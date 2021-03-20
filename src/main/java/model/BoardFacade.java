@@ -17,7 +17,7 @@ public class BoardFacade {
     }
 
     public BoardFacade(Card card) {
-        this.board = card.getColumn().getBoard();
+        this.board = card.getBoard();
     }
 
     public Board getBoard() {
