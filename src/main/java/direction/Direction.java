@@ -9,7 +9,6 @@ public enum Direction {
         this.label = label;
     }
 
-
     @Override
     public String toString() {
         return label;

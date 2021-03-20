@@ -72,5 +72,4 @@ public class Column extends EntitledContainer<Card> implements History {
             }
         }
     }
-
 }

@@ -2,7 +2,6 @@ package main;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import model.BoardFacade;
 import model.TrelloFacade;
 import mvvm.TrelloViewModel;
 import view.TrelloView;

@@ -126,7 +126,5 @@ public class Card extends Entitled implements History {
                     cardMemento.getColumn().add(cardMemento.getPosition(), cardMemento.getCard());
             }
         }
-
     }
-
 }
