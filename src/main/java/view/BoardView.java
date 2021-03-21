@@ -4,6 +4,7 @@ import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
@@ -22,8 +23,6 @@ public class BoardView extends VBox {
     private static final int COLUMN_CELL_WIDTH = 268;
 
     private final EditableLabel elTitle = new EditableLabel();
-
-    private final HBox hbList = new HBox();
 
     private final ListView<Column> lvColumns = new ListView<>();
 
@@ -52,14 +51,12 @@ public class BoardView extends VBox {
     //  CONFIG GRAPHIC COMPONENTS
 
     public void makeComponentsHierarchy() {
-        hbList.getChildren().addAll(lvColumns, region);
-        this.getChildren().addAll(elTitle, hbList);
+        getChildren().addAll(elTitle, lvColumns);
     }
 
     public void configStyles() {
         configStyleVBox();
         configStyleEditableLabel();
-        configStyleHBox();
         configStyleListView();
         configStyleRegion();
     }
@@ -67,18 +64,17 @@ public class BoardView extends VBox {
     //  VBOX
 
     private void configStyleVBox() {
-        CornerRadii corners = new CornerRadii(10);
-        BackgroundFill backgroundFill = new BackgroundFill(BACKGROUND_COLOR, corners, Insets.EMPTY);
+        BackgroundFill backgroundFill = new BackgroundFill(BACKGROUND_COLOR, null, Insets.EMPTY);
         Background background = new Background(backgroundFill);
         setBackground(background);
-        setSpacing(15);
-        setPadding(new Insets(0, 20, 20, 20));
-        VBox.setVgrow(hbList, Priority.ALWAYS);
+        VBox.setVgrow(lvColumns, Priority.ALWAYS);
 
     }
 
     //  EDITABLE LABEL
 
+    //TODO: refactoriser tous les éditables labels
+    // TODO: refacoriser backgrounds
     private void configStyleEditableLabel() {
         elTitle.tf.setFont(Font.font("Arial", FontWeight.BOLD, 20));
         elTitle.tf.setStyle("-fx-text-fill: #ffffff");
@@ -86,10 +82,6 @@ public class BoardView extends VBox {
         BackgroundFill backgroundFill = new BackgroundFill(BACKGROUND_COLOR, CornerRadii.EMPTY, Insets.EMPTY);
         Background background = new Background(backgroundFill);
         elTitle.tf.setBackground(background);
-        elTitle.tf.minWidthProperty().bind(this.widthProperty().subtract(40));
-        elTitle.setPrefHeight(50);
-        elTitle.minWidthProperty().bind(this.widthProperty().subtract(40));
-        elTitle.setAlignment(Pos.CENTER);
 
         // ajout etienne
     }
@@ -101,18 +93,12 @@ public class BoardView extends VBox {
         Background background = new Background(backgroundFill);
         region.setBackground(background);
     }
-
-    private void configStyleHBox() {
-        HBox.setHgrow(lvColumns, Priority.ALWAYS);
-        HBox.setHgrow(region, Priority.SOMETIMES);
-    }
-
+    
     //   CONFIG LISTVIEW
 
     private void configStyleListView() {
         lvColumns.setOrientation(Orientation.HORIZONTAL);
-        lvColumns.setStyle("-fx-background-insets: 0; -fx-padding: 0;");
-        lvColumns.maxWidthProperty().bind(Bindings.size(boardViewModel.columnsListProperty()).multiply(COLUMN_CELL_WIDTH));
+        lvColumns.setStyle("-fx-background-insets: 0; -fx-padding: 5; -fx-background-color: #485F87");
     }
 
     private void customizeLvColumns() {
@@ -150,7 +136,7 @@ public class BoardView extends VBox {
     }
 
     private void configMouseEvents() {
-        region.setOnMouseClicked(event -> {
+        lvColumns.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
                 boardViewModel.addColumn();
             }
@@ -161,13 +147,15 @@ public class BoardView extends VBox {
         ContextMenu contextMenu = new ContextMenu();
         MenuItem delete = new MenuItem("Delete");
         delete.setOnAction(e -> {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setHeaderText(null);
-            alert.setContentText("Delete " + selectedColumn().getTitle() + " ?");
-            Optional<ButtonType> action = alert.showAndWait();
+            if (selectedColumn() != null) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setHeaderText(null);
+                alert.setContentText("Delete " + selectedColumn().getTitle() + " ?");
+                Optional<ButtonType> action = alert.showAndWait();
 
-            if(action.isPresent() && action.get() == ButtonType.OK) {
-                boardViewModel.delete();
+                if(action.isPresent() && action.get() == ButtonType.OK) {
+                    boardViewModel.delete();
+                }
             }
         });
         contextMenu.getItems().add(delete);

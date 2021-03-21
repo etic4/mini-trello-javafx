@@ -34,6 +34,7 @@ public class EditableLabel extends HBox {
     private void configStyles() {
         tf.setOpacity(1);
         tf.setAlignment(Pos.CENTER);
+        HBox.setHgrow(tf, Priority.ALWAYS);
     }
 
     private void configActions() {

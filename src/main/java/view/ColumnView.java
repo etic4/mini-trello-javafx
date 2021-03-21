@@ -85,11 +85,10 @@ public class ColumnView extends VBox {
     //  VBOX
 
     private void configStyleVBox() {
-        CornerRadii corners = new CornerRadii(10);
-        BackgroundFill backgroundFill = new BackgroundFill(BACKGROUND_COLOR, corners, Insets.EMPTY);
+//        CornerRadii corners = new CornerRadii(10);
+        BackgroundFill backgroundFill = new BackgroundFill(BACKGROUND_COLOR, null, Insets.EMPTY);
         Background background = new Background(backgroundFill);
         setBackground(background);
-        setPadding(new Insets(0, 0, 20, 0));
         prefHeightProperty().bind(lvCards.prefHeightProperty());
         VBox.setVgrow(region, Priority.ALWAYS);
         VBox.setVgrow(lvCards, Priority.SOMETIMES);

@@ -37,6 +37,10 @@ public class TrelloView extends VBox {
         Scene scene = new Scene(this);
         primaryStage.setTitle("Trello");
         primaryStage.setScene(scene);
+
+        //TODO: refactoriser
+        primaryStage.setMinWidth(1000);
+        primaryStage.setMinHeight(750);
         build();
 
     }
@@ -109,9 +113,7 @@ public class TrelloView extends VBox {
         Background background = new Background(backgroundFill);
         setBackground(background);
         setPrefSize(1000, 750);
-        setSpacing(5);
-        setPadding(new Insets(0, 25, 25, 25));
-        setVgrow(this.getChildren().get(1), Priority.ALWAYS);
+        setVgrow(boardView, Priority.ALWAYS);
     }
 
 }
