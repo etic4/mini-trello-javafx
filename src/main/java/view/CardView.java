@@ -73,7 +73,7 @@ public class CardView extends BorderPane {
     //  BORDER PANE
 
     private void configStyleBorderPane() {
-        CornerRadii corners = new CornerRadii(10);
+        CornerRadii corners = new CornerRadii(4);
         BackgroundFill backgroundFill = new BackgroundFill(BACKGROUND_COLOR, corners, Insets.EMPTY);
         Background background = new Background(backgroundFill);
         setBackground(background);
