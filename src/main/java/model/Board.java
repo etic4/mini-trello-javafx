@@ -8,7 +8,7 @@ public class Board extends EntitledContainer<Column> implements History {
     }
 
     @Override
-    public BoardMemento save(MemType memType) {
+    public Memento save(MemType memType) {
         return new BoardMemento(this, memType);
     }
 

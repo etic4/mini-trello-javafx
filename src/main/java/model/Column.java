@@ -52,7 +52,7 @@ public class Column extends EntitledContainer<Card> implements History {
     }
 
     @Override
-    public ColumnMemento save(MemType memType) {
+    public Memento save(MemType memType) {
         return new ColumnMemento(this, memType);
     }
 

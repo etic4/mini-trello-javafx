@@ -6,7 +6,7 @@ public class CreateColumnCommand implements Command {
     private final BoardFacade boardFacade;
     private final Board board;
     private Column column;
-    private ColumnMemento memento;
+    private Memento memento;
 
     public CreateColumnCommand(BoardFacade boardFacade) {
         this.boardFacade = boardFacade;

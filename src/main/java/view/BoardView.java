@@ -55,7 +55,6 @@ public class BoardView extends VBox {
     //  EDITABLE LABEL
 
     //TODO: refactoriser tous les éditables labels
-    // TODO: refacoriser backgrounds
     private void configStyleEditableLabel() {
         elTitle.tf.setFont(Font.font("Arial", FontWeight.BOLD, 20));
         elTitle.tf.setAlignment(Pos.CENTER_LEFT);

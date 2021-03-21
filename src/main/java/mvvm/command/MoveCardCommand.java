@@ -1,17 +1,14 @@
 package mvvm.command;
 
 import direction.Direction;
-import model.BoardFacade;
-import model.Card;
-import model.CardMemento;
-import model.MemType;
+import model.*;
 
 public class MoveCardCommand implements Command {
 
     private final Card card;
     private final Direction direction;
     private final BoardFacade boardFacade;
-    private CardMemento memento;
+    private Memento memento;
     private String commandString = "";
 
 

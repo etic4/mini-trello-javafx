@@ -1,17 +1,14 @@
 package mvvm.command;
 
 import direction.Direction;
-import model.BoardFacade;
-import model.Column;
-import model.ColumnMemento;
-import model.MemType;
+import model.*;
 
 public class MoveColumnCommand implements Command {
 
     private final Column column;
     private final Direction direction;
     private final BoardFacade boardFacade;
-    private ColumnMemento memento;
+    private Memento memento;
 
     public MoveColumnCommand(Column column, Direction direction, BoardFacade boardFacade) {
         this.column = column;

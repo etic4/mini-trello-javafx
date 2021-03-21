@@ -107,7 +107,7 @@ public class Card extends Entitled implements History {
     }
 
     @Override
-    public CardMemento save(MemType memType) {
+    public Memento save(MemType memType) {
         return new CardMemento(this, memType);
     }
 

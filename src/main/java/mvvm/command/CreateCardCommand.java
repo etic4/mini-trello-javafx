@@ -6,7 +6,7 @@ public class CreateCardCommand implements Command {
     private final BoardFacade boardFacade;
     private final Column column;
     private Card card;
-    private CardMemento memento;
+    private Memento memento;
 
     public CreateCardCommand(Column column, BoardFacade boardFacade) {
         this.boardFacade = boardFacade;

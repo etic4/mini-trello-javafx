@@ -1,14 +1,11 @@
 package mvvm.command;
 
-import model.BoardFacade;
-import model.Column;
-import model.ColumnMemento;
-import model.MemType;
+import model.*;
 
 public class DeleteColumnCommand implements Command {
     private final BoardFacade boardFacade;
     private final Column column;
-    private ColumnMemento memento;
+    private Memento memento;
 
     public DeleteColumnCommand(Column column, BoardFacade boardFacade) {
         this.boardFacade = boardFacade;

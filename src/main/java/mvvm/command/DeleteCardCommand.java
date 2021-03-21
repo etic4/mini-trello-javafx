@@ -5,7 +5,7 @@ import model.*;
 public class DeleteCardCommand implements Command {
     private final BoardFacade boardFacade;
     private final Card card;
-    private CardMemento memento;
+    private Memento memento;
 
     public DeleteCardCommand(Card card,  BoardFacade boardFacade) {
         this.boardFacade = boardFacade;
