@@ -211,6 +211,7 @@ public class ColumnView extends VBox {
         region.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
                 columnViewModel.addCard();
+                event.consume();
             }
         });
     }

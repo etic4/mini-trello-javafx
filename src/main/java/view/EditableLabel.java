@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 
 public class EditableLabel extends HBox {
 
@@ -41,6 +42,7 @@ public class EditableLabel extends HBox {
                 tfDisabled.set(false);
                 editAborted.set(false);
                 tf.requestFocus();
+                event.consume();
             }
         });
 
