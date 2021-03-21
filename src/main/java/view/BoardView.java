@@ -107,7 +107,6 @@ public class BoardView extends VBox {
 
     private void configMouseEvents() {
         lvColumns.setOnMouseClicked(event -> {
-            System.out.println("recu par lvcolumns");
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
                 boardViewModel.addColumn();
             }
