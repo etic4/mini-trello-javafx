@@ -5,7 +5,7 @@ import javafx.collections.ObservableList;
 
 import java.util.Collections;
 
-public class EntitledContainer<E> extends Entitled {
+public abstract class EntitledContainer<E> extends Entitled {
     private final ObservableList<E> movables = FXCollections.observableArrayList();
 
     public EntitledContainer(String title) {

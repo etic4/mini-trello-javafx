@@ -17,35 +17,25 @@ import mvvm.TrelloViewModel;
 
 public class TrelloView extends VBox {
 
-    private static final Color BACKGROUND_COLOR = Color.web("#E5E5E5");
-
+    private static final Color BACKGROUND_COLOR = Color.WHITE;
     private final TrelloViewModel trelloViewModel;
-
     private BoardView boardView;
-
     private MenuBar menuBar;
 
-    private final CommandManager commandManager;
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    //  CONSTRUCTOR
 
     public TrelloView(Stage primaryStage, TrelloViewModel trelloViewModel) {
         this.trelloViewModel = trelloViewModel;
-        this.commandManager = CommandManager.getInstance();
         Scene scene = new Scene(this);
+
+        //config stage
         primaryStage.setTitle("Trello");
         primaryStage.setScene(scene);
-
-        //TODO: refactoriser
         primaryStage.setMinWidth(1000);
         primaryStage.setMinHeight(750);
+
         build();
 
     }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     //  CONFIG GRAPHIC COMPONENTS
 
@@ -70,9 +60,11 @@ public class TrelloView extends VBox {
         
         var createColumn = new MenuItem("Nouvelle Colonne");
         createColumn.setOnAction(e -> trelloViewModel.commandCreateColumn());
+        createColumn.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN));
 
         var quit = new MenuItem("Quitter");
         quit.setOnAction(e -> trelloViewModel.quit());
+        quit.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.CONTROL_DOWN));
 
         fileMenu.getItems().add(createColumn);
         fileMenu.getItems().add(quit);
@@ -97,23 +89,18 @@ public class TrelloView extends VBox {
         editionMenu.getItems().add(redo);
         
         // Menu bar
-        
-        menuBar.getMenus().add(fileMenu);
-        menuBar.getMenus().add(editionMenu);
+        menuBar.getMenus().addAll(fileMenu, editionMenu);
     }
 
     private void makeComponentsHierarchy() {
-        this.getChildren().add(menuBar);
-        this.getChildren().add(boardView);
+        this.getChildren().addAll(menuBar, boardView);
     }
 
     private void configStylesVBow() {
-        CornerRadii corners = new CornerRadii(0);
-        BackgroundFill backgroundFill = new BackgroundFill(BACKGROUND_COLOR, corners, Insets.EMPTY);
+        BackgroundFill backgroundFill = new BackgroundFill(BACKGROUND_COLOR, null, Insets.EMPTY);
         Background background = new Background(backgroundFill);
         setBackground(background);
         setPrefSize(1000, 750);
         setVgrow(boardView, Priority.ALWAYS);
     }
-
 }

@@ -1,8 +1,6 @@
 package mvvm;
 
-import mvvm.command.CommandManager;
-import mvvm.command.EditTitleCommand;
-import mvvm.command.MoveCardCommand;
+import mvvm.command.*;
 import direction.Direction;
 import model.*;
 import javafx.beans.property.*;
@@ -26,8 +24,6 @@ public class CardViewModel {
     private final BoardFacade boardFacade;
 
 
-    //  CONSTRUCTOR
-
     public CardViewModel(Card card) {
         this.card = card;
         boardFacade = new BoardFacade(card);
@@ -36,6 +32,9 @@ public class CardViewModel {
         configListeners();
     }
 
+    public void delete() {
+        CommandManager.getInstance().execute(new DeleteCardCommand(card, boardFacade));
+    }
 
     //   LISTENERS
 

@@ -12,6 +12,10 @@ public class Column extends EntitledContainer<Card> implements History {
         super(title);
         this.board = board;
         board.add(this);
+
+        if (this.getTitle().equals("")) {
+            setTitle("Column " + board.size());
+        }
     }
 
     public Column(Board board) {

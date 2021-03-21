@@ -12,14 +12,9 @@ import javafx.scene.layout.Priority;
 public class EditableLabel extends HBox {
 
     TextField tf = new TextField();
-
     BooleanProperty
             tfDisabled = new SimpleBooleanProperty(true),
             editAborted = new SimpleBooleanProperty(false);
-
-
-
-    //   CONSTRUCTOR
 
     public EditableLabel() {
         this.getChildren().add(tf);

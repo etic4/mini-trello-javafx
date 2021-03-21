@@ -7,7 +7,7 @@ public class DeleteCardCommand implements Command {
     private final Card card;
     private CardMemento memento;
 
-    public DeleteCardCommand(Card card, Column column, BoardFacade boardFacade) {
+    public DeleteCardCommand(Card card,  BoardFacade boardFacade) {
         this.boardFacade = boardFacade;
         this.card = card;
     }

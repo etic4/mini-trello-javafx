@@ -13,6 +13,10 @@ public class Card extends Entitled implements History {
         super(title);
         this.column = column;
         column.add(this);
+
+        if (this.getTitle().equals("")) {
+            setTitle("Card " + column.size());
+        }
     }
 
     public Card(Column column) {

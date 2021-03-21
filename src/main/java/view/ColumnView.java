@@ -7,12 +7,14 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import model.Card;
 import model.Column;
 import mvvm.ColumnViewModel;
@@ -21,28 +23,16 @@ import java.util.Optional;
 import java.util.stream.IntStream;
 
 public class ColumnView extends VBox {
+    private static final int CARD_CELL_HEIGHT = 100;
 
-    private static final Color BACKGROUND_COLOR = Color.web("#AAC6E1");
-    private static final int CARD_CELL_HEIGHT = 98;
-
-    private final HBox
-            hbHeader = new HBox();
-
+    private final HBox hbHeader = new HBox();
     private final Button
             btLeft = new Button(),
             btRight = new Button();
 
-    private final EditableLabel
-            elTitle = new EditableLabel();
-
-    private final Region
-            region = new Region();
-
-    private final ListView<Card>
-            lvCards = new ListView<>();
-
+    private final EditableLabel elTitle = new EditableLabel();
+    private final ListView<Card> lvCards = new ListView<>();
     private final ColumnViewModel columnViewModel;
-
     private final ObjectProperty<Direction> direction = new SimpleObjectProperty<>();
 
 
@@ -59,41 +49,38 @@ public class ColumnView extends VBox {
         this(new ColumnViewModel(column));
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     //  CONFIG GRAPHIC COMPONENTS
 
     private void buildGraphicComponents() {
         makeComponentsHierarchy();
         configStyles();
-        customizeLvCards();
+        configCardFactory();
     }
 
     private void makeComponentsHierarchy() {
         hbHeader.getChildren().addAll(btLeft, elTitle, btRight);
-        getChildren().addAll(hbHeader, lvCards, region);
+        getChildren().addAll(hbHeader, lvCards);
     }
 
     private void configStyles() {
         configStyleVBox();
+        configStyleHeader();
         configStyleButtons();
         configStyleEditableLabel();
         configStyleListView();
-        configStyleRegion();
     }
 
     //  VBOX
 
     private void configStyleVBox() {
-        CornerRadii corners = new CornerRadii(4);
-        BackgroundFill backgroundFill = new BackgroundFill(BACKGROUND_COLOR, corners, Insets.EMPTY);
-        Background background = new Background(backgroundFill);
-        setBackground(background);
-        prefHeightProperty().bind(lvCards.prefHeightProperty());
-        VBox.setVgrow(region, Priority.ALWAYS);
-        VBox.setVgrow(lvCards, Priority.SOMETIMES);
+        setStyle("-fx-border-color: #999999;");
+        VBox.setVgrow(lvCards, Priority.ALWAYS);
     }
 
+    private void configStyleHeader() {
+        hbHeader.setStyle("-fx-background-color: #fcfcfc");
+        elTitle.tf.setStyle("-fx-background-color: #fcfcfc");
+    }
     //  BUTTONS
 
     private void configStyleButtons() {
@@ -105,26 +92,26 @@ public class ColumnView extends VBox {
 
             Image image = new Image(getClass().getResourceAsStream(
                     "/icons/" + imgName[idx]), 20, 20, true, false);
-            btn.setGraphic(new ImageView(image));
+
+            var imgView = new ImageView(image);
+
+            //griser un peu le noir
+            ColorAdjust colorAdjust = new ColorAdjust();
+            colorAdjust.setBrightness(0.3);
+            imgView.setEffect(colorAdjust);
+
+            btn.setGraphic(imgView);
             btn.setPrefSize(30, 30);
             btn.setPadding(new Insets(10, 0, 0, 0));
-
-            int leftRadii = btn == btLeft ? 15 : 0;
-            int rightRadii = leftRadii == 15 ? 0 : 15;
-
-            CornerRadii corners = new CornerRadii(leftRadii, rightRadii, 0, 0, true);
-            BackgroundFill backgroundFill = new BackgroundFill(BACKGROUND_COLOR, corners, Insets.EMPTY);
-            btn.setBackground(new Background(backgroundFill));
+            btn.setStyle("-fx-background-color: #ffff; -fx-border-color: #f1f1f1");
         });
     }
 
     //  EDITABLE LABEL
 
     private void configStyleEditableLabel() {
-        elTitle.tf.setFont(Font.font("Arial", 15));
-        BackgroundFill backgroundFill = new BackgroundFill(BACKGROUND_COLOR, CornerRadii.EMPTY, Insets.EMPTY);
-        Background background = new Background(backgroundFill);
-        elTitle.tf.setBackground(background);
+        elTitle.tf.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        elTitle.tf.setStyle("-fx-background-color: #fcfcfc");
         elTitle.setPrefHeight(40);
         elTitle.setMinWidth(190);
         elTitle.setPadding(new Insets(3, 0, 0, 0));
@@ -132,22 +119,13 @@ public class ColumnView extends VBox {
         HBox.setHgrow(elTitle, Priority.ALWAYS);
     }
 
-    //   REGION
-
-    private void configStyleRegion() {
-        BackgroundFill backgroundFill = new BackgroundFill(BACKGROUND_COLOR, CornerRadii.EMPTY, Insets.EMPTY);
-        Background background = new Background(backgroundFill);
-        region.setBackground(background);
-    }
-
     //   LISTVIEW
 
     private void configStyleListView() {
-        lvCards.setStyle("-fx-background-insets: 0; -fx-padding: 0;");
-        lvCards.setPrefHeight(580);
+        lvCards.setStyle("-fx-background-color: #fcfcfc; -fx-background-insets: 0; -fx-padding: 0;");
     }
 
-    private void customizeLvCards() {
+    private void configCardFactory() {
         lvCards.setCellFactory(columnView -> new ListCell<>(){
             @Override
             protected void updateItem(Card card, boolean empty) {
@@ -156,14 +134,12 @@ public class ColumnView extends VBox {
                 if (card != null) {
                     cardView = new CardView(card);
                 }
-                setStyle("-fx-background-color: #AAC6E1");
+                setStyle("-fx-background-color: #fcfcfc");
                 setGraphic(cardView);
             }
         });
     }
 
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     //   BINDINGS
 
@@ -179,7 +155,6 @@ public class ColumnView extends VBox {
         columnViewModel.bindEditAborted(elTitle.editAbortedProperty());
 
         lvCards.itemsProperty().bind(columnViewModel.cardsListProperty());
-        lvCards.prefHeightProperty().bind(Bindings.size(lvCards.getItems()).multiply(CARD_CELL_HEIGHT));
     }
 
     private void configViewModelBindings() {
@@ -197,7 +172,6 @@ public class ColumnView extends VBox {
 
     private void configActions() {
         configEventsHandling();
-        configContextMenu();
         configMouseEvents();
     }
 
@@ -207,21 +181,27 @@ public class ColumnView extends VBox {
     }
 
     private void configMouseEvents() {
-        region.setOnMouseClicked(event -> {
-            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
+        lvCards.setOnMouseClicked(e -> {
+            if (e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2) {
                 columnViewModel.addCard();
-                event.consume();
+                e.consume();
             }
+        });
+
+        lvCards.setOnContextMenuRequested(e -> {
+            var contextMenu = getContextMenu();
+            contextMenu.show(lvCards, e.getScreenX(), e.getScreenY());
+            e.consume();
         });
     }
 
-    private void configContextMenu() {
+    private ContextMenu getContextMenu() {
         ContextMenu contextMenu = new ContextMenu();
-        MenuItem delete = new MenuItem("Delete");
+        MenuItem delete = new MenuItem("Delete " + elTitle.tf.getText());
         delete.setOnAction(e -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setHeaderText(null);
-            alert.setContentText("Delete " + selectedCard().getTitle() + " ?");
+            alert.setContentText("Delete " + elTitle.tf.getText() + " ?");
             Optional<ButtonType> action = alert.showAndWait();
 
             if(action.isPresent() && action.get() == ButtonType.OK) {
@@ -229,8 +209,9 @@ public class ColumnView extends VBox {
             }
         });
         contextMenu.getItems().add(delete);
-        lvCards.setContextMenu(contextMenu);
+        return contextMenu;
     }
+
 
     private Card selectedCard() {
         return lvCards.getSelectionModel().getSelectedItem();

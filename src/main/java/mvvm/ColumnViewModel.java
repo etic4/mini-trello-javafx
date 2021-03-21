@@ -7,7 +7,6 @@ import javafx.beans.property.*;
 import model.Column;
 import model.BoardFacade;
 
-
 public class ColumnViewModel {
 
     private final StringProperty
@@ -15,19 +14,14 @@ public class ColumnViewModel {
             columnTitleModel = new SimpleStringProperty();
 
     private final IntegerProperty selectedCard = new SimpleIntegerProperty();
-
     private final ObjectProperty<Direction> direction = new SimpleObjectProperty<>();
-
     private final BooleanProperty
             focusedTitle = new SimpleBooleanProperty(),
             titleEditAborted = new SimpleBooleanProperty();
 
     private final Column column;
-
     private final BoardFacade boardFacade;
 
-
-    //  CONSTRUCTOR
 
     public ColumnViewModel(Column column) {
         this.column = column;
@@ -113,10 +107,7 @@ public class ColumnViewModel {
     }
 
     public void delete() {
-        Card card = getCard();
-        if(card != null) {
-            CommandManager.getInstance().execute(new DeleteCardCommand(card, column, boardFacade));
-        }
+        CommandManager.getInstance().execute(new DeleteColumnCommand(column, boardFacade));
     }
 
     private Card getCard() {
