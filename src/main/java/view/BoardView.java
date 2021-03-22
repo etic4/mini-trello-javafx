@@ -14,8 +14,6 @@ import mvvm.BoardViewModel;
 import java.util.Optional;
 
 public class BoardView extends VBox {
-    private static final int COLUMN_CELL_WIDTH = 268;
-
     private final EditableLabel elTitle = new EditableLabel();
     private final ListView<Column> lvColumns = new ListView<>();
     private final BoardViewModel boardViewModel;
@@ -23,6 +21,10 @@ public class BoardView extends VBox {
 
     public BoardView(BoardViewModel boardViewModel) {
         this.boardViewModel = boardViewModel;
+        build();
+    }
+
+    public void build() {
         buildGraphicComponents();
         configBindings();
         configActions();
@@ -60,7 +62,7 @@ public class BoardView extends VBox {
         elTitle.tf.setAlignment(Pos.CENTER_LEFT);
         elTitle.setPrefHeight(50);
         elTitle.tf.setPrefHeight(49);
-        elTitle.tf.setStyle("-fx-background-color: #fcfcfc; -fx-border-color: #999999");
+        elTitle.tf.setStyle("-fx-background-color: #fcfcfc");
     }
     
     //   CONFIG LISTVIEW

@@ -68,7 +68,7 @@ public class CardView extends BorderPane {
     //  BORDER PANE
 
     private void configStyleBorderPane() {
-        setStyle("-fx-padding: 2 ;-fx-border-color: #999999 ;-fx-border-radius: 4; -fx-background-color: #ffffff");
+        setStyle("-fx-padding: 2 ;-fx-border-color: #dddddd ;-fx-border-radius: 4; -fx-background-color: #ffffff");
     }
 
     //  EDITABLE LABEL
@@ -95,7 +95,7 @@ public class CardView extends BorderPane {
 
             //griser un peu le noir
             ColorAdjust colorAdjust = new ColorAdjust();
-            colorAdjust.setBrightness(0.3);
+            colorAdjust.setBrightness(0.4);
             imgView.setEffect(colorAdjust);
 
             btn.setGraphic(imgView);

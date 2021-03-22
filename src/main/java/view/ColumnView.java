@@ -73,7 +73,7 @@ public class ColumnView extends VBox {
     //  VBOX
 
     private void configStyleVBox() {
-        setStyle("-fx-border-color: #999999;");
+        setStyle("-fx-border-color: #dddddd;");
         VBox.setVgrow(lvCards, Priority.ALWAYS);
     }
 
@@ -97,7 +97,7 @@ public class ColumnView extends VBox {
 
             //griser un peu le noir
             ColorAdjust colorAdjust = new ColorAdjust();
-            colorAdjust.setBrightness(0.3);
+            colorAdjust.setBrightness(0.4);
             imgView.setEffect(colorAdjust);
 
             btn.setGraphic(imgView);
