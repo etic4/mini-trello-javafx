@@ -50,7 +50,7 @@ public class ColumnViewModel {
     private void addTitleListener() {
         focusedTitle.addListener((a, oldValue, newValue) -> {
             if (!newValue && !column.getTitle().equals(columnTitleView.get())) {
-                CommandManager.getInstance().execute(new EditTitleCommand<>(column, columnTitleView.get()));
+                CommandManager.getInstance().execute(new EditTitleCommand<>(column, columnTitleView.get(), boardFacade));
             }
         });
 

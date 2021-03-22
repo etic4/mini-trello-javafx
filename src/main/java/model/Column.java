@@ -60,20 +60,7 @@ public class Column extends EntitledContainer<Card> implements History {
     public void restore(Memento memento) {
         if (memento instanceof ColumnMemento) {
             var columnMemento = (ColumnMemento) memento;
-            switch (columnMemento.getMemType()) {
-                case TITLE:
-                    this.setTitle(columnMemento.getTitle());
-                    break;
-                case POSITION:
-                    board.remove(this);
-                    board.add(columnMemento.getPosition(), this);
-                    break;
-                case ADD:
-                    columnMemento.getBoard().remove(columnMemento.getColumn());
-                    break;
-                case DELETE:
-                    columnMemento.getBoard().add(columnMemento.getPosition(), columnMemento.getColumn());
-            }
+            columnMemento.restore();
         }
     }
 }

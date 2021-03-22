@@ -4,42 +4,38 @@ public class CardMemento implements Memento {
     private Column column;
     private int position;
     private String title;
-    private Card card;
+    private final Card card;
     private final MemType memType;
 
     CardMemento(Card card, MemType memType) {
+        this.card = card;
         this.memType = memType;
 
         switch (memType) {
             case TITLE:
-                this.title = card.getTitle();
+                title = card.getTitle();
                 break;
             case ADD:
             case DELETE:
-                this.card = card;
             case POSITION:
-                this.column = card.getColumn();
-                this.position = card.getPosition();
+                column = card.getColumn();
+                position = card.getPosition();
         }
     }
 
-    Column getColumn() {
-        return column;
-    }
-
-    int getPosition() {
-        return position;
-    }
-
-    String getTitle() {
-        return title;
-    }
-
-    Card getCard() {
-        return card;
-    }
-
-    MemType getMemType() {
-        return memType;
+    void restore() {
+        switch (memType) {
+            case TITLE:
+                card.setTitle(title);
+                break;
+            case ADD:
+                column.remove(card);
+                break;
+            case DELETE:
+                column.add(position, card);
+            case POSITION:
+                card.switchTo(column, card, position);
+                break;
+        }
     }
 }

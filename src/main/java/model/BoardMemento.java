@@ -1,19 +1,17 @@
 package model;
 
 public class BoardMemento implements Memento {
+    private final Board board;
     private final String title;
     private final MemType memType;
 
     BoardMemento(Board board, MemType memType) {
+        this.board = board;
         this.memType = memType;
         this.title = board.getTitle();
     }
 
-    String getTitle() {
-        return title;
-    }
-
-    MemType getMemType() {
-        return memType;
+    void restore() {
+        board.setTitle(title);
     }
 }

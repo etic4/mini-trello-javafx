@@ -16,8 +16,7 @@ public class Board extends EntitledContainer<Column> implements History {
     public void restore(Memento memento) {
         if (memento instanceof BoardMemento) {
             var boardMemento = (BoardMemento) memento;
-            this.setTitle(boardMemento.getTitle());
+            boardMemento.restore();
         }
     }
-
 }

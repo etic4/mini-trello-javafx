@@ -20,7 +20,6 @@ public class CardViewModel {
             titleEditAborted = new SimpleBooleanProperty();
 
     private final Card card;
-
     private final BoardFacade boardFacade;
 
 
@@ -32,11 +31,8 @@ public class CardViewModel {
         configListeners();
     }
 
-    public void delete() {
-        CommandManager.getInstance().execute(new DeleteCardCommand(card, boardFacade));
-    }
 
-    //   LISTENERS
+    //--- Listeners ---
 
     private void configListeners() {
         addMoveListener();
@@ -54,7 +50,7 @@ public class CardViewModel {
     private void addTitleListener() {
         focusedTitle.addListener((a, oldValue, newValue) -> {
             if (!newValue && !card.getTitle().equals(cardTitleView.get())) {
-                CommandManager.getInstance().execute(new EditTitleCommand<>(card, cardTitleView.get()));
+                CommandManager.getInstance().execute(new EditTitleCommand<>(card, cardTitleView.get(), boardFacade));
             }
         });
 
@@ -67,7 +63,7 @@ public class CardViewModel {
         cardTitleModel.addListener((o, oldVal, newVal) -> cardTitleView.set(card.getTitle()));
     }
 
-    //   BINDING
+    //--- Bindings ---
 
     public void bindMoveDirection(ObjectProperty<Direction> direction) {
         this.direction.bind(direction);
@@ -81,7 +77,7 @@ public class CardViewModel {
         this.titleEditAborted.bind(titleEditAborted);
     }
 
-    //  PROPERTIES
+    //--- Properties ---
 
     public StringProperty cardTitleViewProperty() {
         return cardTitleView;
@@ -101,6 +97,12 @@ public class CardViewModel {
 
     public BooleanProperty btDownDisabledProperty() {
         return card.isLastProperty();
+    }
+
+    //--- Commands ---
+
+    public void delete() {
+        CommandManager.getInstance().execute(new DeleteCardCommand(card, boardFacade));
     }
 
 }

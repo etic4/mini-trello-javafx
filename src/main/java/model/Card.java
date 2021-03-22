@@ -91,11 +91,11 @@ public class Card extends Entitled implements History {
         return getColumn().isLastProperty();
     }
 
-    private void switchTo(Column newColumn, Card card) {
+    void switchTo(Column newColumn, Card card) {
         switchTo(newColumn, card, newColumn.size());
     }
 
-    private void switchTo(Column newColumn, Card card, int position) {
+    void switchTo(Column newColumn, Card card, int position) {
         column.remove(card);
         newColumn.add(position, card);
         card.setColumn(newColumn);
@@ -115,20 +115,7 @@ public class Card extends Entitled implements History {
     public void restore(Memento memento) {
         if (memento instanceof CardMemento) {
             var cardMemento = (CardMemento) memento;
-
-            switch (cardMemento.getMemType()) {
-                case POSITION:
-                    switchTo(cardMemento.getColumn(), this, cardMemento.getPosition());
-                    break;
-                case TITLE:
-                    setTitle(cardMemento.getTitle());
-                    break;
-                case ADD:
-                    cardMemento.getColumn().remove(cardMemento.getCard());
-                    break;
-                case DELETE:
-                    cardMemento.getColumn().add(cardMemento.getPosition(), cardMemento.getCard());
-            }
+            cardMemento.restore();
         }
     }
 }

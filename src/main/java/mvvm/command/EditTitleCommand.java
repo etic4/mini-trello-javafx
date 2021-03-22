@@ -1,24 +1,23 @@
 package mvvm.command;
 
-import model.Entitled;
-import model.History;
-import model.MemType;
-import model.Memento;
+import model.*;
 
 public class EditTitleCommand<E extends Entitled & History> implements Command {
     private final E entitled;
-    private final String text;
+    private final String title;
+    private final BoardFacade boardFacade;
     private Memento memento;
 
-    public EditTitleCommand(E entitled, String text) {
+    public EditTitleCommand(E entitled, String title, BoardFacade boardFacade) {
             this.entitled = entitled;
-            this.text = text;
+            this.title = title;
+            this.boardFacade = boardFacade;
     }
 
     @Override
     public void execute() {
         memento = entitled.save(MemType.TITLE);
-        entitled.setTitle(text);
+        boardFacade.setTitle(entitled, title);
     }
 
     @Override

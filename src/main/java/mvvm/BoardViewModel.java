@@ -50,7 +50,7 @@ public class BoardViewModel {
     private void addTitleListener() {
         focusedTitle.addListener((a, oldValue, newValue) -> {
             if (!newValue && !board.getTitle().equals(boardTitleView.get())) {
-                CommandManager.getInstance().execute(new EditTitleCommand<>(board, boardTitleView.get()));
+                CommandManager.getInstance().execute(new EditTitleCommand<>(board, boardTitleView.get(), boardFacade));
             }
         });
 
