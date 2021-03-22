@@ -12,11 +12,4 @@ public class Board extends EntitledContainer<Column> implements History {
         return new BoardMemento(this, memType);
     }
 
-    @Override
-    public void restore(Memento memento) {
-        if (memento instanceof BoardMemento) {
-            var boardMemento = (BoardMemento) memento;
-            boardMemento.restore();
-        }
-    }
 }

@@ -11,7 +11,7 @@ public class BoardMemento implements Memento {
         this.title = board.getTitle();
     }
 
-    void restore() {
+    public void restore() {
         board.setTitle(title);
     }
 }

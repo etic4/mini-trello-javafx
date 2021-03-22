@@ -1,6 +1,6 @@
 package mvvm.command;
 
-public class EmptyCommand implements Command {
+public class EmptyCommand extends Command {
     @Override
     public void execute() {
 

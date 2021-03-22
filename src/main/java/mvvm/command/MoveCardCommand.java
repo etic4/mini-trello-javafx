@@ -3,12 +3,11 @@ package mvvm.command;
 import direction.Direction;
 import model.*;
 
-public class MoveCardCommand implements Command {
+public class MoveCardCommand extends Command {
 
     private final Card card;
     private final Direction direction;
     private final BoardFacade boardFacade;
-    private Memento memento;
     private String commandString = "";
 
 
@@ -23,11 +22,6 @@ public class MoveCardCommand implements Command {
         memento = card.save(MemType.POSITION);
         setCommandString();
         this.boardFacade.move(card, direction);
-    }
-
-    @Override
-    public void undo() {
-        card.restore(memento);
     }
 
     private void setCommandString() {

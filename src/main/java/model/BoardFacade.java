@@ -40,7 +40,9 @@ public class BoardFacade {
 
     // --- Board ---
 
-    public Column addColumn(Board board) {
+    // TODO: changer ça
+
+    public Column addColumn() {
         return new Column(board);
     }
 

@@ -55,12 +55,4 @@ public class Column extends EntitledContainer<Card> implements History {
     public Memento save(MemType memType) {
         return new ColumnMemento(this, memType);
     }
-
-    @Override
-    public void restore(Memento memento) {
-        if (memento instanceof ColumnMemento) {
-            var columnMemento = (ColumnMemento) memento;
-            columnMemento.restore();
-        }
-    }
 }

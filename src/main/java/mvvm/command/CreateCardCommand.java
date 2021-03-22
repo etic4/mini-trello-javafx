@@ -2,11 +2,9 @@ package mvvm.command;
 
 import model.*;
 
-public class CreateCardCommand implements Command {
+public class CreateCardCommand extends Command {
     private final BoardFacade boardFacade;
     private final Column column;
-    private Card card;
-    private Memento memento;
 
     public CreateCardCommand(Column column, BoardFacade boardFacade) {
         this.boardFacade = boardFacade;
@@ -15,13 +13,8 @@ public class CreateCardCommand implements Command {
 
     @Override
     public void execute() {
-        card = boardFacade.addCard(column);
+        var card = boardFacade.addCard(column);
         memento = card.save(MemType.ADD);
-    }
-
-    @Override
-    public void undo() {
-        card.restore(memento);
     }
 
     @Override

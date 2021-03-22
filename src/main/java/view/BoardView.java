@@ -82,7 +82,7 @@ public class BoardView extends VBox {
                 if (column != null) {
                     columnView = new ColumnView(column);
                 }
-                setStyle("-fx-background-color: #ffffff; -fx-padding: 4");
+                setStyle("-fx-background-color: #ffffff; -fx-padding: 6");
                 setGraphic(columnView);
             }
         });

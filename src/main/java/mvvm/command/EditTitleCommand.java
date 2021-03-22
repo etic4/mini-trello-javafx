@@ -2,11 +2,10 @@ package mvvm.command;
 
 import model.*;
 
-public class EditTitleCommand<E extends Entitled & History> implements Command {
+public class EditTitleCommand<E extends Entitled & History> extends Command {
     private final E entitled;
     private final String title;
     private final BoardFacade boardFacade;
-    private Memento memento;
 
     public EditTitleCommand(E entitled, String title, BoardFacade boardFacade) {
             this.entitled = entitled;
@@ -20,10 +19,6 @@ public class EditTitleCommand<E extends Entitled & History> implements Command {
         boardFacade.setTitle(entitled, title);
     }
 
-    @Override
-    public void undo() {
-        entitled.restore(memento);
-    }
 
     @Override
     public String toString() {

@@ -2,10 +2,9 @@ package mvvm.command;
 
 import model.*;
 
-public class DeleteCardCommand implements Command {
+public class DeleteCardCommand extends Command {
     private final BoardFacade boardFacade;
     private final Card card;
-    private Memento memento;
 
     public DeleteCardCommand(Card card,  BoardFacade boardFacade) {
         this.boardFacade = boardFacade;
@@ -16,11 +15,6 @@ public class DeleteCardCommand implements Command {
     public void execute() {
         memento = card.save(MemType.DELETE);
         boardFacade.delete(card);
-    }
-
-    @Override
-    public void undo() {
-        card.restore(memento);
     }
 
     @Override

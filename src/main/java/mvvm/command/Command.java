@@ -1,7 +1,13 @@
 package mvvm.command;
 
-public interface Command {
-    void execute();
-    void undo();
+import model.Memento;
+
+public abstract class Command {
+    protected Memento memento;
+
+    abstract void execute();
+    void undo() {
+        memento.restore();
+    };
 
 }

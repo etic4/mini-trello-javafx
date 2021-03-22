@@ -23,7 +23,7 @@ public class ColumnMemento implements Memento {
         }
     }
 
-    void restore() {
+    public void restore() {
         switch (memType) {
             case TITLE:
                 column.setTitle(title);

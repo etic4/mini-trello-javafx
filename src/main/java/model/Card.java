@@ -111,11 +111,4 @@ public class Card extends Entitled implements History {
         return new CardMemento(this, memType);
     }
 
-    @Override
-    public void restore(Memento memento) {
-        if (memento instanceof CardMemento) {
-            var cardMemento = (CardMemento) memento;
-            cardMemento.restore();
-        }
-    }
 }

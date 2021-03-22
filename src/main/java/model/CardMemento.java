@@ -23,7 +23,7 @@ public class CardMemento implements Memento {
         }
     }
 
-    void restore() {
+    public void restore() {
         switch (memType) {
             case TITLE:
                 card.setTitle(title);
