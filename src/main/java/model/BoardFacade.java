@@ -32,17 +32,20 @@ public class BoardFacade {
         return FXCollections.unmodifiableObservableList(column.getMovables());
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // --- Title ---
 
-    //  BOARD
+    public void setTitle(Entitled entitled, String title) {
+        entitled.setTitle(title);
+    }
+
+    // --- Board ---
 
     public Column addColumn(Board board) {
         return new Column(board);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    //  COLUMN
+    // ---  Column ---
 
     public Card addCard(Column column) {
         return new Card(column);
@@ -62,9 +65,8 @@ public class BoardFacade {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    //  CARD
+    // ---  Card ---
 
     public Column getColumn(Card card) {
         return card.getColumn();
@@ -93,10 +95,10 @@ public class BoardFacade {
     public Column getMoveDestinationColumn(Card card, Direction direction) {
         if (direction.equals(Direction.LEFT)) {
             return card.getPreviousColumn();
-        } else if (direction.equals(Direction.RIGHT)) {
+        }
+        else if (direction.equals(Direction.RIGHT)) {
             return card.getNextColumn();
         }
         return null;
     }
-
 }
