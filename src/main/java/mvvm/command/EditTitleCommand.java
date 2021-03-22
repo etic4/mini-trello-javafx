@@ -19,7 +19,6 @@ public class EditTitleCommand<E extends Entitled & History> extends Command {
         boardFacade.setTitle(entitled, title);
     }
 
-
     @Override
     public String toString() {
         return "Édition du titre de " + entitled.getClass().getSimpleName();
