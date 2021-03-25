@@ -1,7 +1,9 @@
 package view;
 
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.StringProperty;
 import javafx.geometry.Pos;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -11,25 +13,33 @@ import javafx.scene.layout.Priority;
 
 public class EditableLabel extends HBox {
 
-    TextField tf = new TextField();
+    private TextField tf = new TextField();
     BooleanProperty
             tfDisabled = new SimpleBooleanProperty(true),
             editAborted = new SimpleBooleanProperty(false);
 
-    public EditableLabel() {
-        this.getChildren().add(tf);
-        configStyles();
-        configActions();
+    public EditableLabel(String... cssClasses) {
+        getChildren().add(tf);
         tf.disableProperty().bind(tfDisabled);
+        HBox.setHgrow(tf, Priority.ALWAYS);
+
+        getStyleClass().add("el-container");
+
+        addTextFieldCssClasses(cssClasses);
+        configActions();
     }
 
+    public EditableLabel(){
+        this((String) null);
+    }
 
-    //   METHODS
+    private void addTextFieldCssClasses(String[] cssClasses) {
+        tf.getStyleClass().add("el-text");
+        tf.getStyleClass().addAll(cssClasses);
+    }
 
-    private void configStyles() {
-        tf.setOpacity(1);
-        tf.setAlignment(Pos.CENTER);
-        HBox.setHgrow(tf, Priority.ALWAYS);
+    public void setTextFieldId(String tfId) {
+        tf.setId(tfId);
     }
 
     private void configActions() {
@@ -56,6 +66,14 @@ public class EditableLabel extends HBox {
 
     public BooleanProperty editAbortedProperty() {
         return editAborted;
+    }
+
+    public ReadOnlyBooleanProperty tfFocusedProperty() {
+        return tf.focusedProperty();
+    }
+
+    public StringProperty textProperty() {
+        return tf.textProperty();
     }
 
 }
