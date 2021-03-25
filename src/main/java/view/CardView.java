@@ -10,6 +10,7 @@ import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -28,7 +29,7 @@ public class CardView extends BorderPane {
             btDown = new Button(),
             btLeft = new Button();
 
-    private final EditableLabel elTitle = new EditableLabel();
+    private final EditableLabel elTitle = new EditableLabel("el-card");
     private final CardViewModel cardViewModel;
     private final ObjectProperty<Direction> direction = new SimpleObjectProperty<>();
 
@@ -52,37 +53,26 @@ public class CardView extends BorderPane {
     }
 
     private void makeComponentsHierarchy() {
-        this.setTop(btUp);
-        this.setRight(btRight);
-        this.setBottom(btDown);
-        this.setLeft(btLeft);
-        this.setCenter(elTitle);
+        setTop(btUp);
+        setRight(btRight);
+        setBottom(btDown);
+        setLeft(btLeft);
+        setCenter(elTitle);
     }
 
     private void configStyles() {
-        configStyleBorderPane();
-        configStyleEditableLabel();
+        getStyleClass().add("card-bp");
         configButtons();
-    }
-
-    //  BORDER PANE
-
-    private void configStyleBorderPane() {
-        setStyle("-fx-padding: 2 ;-fx-border-color: #dddddd ;-fx-border-radius: 4; -fx-background-color: #ffffff");
-    }
-
-    //  EDITABLE LABEL
-
-    private void configStyleEditableLabel() {
-        elTitle.tf.setFont(Font.font("Arial", 14));
-        elTitle.tf.setStyle("-fx-background-color: #ffffff");
-        elTitle.tf.setPrefSize(160, 30);
-        elTitle.setMinWidth(70);
     }
 
     //  BUTTONS
 
     private void configButtons() {
+//        btRight.getStyleClass().addAll("bt", "bt-right");
+//        btLeft.getStyleClass().addAll("bt", "bt-left");
+//        btUp.getStyleClass().addAll("bt", "bt-up");
+//        btDown.getStyleClass().addAll("bt", "bt-down");
+
         Button[] buttons = {btLeft, btUp, btRight, btDown};
         String[] imgName = {"left.png", "up.png", "right.png", "down.png"};
 
@@ -113,9 +103,9 @@ public class CardView extends BorderPane {
     }
 
     private void configViewModelBindings() {
-        elTitle.tf.textProperty().bindBidirectional(cardViewModel.cardTitleViewProperty());
+        elTitle.textProperty().bindBidirectional(cardViewModel.cardTitleViewProperty());
         cardViewModel.bindEditAborted(elTitle.editAbortedProperty());
-        cardViewModel.focusedTitleBinding(elTitle.tf.focusedProperty());
+        cardViewModel.focusedTitleBinding(elTitle.tfFocusedProperty());
         cardViewModel.bindMoveDirection(direction);
     }
 
@@ -126,9 +116,10 @@ public class CardView extends BorderPane {
         btLeft.disableProperty().bind(cardViewModel.btLeftDisabledProperty());
     }
 
-    //  ACTIONS
+    // --- EventsHandling ---
 
     private void configEventsHandling() {
+
         Button[] buttons = {btLeft, btUp, btRight, btDown};
         Direction[] directions = {Direction.LEFT, Direction.UP, Direction.RIGHT, Direction.DOWN};
 
@@ -138,8 +129,9 @@ public class CardView extends BorderPane {
                 )
         );
 
+        var contextMenu = getContextMenu();
+
         setOnContextMenuRequested(e -> {
-            var contextMenu = getContextMenu();
             contextMenu.show(this, e.getScreenX(), e.getScreenY());
             e.consume();
         });
@@ -147,11 +139,12 @@ public class CardView extends BorderPane {
 
     private ContextMenu getContextMenu() {
         ContextMenu contextMenu = new ContextMenu();
-        MenuItem delete = new MenuItem("Delete " + elTitle.tf.getText());
+        MenuItem delete = new MenuItem("Delete " + elTitle.textProperty().get());
         delete.setOnAction(e -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setHeaderText(null);
-            alert.setContentText("Delete " + elTitle.tf.getText() + " ?");
+            alert.setContentText("Delete " + elTitle.textProperty().get() + " ?");
+
             Optional<ButtonType> action = alert.showAndWait();
 
             if(action.isPresent() && action.get() == ButtonType.OK) {

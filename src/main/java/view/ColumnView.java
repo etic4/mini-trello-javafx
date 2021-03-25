@@ -1,6 +1,11 @@
 package view;
 
+import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ObservableIntegerValue;
+import javafx.collections.ObservableArray;
 import javafx.geometry.Pos;
 import direction.Direction;
 import javafx.beans.property.ObjectProperty;
@@ -11,6 +16,7 @@ import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -23,16 +29,18 @@ import java.util.Optional;
 import java.util.stream.IntStream;
 
 public class ColumnView extends VBox {
-    private static final int CARD_CELL_HEIGHT = 100;
+    private static final int LIST_CELL_HEIGHT = 116;
 
     private final HBox hbHeader = new HBox();
     private final Button
             btLeft = new Button(),
             btRight = new Button();
 
-    private final EditableLabel elTitle = new EditableLabel();
+    private final EditableLabel elTitle = new EditableLabel("el-column");
     private final ListView<Card> lvCards = new ListView<>();
     private final ColumnViewModel columnViewModel;
+
+    private final IntegerProperty nbrItems = new SimpleIntegerProperty();
     private final ObjectProperty<Direction> direction = new SimpleObjectProperty<>();
 
 
@@ -40,9 +48,11 @@ public class ColumnView extends VBox {
 
     public ColumnView(ColumnViewModel columnViewModel) {
         this.columnViewModel = columnViewModel;
+//        lvCards.setPrefHeight(1);
         buildGraphicComponents();
         configBindings();
         configActions();
+
     }
 
     ColumnView(Column column) {
@@ -63,27 +73,24 @@ public class ColumnView extends VBox {
     }
 
     private void configStyles() {
-        configStyleVBox();
-        configStyleHeader();
+        getStyleClass().add("col-vbox");
+        hbHeader.getStyleClass().add("col-header");
+        lvCards.getStyleClass().add("lv-cards");
+        HBox.setHgrow(elTitle, Priority.ALWAYS);
+
+//        lvCards.setPrefHeight(lvCards.getItems().size() * LIST_CELL_HEIGHT);
+        lvCards.prefHeightProperty().bind(Bindings.multiply(nbrItems, LIST_CELL_HEIGHT).add(10));
         configStyleButtons();
-        configStyleEditableLabel();
-        configStyleListView();
     }
 
-    //  VBOX
 
-    private void configStyleVBox() {
-        setStyle("-fx-border-color: #dddddd;");
-        VBox.setVgrow(lvCards, Priority.ALWAYS);
-    }
-
-    private void configStyleHeader() {
-        hbHeader.setStyle("-fx-background-color: #fcfcfc");
-        elTitle.tf.setStyle("-fx-background-color: #fcfcfc");
-    }
     //  BUTTONS
 
     private void configStyleButtons() {
+//        btRight.getStyleClass().addAll("bt", "bt-right");
+//        btLeft.getStyleClass().addAll("bt", "bt-left");
+
+
         Button[] buttons = {btLeft, btRight};
         String[] imgName = {"left.png", "right.png"};
 
@@ -107,23 +114,7 @@ public class ColumnView extends VBox {
         });
     }
 
-    //  EDITABLE LABEL
-
-    private void configStyleEditableLabel() {
-        elTitle.tf.setFont(Font.font("Arial", FontWeight.BOLD, 14));
-        elTitle.tf.setStyle("-fx-background-color: #fcfcfc");
-        elTitle.setPrefHeight(40);
-        elTitle.setMinWidth(190);
-        elTitle.setPadding(new Insets(3, 0, 0, 0));
-        elTitle.setAlignment(Pos.CENTER);
-        HBox.setHgrow(elTitle, Priority.ALWAYS);
-    }
-
     //   LISTVIEW
-
-    private void configStyleListView() {
-        lvCards.setStyle("-fx-background-color: #fcfcfc; -fx-background-insets: 0; -fx-padding: 0;");
-    }
 
     private void configCardFactory() {
         lvCards.setCellFactory(columnView -> new ListCell<>(){
@@ -131,15 +122,18 @@ public class ColumnView extends VBox {
             protected void updateItem(Card card, boolean empty) {
                 super.updateItem(card, empty);
                 CardView cardView = null;
+
                 if (card != null) {
                     cardView = new CardView(card);
                 }
-                setStyle("-fx-background-color: #fcfcfc");
+
                 setGraphic(cardView);
+
+                // Mettre à jour la taille de la liste pour mettre à jour la taille de la listeView
+                nbrItems.set(lvCards.getItems().size());
             }
         });
     }
-
 
     //   BINDINGS
 
@@ -147,11 +141,12 @@ public class ColumnView extends VBox {
         configDataBindings();
         configViewModelBindings();
         configDisableBindings();
+
     }
 
     private void configDataBindings() {
-        elTitle.tf.textProperty().bindBidirectional(columnViewModel.columnTitleProperty());
-        columnViewModel.focusedTitleBinding(elTitle.tf.focusedProperty());
+        elTitle.textProperty().bindBidirectional(columnViewModel.columnTitleProperty());
+        columnViewModel.focusedTitleBinding(elTitle.tfFocusedProperty());
         columnViewModel.bindEditAborted(elTitle.editAbortedProperty());
 
         lvCards.itemsProperty().bind(columnViewModel.cardsListProperty());
@@ -159,7 +154,6 @@ public class ColumnView extends VBox {
 
     private void configViewModelBindings() {
         columnViewModel.directionBinding(direction);
-        columnViewModel.selectedColumnBinding(lvCards.getSelectionModel().selectedIndexProperty());
     }
 
     private void configDisableBindings() {
@@ -181,15 +175,21 @@ public class ColumnView extends VBox {
     }
 
     private void configMouseEvents() {
-        lvCards.setOnMouseClicked(e -> {
+        setOnMouseClicked(e -> {
             if (e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2) {
                 columnViewModel.addCard();
                 e.consume();
             }
         });
 
-        lvCards.setOnContextMenuRequested(e -> {
-            var contextMenu = getContextMenu();
+        var contextMenu = getContextMenu();
+
+        hbHeader.setOnContextMenuRequested(e -> {
+            contextMenu.show(hbHeader, e.getScreenX(), e.getScreenY());
+            e.consume();
+        });
+
+        setOnContextMenuRequested(e -> {
             contextMenu.show(lvCards, e.getScreenX(), e.getScreenY());
             e.consume();
         });
@@ -197,11 +197,12 @@ public class ColumnView extends VBox {
 
     private ContextMenu getContextMenu() {
         ContextMenu contextMenu = new ContextMenu();
-        MenuItem delete = new MenuItem("Delete " + elTitle.tf.getText());
+        MenuItem delete = new MenuItem("Delete " + elTitle.textProperty().get());
         delete.setOnAction(e -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setHeaderText(null);
-            alert.setContentText("Delete " + elTitle.tf.getText() + " ?");
+            alert.setContentText("Delete " + elTitle.textProperty().get() + " ?");
+
             Optional<ButtonType> action = alert.showAndWait();
 
             if(action.isPresent() && action.get() == ButtonType.OK) {
@@ -210,11 +211,6 @@ public class ColumnView extends VBox {
         });
         contextMenu.getItems().add(delete);
         return contextMenu;
-    }
-
-
-    private Card selectedCard() {
-        return lvCards.getSelectionModel().getSelectedItem();
     }
 
 }

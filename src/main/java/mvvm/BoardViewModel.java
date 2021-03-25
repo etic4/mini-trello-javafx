@@ -15,9 +15,6 @@ public class BoardViewModel {
             boardTitleView = new SimpleStringProperty(),
             boardTitleModel = new SimpleStringProperty();
 
-    private final IntegerProperty
-            selectedColumn = new SimpleIntegerProperty();
-
     private final BooleanProperty
             focusedTitle = new SimpleBooleanProperty(),
             titleEditAborted = new SimpleBooleanProperty();
@@ -74,17 +71,8 @@ public class BoardViewModel {
         return columnsList;
     }
 
-    public void focusedTitleBinding(ReadOnlyBooleanProperty readOnlyBooleanProperty) {
+    public void bindFfocusedTitle(ReadOnlyBooleanProperty readOnlyBooleanProperty) {
         focusedTitle.bind(readOnlyBooleanProperty);
-    }
-
-    private Column getColumn() {
-        int index = selectedColumn.get();
-        return index == -1 ? null : columnsListProperty().get(index);
-    }
-
-    public void selectedColumnBinding(ReadOnlyIntegerProperty integerProperty) {
-        selectedColumn.bind(integerProperty);
     }
 
 
@@ -97,13 +85,5 @@ public class BoardViewModel {
 
     public void addColumn() {
         CommandManager.getInstance().execute(new CreateColumnCommand(boardFacade));
-    }
-
-    public void delete() {
-        Column column = getColumn();
-
-        if(column != null) {
-            CommandManager.getInstance().execute(new DeleteColumnCommand(column, boardFacade));
-        }
     }
 }

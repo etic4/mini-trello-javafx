@@ -13,7 +13,6 @@ public class ColumnViewModel {
             columnTitleView = new SimpleStringProperty(),
             columnTitleModel = new SimpleStringProperty();
 
-    private final IntegerProperty selectedCard = new SimpleIntegerProperty();
     private final ObjectProperty<Direction> direction = new SimpleObjectProperty<>();
     private final BooleanProperty
             focusedTitle = new SimpleBooleanProperty(),
@@ -84,9 +83,6 @@ public class ColumnViewModel {
 
     //   BINDINGS
 
-    public void selectedColumnBinding(ReadOnlyIntegerProperty integerProperty) {
-        selectedCard.bind(integerProperty);
-    }
 
     public void directionBinding(ObjectProperty<Direction> direction) {
         this.direction.bind(direction);
@@ -100,7 +96,7 @@ public class ColumnViewModel {
         this.titleEditAborted.bind(titleEditAborted);
     }
 
-    //   ADD & DELETE
+    // --- Commandes ---
 
     public void addCard() {
         CommandManager.getInstance().execute(new CreateCardCommand(column, boardFacade));
@@ -108,11 +104,6 @@ public class ColumnViewModel {
 
     public void delete() {
         CommandManager.getInstance().execute(new DeleteColumnCommand(column, boardFacade));
-    }
-
-    private Card getCard() {
-        int index = selectedCard.get();
-        return index == -1 ? null : cardsListProperty().get(index);
     }
 
 }
