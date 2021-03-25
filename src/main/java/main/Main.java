@@ -13,8 +13,8 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         TrelloFacade trelloFacade = new TrelloFacade();
-        TrelloViewModel trelloViewModel = new TrelloViewModel(trelloFacade);
-        TrelloView trelloView = new TrelloView(primaryStage, trelloViewModel);
+        TrelloViewModel.init(trelloFacade);
+        TrelloView trelloView = new TrelloView(primaryStage);
         primaryStage.show();
     }
 

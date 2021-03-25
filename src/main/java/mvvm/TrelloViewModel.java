@@ -1,21 +1,50 @@
 package mvvm;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.*;
+import javafx.beans.value.ObservableValue;
+import model.Column;
 import mvvm.command.Command;
 import mvvm.command.CommandManager;
+import mvvm.command.CreateCardCommand;
 import mvvm.command.CreateColumnCommand;
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.StringProperty;
 import model.BoardFacade;
 import model.TrelloFacade;
 
+/* Cette classe est "une sorte de singleton" qui est paramétré
+lors de l'appel à TrelloViewModel.init(). L'instance peut ensuite être obtenue avec un getInstance();
+Permet de binder tout ce qu'on veut depuis d'autres instance de ViewModel, principalement pour gérer des actions
+de menus
+Est-ce correct de faire ça ? Est-ce que c'est toujours un singleton ?
+*/
 public class TrelloViewModel {
+    public static TrelloViewModel instance = null;
+
     private final TrelloFacade trelloFacade;
     private final CommandManager commandManager;
+    private final BooleanProperty noColumnSelected = new SimpleBooleanProperty(false);
+    private final ObjectProperty<Column> selectedColumn = new SimpleObjectProperty<>();
 
-    public TrelloViewModel(TrelloFacade trelloFacade) {
+    public static void init(TrelloFacade trelloFacade) {
+        if (instance != null) {
+            throw new RuntimeException("TrelloViewModel a déjà été initialisé !");
+        }
+        instance = new TrelloViewModel(trelloFacade);
+    }
+
+    public static TrelloViewModel getInstance() {
+        if (instance == null) {
+            throw new RuntimeException("TrelloViewModel n'a pas encore été initialisé !");
+        }
+        return instance;
+    }
+
+
+    private TrelloViewModel(TrelloFacade trelloFacade) {
         this.trelloFacade = trelloFacade;
-        this.commandManager = CommandManager.getInstance();
+        commandManager = CommandManager.getInstance();
+        noColumnSelected.bind(Bindings.isNull(selectedColumn));
     }
 
     public BoardFacade getBoardFacade() {
@@ -31,7 +60,11 @@ public class TrelloViewModel {
     }
 
     public void commandCreateColumn() {
-        CommandManager.getInstance().execute(new CreateColumnCommand(this.getBoardFacade()));
+        CommandManager.getInstance().execute(new CreateColumnCommand(getBoardFacade()));
+    }
+
+    public void commandCreateCard() {
+        CommandManager.getInstance().execute(new CreateCardCommand(selectedColumn.get(), getBoardFacade()));
     }
 
     public void quit() {
@@ -53,4 +86,13 @@ public class TrelloViewModel {
     public BooleanProperty hasNoRedoableProperty() {
         return commandManager.hasNoRedoableProperty();
     }
+
+    public void bindSelectedColumn(ReadOnlyObjectProperty<Column> selectedColumnProperty) {
+        selectedColumn.bind(selectedColumnProperty);
+    }
+
+    public ReadOnlyBooleanProperty noColumnSelectedProperty() {
+        return noColumnSelected;
+    }
+
 }

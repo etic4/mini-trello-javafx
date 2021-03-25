@@ -96,8 +96,9 @@ public class BoardView extends VBox {
         elTitle.tf.textProperty().bindBidirectional(boardViewModel.boardTitleProperty());
         lvColumns.itemsProperty().bindBidirectional(boardViewModel.columnsListProperty());
         boardViewModel.bindEditAborted(elTitle.editAbortedProperty());
-        boardViewModel.selectedColumnBinding(lvColumns.getSelectionModel().selectedIndexProperty());
-        boardViewModel.focusedTitleBinding(elTitle.tf.focusedProperty());
+        boardViewModel.bindFfocusedTitle(elTitle.tfFocusedProperty());
+
+        TrelloViewModel.getInstance().bindSelectedColumn(lvColumns.getSelectionModel().selectedItemProperty());
     }
 
     // CONFIG MOUSE EVENT
