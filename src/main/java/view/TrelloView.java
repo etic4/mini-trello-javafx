@@ -1,7 +1,5 @@
 package view;
 
-import mvvm.command.CommandManager;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -23,8 +21,8 @@ public class TrelloView extends VBox {
     private MenuBar menuBar;
 
 
-    public TrelloView(Stage primaryStage, TrelloViewModel trelloViewModel) {
-        this.trelloViewModel = trelloViewModel;
+    public TrelloView(Stage primaryStage) {
+        trelloViewModel = TrelloViewModel.getInstance();
         Scene scene = new Scene(this);
 
         //config stage
@@ -32,6 +30,8 @@ public class TrelloView extends VBox {
         primaryStage.setScene(scene);
         primaryStage.setMinWidth(1000);
         primaryStage.setMinHeight(750);
+
+        scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
 
         build();
 
@@ -52,44 +52,7 @@ public class TrelloView extends VBox {
     }
 
     private void buildMainMenuBar() {
-        menuBar = new MenuBar();
-
-        // Menu fichier
-
-        Menu fileMenu = new Menu("Fichier");
-        
-        var createColumn = new MenuItem("Nouvelle Colonne");
-        createColumn.setOnAction(e -> trelloViewModel.commandCreateColumn());
-        createColumn.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN));
-
-        var quit = new MenuItem("Quitter");
-        quit.setOnAction(e -> trelloViewModel.quit());
-        quit.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.CONTROL_DOWN));
-
-        fileMenu.getItems().add(createColumn);
-        fileMenu.getItems().add(quit);
-
-        // Menu edition
-
-        Menu editionMenu = new Menu("Edition");
-        
-        var undo = new MenuItem("Annuler");
-        undo.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN));
-        undo.textProperty().bind(trelloViewModel.nextUndoableProperty());
-        undo.disableProperty().bind(trelloViewModel.hasNoUndoableProperty());
-        undo.setOnAction(e -> trelloViewModel.undo());
-        
-        var redo = new MenuItem("Refaire");
-        redo.setAccelerator(new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN));
-        redo.textProperty().bind(trelloViewModel.nextRedoableProperty());
-        redo.disableProperty().bind(trelloViewModel.hasNoRedoableProperty());
-        redo.setOnAction(e -> trelloViewModel.redo());
-        
-        editionMenu.getItems().add(undo);
-        editionMenu.getItems().add(redo);
-        
-        // Menu bar
-        menuBar.getMenus().addAll(fileMenu, editionMenu);
+        menuBar = new TrelloMenuBar(trelloViewModel);
     }
 
     private void makeComponentsHierarchy() {
@@ -97,10 +60,7 @@ public class TrelloView extends VBox {
     }
 
     private void configStylesVBow() {
-        BackgroundFill backgroundFill = new BackgroundFill(BACKGROUND_COLOR, null, Insets.EMPTY);
-        Background background = new Background(backgroundFill);
-        setBackground(background);
-        setPrefSize(1000, 750);
+        setId("vb-trello");
         setVgrow(boardView, Priority.ALWAYS);
     }
 }
