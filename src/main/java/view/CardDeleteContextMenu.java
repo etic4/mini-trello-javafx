@@ -1,13 +1,13 @@
 package view;
 
 import mvvm.CardViewModel;
-import view.common.BaseContextMenu;
+import view.common.BaseDeleteContextMenu;
 
 
-public class CardContextMenu extends BaseContextMenu {
+public class CardDeleteContextMenu extends BaseDeleteContextMenu {
     private final CardViewModel cardViewModel;
 
-    public CardContextMenu(CardViewModel cardViewModel, String title) {
+    public CardDeleteContextMenu(CardViewModel cardViewModel, String title) {
         super(title);
         this.cardViewModel = cardViewModel;
     }

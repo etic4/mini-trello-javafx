@@ -115,7 +115,7 @@ public class ColumnView extends VBox {
         });
 
         // context menu
-        var contextMenu = new ColumnContextMenu(columnViewModel, elTitle.textProperty().get());
+        var contextMenu = new ColumnDeleteContextMenu(columnViewModel, elTitle.textProperty().get());
         hbHeader.setOnContextMenuRequested(e -> {
             contextMenu.show(hbHeader, e.getScreenX(), e.getScreenY());
             e.consume();

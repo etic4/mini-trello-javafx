@@ -82,7 +82,7 @@ public class CardView extends BorderPane {
         }
 
         // set context menu
-        var contextMenu = new CardContextMenu(cardViewModel, elTitle.textProperty().get());
+        var contextMenu = new CardDeleteContextMenu(cardViewModel, elTitle.textProperty().get());
 
         setOnContextMenuRequested(e -> {
             contextMenu.show(this, e.getScreenX(), e.getScreenY());

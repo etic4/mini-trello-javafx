@@ -1,8 +1,6 @@
 package view.common;
 
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContextMenu;
@@ -10,14 +8,17 @@ import javafx.scene.control.MenuItem;
 
 import java.util.Optional;
 
-/* Base context menu, un seul élément actuellement, pourrait donc s'appeller BaseDeleteContextMenu,
+/* Base context menu, comporte un seul élément actuellement, pourrait donc s'appeler BaseDeleteContextMenu,
 * Mais ça me semble exagérément spécifique
 * */
 
-public abstract class BaseContextMenu extends ContextMenu {
+public abstract class BaseDeleteContextMenu extends ContextMenu {
+    // title's object
     private final String title;
 
-    public BaseContextMenu(String title) {
+    protected abstract void executeDeleteCommand();
+
+    public BaseDeleteContextMenu(String title) {
         super();
         this.title = title;
         buildMenu();
@@ -30,11 +31,11 @@ public abstract class BaseContextMenu extends ContextMenu {
 
     private void buildMenuDelete() {
         MenuItem delete = new MenuItem("Delete " + title);
-        delete.setOnAction(e -> askDeleteConfirmation());
+        delete.setOnAction(e -> askDeleteConfirmationAndDo());
         getItems().add(delete);
     }
 
-    private void askDeleteConfirmation() {
+    private void askDeleteConfirmationAndDo() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setHeaderText(null);
         alert.setContentText("Delete " + title + " ?");
@@ -45,7 +46,5 @@ public abstract class BaseContextMenu extends ContextMenu {
             executeDeleteCommand();
         }
     }
-
-    protected abstract void executeDeleteCommand();
 }
 

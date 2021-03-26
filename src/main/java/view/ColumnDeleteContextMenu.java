@@ -1,12 +1,12 @@
 package view;
 
 import mvvm.ColumnViewModel;
-import view.common.BaseContextMenu;
+import view.common.BaseDeleteContextMenu;
 
-public class ColumnContextMenu extends BaseContextMenu {
+public class ColumnDeleteContextMenu extends BaseDeleteContextMenu {
     private final ColumnViewModel cardViewModel;
 
-    public ColumnContextMenu(ColumnViewModel cardViewModel, String title) {
+    public ColumnDeleteContextMenu(ColumnViewModel cardViewModel, String title) {
         super(title);
         this.cardViewModel = cardViewModel;
     }
