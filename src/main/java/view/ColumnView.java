@@ -182,8 +182,8 @@ public class ColumnView extends VBox {
             }
         });
 
-        var contextMenu = getContextMenu();
-
+        // context menu
+        var contextMenu = new ColumnContextMenu(columnViewModel, elTitle.textProperty().get());
         hbHeader.setOnContextMenuRequested(e -> {
             contextMenu.show(hbHeader, e.getScreenX(), e.getScreenY());
             e.consume();
@@ -194,23 +194,4 @@ public class ColumnView extends VBox {
             e.consume();
         });
     }
-
-    private ContextMenu getContextMenu() {
-        ContextMenu contextMenu = new ContextMenu();
-        MenuItem delete = new MenuItem("Delete " + elTitle.textProperty().get());
-        delete.setOnAction(e -> {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setHeaderText(null);
-            alert.setContentText("Delete " + elTitle.textProperty().get() + " ?");
-
-            Optional<ButtonType> action = alert.showAndWait();
-
-            if(action.isPresent() && action.get() == ButtonType.OK) {
-                columnViewModel.delete();
-            }
-        });
-        contextMenu.getItems().add(delete);
-        return contextMenu;
-    }
-
 }

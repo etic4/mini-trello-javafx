@@ -123,35 +123,12 @@ public class CardView extends BorderPane {
         Button[] buttons = {btLeft, btUp, btRight, btDown};
         Direction[] directions = {Direction.LEFT, Direction.UP, Direction.RIGHT, Direction.DOWN};
 
-        IntStream.range(0, 4).forEach(i ->
-                buttons[i].setOnAction(e ->
-                        direction.set(directions[i])
-                )
-        );
-
-        var contextMenu = getContextMenu();
+        // set context menu
+        var contextMenu = new CardContextMenu(cardViewModel, elTitle.textProperty().get());
 
         setOnContextMenuRequested(e -> {
             contextMenu.show(this, e.getScreenX(), e.getScreenY());
             e.consume();
         });
-    }
-
-    private ContextMenu getContextMenu() {
-        ContextMenu contextMenu = new ContextMenu();
-        MenuItem delete = new MenuItem("Delete " + elTitle.textProperty().get());
-        delete.setOnAction(e -> {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setHeaderText(null);
-            alert.setContentText("Delete " + elTitle.textProperty().get() + " ?");
-
-            Optional<ButtonType> action = alert.showAndWait();
-
-            if(action.isPresent() && action.get() == ButtonType.OK) {
-                cardViewModel.delete();
-            }
-        });
-        contextMenu.getItems().add(delete);
-        return contextMenu;
     }
 }
