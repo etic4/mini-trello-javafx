@@ -9,15 +9,7 @@ import model.BoardFacade;
 
 public class ColumnViewModel {
 
-    private final StringProperty
-            columnTitleView = new SimpleStringProperty(),
-            columnTitleModel = new SimpleStringProperty();
-
-    private final ObjectProperty<Direction> direction = new SimpleObjectProperty<>();
-    private final BooleanProperty
-            focusedTitle = new SimpleBooleanProperty(),
-            titleEditAborted = new SimpleBooleanProperty();
-
+    private final StringProperty columnTitleView = new SimpleStringProperty();
     private final Column column;
     private final BoardFacade boardFacade;
 
@@ -25,85 +17,47 @@ public class ColumnViewModel {
     public ColumnViewModel(Column column) {
         this.column = column;
         boardFacade = new BoardFacade(column);
-        columnTitleModel.bind(column.titleProperty());
+
+        // set title view binded property to column title
         columnTitleView.set(column.getTitle());
 
-        configListeners();
+        // set title view binding on model value if changed
+        column.titleProperty().addListener((o, oldVal, newVal) -> columnTitleView.set(column.getTitle()));
     }
 
-
-    //   LISTENERS
-
-    private void configListeners() {
-        addMoveListener();
-        addTitleListener();
-    }
-
-    private void addMoveListener() {
-        direction.addListener((obj, oldVal, direction) -> {
-            CommandManager.getInstance().execute(new MoveColumnCommand(column, direction, boardFacade));
-            }
-        );
-    }
-
-    private void addTitleListener() {
-        focusedTitle.addListener((a, oldValue, newValue) -> {
-            if (!newValue && !column.getTitle().equals(columnTitleView.get())) {
-                CommandManager.getInstance().execute(new EditTitleCommand<>(column, columnTitleView.get(), boardFacade));
-            }
-        });
-
-        titleEditAborted.addListener((a, oldValue, newValue) -> {
-            if(newValue) {
-                columnTitleView.set(column.getTitle());
-            }
-        });
-
-        columnTitleModel.addListener((o, oldVal, newVal) -> columnTitleView.set(column.getTitle()));
-    }
-
-    //   PROPERTIES
-
-    public ListProperty<Card> cardsListProperty() {
-        return new SimpleListProperty<>(boardFacade.getCards(column));
-    }
 
     public StringProperty columnTitleProperty() {
         return columnTitleView;
     }
 
-    public BooleanProperty btRightDisabledProperty() {
+    public ListProperty<Card> cardsListProperty() {
+        return new SimpleListProperty<>(boardFacade.getCards(column));
+    }
+
+    public ReadOnlyBooleanProperty btRightDisabledProperty() {
         return column.isLastProperty();
     }
 
-    public BooleanProperty btLeftDisabledProperty() {
+    public ReadOnlyBooleanProperty btLeftDisabledProperty() {
         return column.isFirstProperty();
     }
 
 
-    //   BINDINGS
-
-
-    public void directionBinding(ObjectProperty<Direction> direction) {
-        this.direction.bind(direction);
-    }
-
-    public void focusedTitleBinding(ReadOnlyBooleanProperty readOnlyBooleanProperty) {
-        focusedTitle.bind(readOnlyBooleanProperty);
-    }
-
-    public void bindEditAborted(BooleanProperty titleEditAborted) {
-        this.titleEditAborted.bind(titleEditAborted);
-    }
-
-    // --- Commandes ---
+    // --- Commands ---
 
     public void addCard() {
         CommandManager.getInstance().execute(new CreateCardCommand(column, boardFacade));
     }
 
-    public void delete() {
+    public void deleteColumn() {
         CommandManager.getInstance().execute(new DeleteColumnCommand(column, boardFacade));
     }
 
+    public void moveColumn(Direction direction) {
+        CommandManager.getInstance().execute(new MoveColumnCommand(column, direction, boardFacade));
+    }
+
+    public void setTitle(String title) {
+        CommandManager.getInstance().execute(new EditTitleCommand<>(column, columnTitleView.get(), boardFacade));
+    }
 }

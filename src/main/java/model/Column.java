@@ -1,6 +1,6 @@
 package model;
 
-import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
 
@@ -38,11 +38,11 @@ public class Column extends EntitledContainer<Card> implements History {
         getBoard().remove(this);
     }
 
-    public BooleanProperty isFirstProperty() {
+    public ReadOnlyBooleanProperty isFirstProperty() {
         return new SimpleBooleanProperty(getBoard().isFirst(this));
     }
 
-    public BooleanProperty isLastProperty() {
+    public ReadOnlyBooleanProperty isLastProperty() {
         return new SimpleBooleanProperty(getBoard().isLast(this));
     }
 

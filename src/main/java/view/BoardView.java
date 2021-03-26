@@ -1,11 +1,13 @@
 package view;
 
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import model.Column;
 import mvvm.BoardViewModel;
 import mvvm.TrelloViewModel;
+import view.common.EditableLabel;
 
 public class BoardView extends VBox {
     private final EditableLabel elTitle = new EditableLabel();
@@ -15,31 +17,28 @@ public class BoardView extends VBox {
 
     public BoardView(BoardViewModel boardViewModel) {
         this.boardViewModel = boardViewModel;
-        build();
+        buildView();
     }
 
-    public void build() {
-        buildGraphicComponents();
-        configBindings();
-        configActions();
-    }
 
-    public void buildGraphicComponents() {
-        makeComponentsHierarchy();
-        configStyles();
+    public void buildView() {
+        configGraphicComponents();
         configColumnFactory();
+        configBindings();
+        configEventsHandling();
     }
 
-    //  CONFIG GRAPHIC COMPONENTS
 
-    public void makeComponentsHierarchy() {
-        getChildren().addAll(elTitle, lvColumns);
-    }
-
-    public void configStyles() {
-        VBox.setVgrow(lvColumns, Priority.ALWAYS);
+    public void configGraphicComponents() {
+        // set styles classes and ids
         elTitle.setTextFieldId("el-title");
         lvColumns.getStyleClass().add("lv-columns");
+
+        // components hierarchy
+        getChildren().addAll(elTitle, lvColumns);
+
+        // grow priority
+        VBox.setVgrow(lvColumns, Priority.ALWAYS);
     }
 
 
@@ -48,36 +47,33 @@ public class BoardView extends VBox {
             @Override
             protected void updateItem(Column column, boolean empty) {
                 super.updateItem(column, empty);
+
                 ColumnView columnView = null;
                 if (column != null) {
                     columnView = new ColumnView(column);
-
                 }
                 setGraphic(columnView);
             }
         });
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    //  CONFIG BINDINGS & LISTENERS
 
     private void configBindings() {
         elTitle.textProperty().bindBidirectional(boardViewModel.boardTitleProperty());
-        lvColumns.itemsProperty().bindBidirectional(boardViewModel.columnsListProperty());
-        boardViewModel.bindEditAborted(elTitle.editAbortedProperty());
-        boardViewModel.bindFfocusedTitle(elTitle.tfFocusedProperty());
 
+        lvColumns.itemsProperty().bindBidirectional(boardViewModel.columnsListProperty());
+
+        // binding pour obtenir la colonne sélectionnée dans menu principal
         TrelloViewModel.getInstance().bindSelectedColumn(lvColumns.getSelectionModel().selectedItemProperty());
     }
 
-    // CONFIG MOUSE EVENT
 
-    private void configActions() {
-        configMouseEvents();
-    }
+    private void configEventsHandling() {
+        // Title text changed
+        elTitle.addEventHandler(EditableLabel.TEXT_CHANGED, e -> {
+            boardViewModel.setTitle(elTitle.getText());
+        });
 
-    private void configMouseEvents() {
         lvColumns.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
                 boardViewModel.addColumn();

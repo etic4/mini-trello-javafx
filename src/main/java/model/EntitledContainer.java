@@ -2,9 +2,11 @@ package model;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
 import java.util.Collections;
 
+/*
+* Un container qui étend Entitled
+* */
 public abstract class EntitledContainer<E> extends Entitled {
     private final ObservableList<E> movables = FXCollections.observableArrayList();
 

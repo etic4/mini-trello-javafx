@@ -1,7 +1,7 @@
 package model;
 
-
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
 
@@ -14,7 +14,7 @@ public class Card extends Entitled implements History {
         this.column = column;
         column.add(this);
 
-        if (this.getTitle().equals("")) {
+        if (getTitle().equals("")) {
             setTitle("Card " + column.size());
         }
     }
@@ -75,19 +75,19 @@ public class Card extends Entitled implements History {
         getColumn().remove(this);
     }
 
-    public BooleanProperty isFirstProperty() {
+    public ReadOnlyBooleanProperty isFirstProperty() {
         return new SimpleBooleanProperty(getColumn().isFirst(this));
     }
 
-    public BooleanProperty isLastProperty() {
+    public ReadOnlyBooleanProperty isLastProperty() {
         return new SimpleBooleanProperty(getColumn().isLast(this));
     }
 
-    public BooleanProperty isColumnFirstProperty() {
+    public ReadOnlyBooleanProperty isColumnFirstProperty() {
         return getColumn().isFirstProperty();
     }
 
-    public BooleanProperty isColumnLastProperty() {
+    public ReadOnlyBooleanProperty isColumnLastProperty() {
         return getColumn().isLastProperty();
     }
 

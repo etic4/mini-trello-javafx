@@ -8,19 +8,8 @@ import model.BoardFacade;
 
 public class BoardViewModel {
 
-    private final ListProperty<Column>
-            columnsList = new SimpleListProperty<>();
-
-    private final StringProperty
-            boardTitleView = new SimpleStringProperty(),
-            boardTitleModel = new SimpleStringProperty();
-
-    private final BooleanProperty
-            focusedTitle = new SimpleBooleanProperty(),
-            titleEditAborted = new SimpleBooleanProperty();
-
+    private final StringProperty boardTitleView = new SimpleStringProperty();
     private final Board board;
-
     private final BoardFacade boardFacade;
 
 
@@ -29,59 +18,28 @@ public class BoardViewModel {
     public BoardViewModel(BoardFacade boardFacade) {
         this.boardFacade = boardFacade;
         board = boardFacade.getBoard();
-        boardTitleModel.bind(board.titleProperty());
+
+        // set title view binded property tot board title
         boardTitleView.set(board.getTitle());
-        setColumnsList();
-        addTitleListener();
+
+        // set title view binding on model value if changed
+        board.titleProperty().addListener((o, oldVal, newVal) -> boardTitleView.set(board.getTitle()));
     }
 
-    //   SETTER
-
-    private void setColumnsList() {
-        columnsList.set(boardFacade.getColumns(board));
-    }
-
-
-    //   LISTENER
-
-    private void addTitleListener() {
-        focusedTitle.addListener((a, oldValue, newValue) -> {
-            if (!newValue && !board.getTitle().equals(boardTitleView.get())) {
-                CommandManager.getInstance().execute(new EditTitleCommand<>(board, boardTitleView.get(), boardFacade));
-            }
-        });
-
-        titleEditAborted.addListener((a, oldValue, newValue) -> {
-            if(newValue) {
-                boardTitleView.set(board.getTitle());
-            }
-        });
-
-        boardTitleModel.addListener((o, oldVal, newVal) -> boardTitleView.set(board.getTitle()));
-    }
-
-
-    //  PROPERTIES
 
     public StringProperty boardTitleProperty() {
         return boardTitleView;
     }
 
     public ListProperty<Column> columnsListProperty() {
-        return columnsList;
+        return new SimpleListProperty<>(boardFacade.getColumns(board));
     }
 
-    public void bindFfocusedTitle(ReadOnlyBooleanProperty readOnlyBooleanProperty) {
-        focusedTitle.bind(readOnlyBooleanProperty);
+    // --- commands ---
+
+    public void setTitle(String title) {
+        CommandManager.getInstance().execute(new EditTitleCommand<>(board, title, boardFacade));
     }
-
-
-    public void bindEditAborted(BooleanProperty titleEditAborted) {
-        this.titleEditAborted.bind(titleEditAborted);
-    }
-
-
-    //   ACTIONS
 
     public void addColumn() {
         CommandManager.getInstance().execute(new CreateColumnCommand(boardFacade));

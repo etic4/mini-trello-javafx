@@ -2,9 +2,7 @@ package mvvm;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
-import javafx.beans.value.ObservableValue;
 import model.Column;
-import mvvm.command.Command;
 import mvvm.command.CommandManager;
 import mvvm.command.CreateCardCommand;
 import mvvm.command.CreateColumnCommand;
@@ -18,6 +16,7 @@ Permet de binder tout ce qu'on veut depuis d'autres instance de ViewModel, princ
 de menus
 Est-ce correct de faire ça ? Est-ce que c'est toujours un singleton ?
 */
+
 public class TrelloViewModel {
     public static TrelloViewModel instance = null;
 
@@ -67,23 +66,23 @@ public class TrelloViewModel {
         CommandManager.getInstance().execute(new CreateCardCommand(selectedColumn.get(), getBoardFacade()));
     }
 
-    public void quit() {
+    public void commandQuit() {
         Platform.exit();
     }
 
     public StringProperty nextUndoableProperty() {
-        return commandManager.nextUndoableProperty();
+        return commandManager.nextUndoableStringProperty();
     }
 
     public StringProperty nextRedoableProperty() {
-        return commandManager.nextRedoableProperty();
+        return commandManager.nextRedoableStringProperty();
     }
 
-    public BooleanProperty hasNoUndoableProperty() {
+    public ReadOnlyBooleanProperty hasNoUndoableProperty() {
         return commandManager.hasNoUndoableProperty();
     }
 
-    public BooleanProperty hasNoRedoableProperty() {
+    public ReadOnlyBooleanProperty hasNoRedoableProperty() {
         return commandManager.hasNoRedoableProperty();
     }
 
@@ -94,5 +93,4 @@ public class TrelloViewModel {
     public ReadOnlyBooleanProperty noColumnSelectedProperty() {
         return noColumnSelected;
     }
-
 }

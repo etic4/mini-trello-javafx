@@ -19,9 +19,9 @@ public class MoveCardCommand extends Command {
 
     @Override
     public void execute() {
-        memento = card.save(MemType.POSITION);
         setCommandString();
-        this.boardFacade.move(card, direction);
+        memento = card.save(MemType.POSITION);
+        boardFacade.move(card, direction);
     }
 
     private void setCommandString() {
@@ -29,7 +29,6 @@ public class MoveCardCommand extends Command {
             var sourceColumn = boardFacade.getColumn(card);
             var destColumn = boardFacade.getMoveDestinationColumn(card, direction);
             commandString = "Déplacement de la " + card + "de la " + sourceColumn + " vers la " + destColumn;
-
         } else {
             commandString = "Déplacement de la " + card + "vers le " + direction;
         }

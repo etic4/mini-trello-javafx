@@ -1,11 +1,9 @@
 package mvvm.command;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
-import java.util.LinkedList;
 
 //Singleton
 public class CommandManager {
@@ -13,119 +11,103 @@ public class CommandManager {
 
     private static final CommandManager instance = new CommandManager();
 
-    LinkedList<Command> undoable = new LinkedList<>();
-    LinkedList<Command> redoable = new LinkedList<>();
+    private final ObservableList<Command>  undoables = FXCollections.observableArrayList();
+    private final ObservableList<Command>  redoables = FXCollections.observableArrayList();
 
-    private final StringProperty nextUndoable = new SimpleStringProperty("Annuler");
-    private final StringProperty nextRedoable = new SimpleStringProperty("Refaire");
+    private final ListProperty<Command> undoablesProperty = new SimpleListProperty<>(undoables);
+    private final ListProperty<Command> redoablesProperty = new SimpleListProperty<>(redoables);
 
-    private final BooleanProperty hasNoUndoable = new SimpleBooleanProperty(true);
-    private final BooleanProperty hasNoRedoable = new SimpleBooleanProperty(true);
+    private final StringProperty nextUndoableString = new SimpleStringProperty("Annuler");
+    private final StringProperty nextRedoableString = new SimpleStringProperty("Refaire");
 
-
-    private CommandManager() {};
 
     public static CommandManager getInstance() {
         return instance;
     }
 
+
+    private CommandManager() {
+        configListeners();
+    };
+
+
+    // change content of string representation of last commands
+    private void configListeners() {
+        undoablesProperty.addListener((lst, old, newval) -> {
+            if (newval.isEmpty()) {
+                nextUndoableString.set("Annuler");
+            } else {
+                nextUndoableString.set("Annuler " + newval.get(newval.size()- 1).toString());
+            }
+        });
+
+        redoablesProperty.addListener((lst, old, newval) -> {
+            if (newval.isEmpty()) {
+                nextRedoableString.set("Refaire");
+            } else {
+                nextRedoableString.set("Refaire " + newval.get(newval.size()- 1).toString());
+            }
+        });
+    }
+
+
+    // execute command
     public void execute(Command command) {
         command.execute();
         addUndoable(command);
-        updateUndoRedoString();
     }
 
     public void undo() {
-        Command command = popUndoable();
-        if (!(command instanceof EmptyCommand)) {
+        Command command = popCommand(undoables);
+        if (command != null) {
             command.undo();
-            addRedoable(command);
+            redoables.add(command);
         }
-        updateUndoRedoString();
     }
 
     public void redo() {
-        Command command = popRedoable();
-        if (!(command instanceof EmptyCommand)) {
+        Command command = popCommand(redoables);
+        if (command != null) {
             command.execute();
             addUndoable(command);
         }
-        updateUndoRedoString();
     }
 
-    private void updateUndoRedoString() {
-        nextRedoable.setValue("Refaire " + peekRedoable().toString());
-        nextUndoable.setValue("Annuler " + peekUndoable().toString());
-    }
 
-    // Gestion de l'historique
-
-    // ajout un élément à l'historique
+    // add element to history
+    // remove first if max size reached
     private void addUndoable(Command command) {
-        if (undoable.size() == CAPACITY) {
-            undoable.removeLast();
+        if (undoables.size() == CAPACITY) {
+            undoables.remove(0);
         }
-        undoable.push(command);
-        hasNoUndoable.set(undoable.isEmpty());
+        undoables.add(command);
     }
 
 
-    // pas besoin de checker la taille ici
-    private void addRedoable(Command command) {
-        redoable.push(command);
-        hasNoRedoable.set(redoable.isEmpty());
-    }
-
-    private Command popUndoable() {
-        Command command = popCommand(undoable);
-        hasNoUndoable.set(undoable.isEmpty());
-        return command;
-    }
-
-    private Command popRedoable() {
-        Command command = popCommand(redoable);
-        hasNoRedoable.set(redoable.isEmpty());
-        return command;
-    }
-
-    private Command peekUndoable() {
-        return peekCommand(undoable);
-    }
-
-    private Command peekRedoable() {
-        return peekCommand(redoable);
-    }
-
-    private Command peekCommand(LinkedList<Command> lst) {
+    // pop or nul
+    private Command popCommand(ObservableList<Command> lst) {
         if (!lst.isEmpty()) {
-            return lst.peek();
+            return lst.remove(lst.size() - 1);
         }
-        return new EmptyCommand();
-    }
-
-    private Command popCommand(LinkedList<Command> lst) {
-        if (!lst.isEmpty()) {
-            return lst.pop();
-        }
-        return new EmptyCommand();
+        return null;
     }
 
 
-    // Properties
+    // --- Properties ---
 
-    public StringProperty nextUndoableProperty() {
-        return nextUndoable;
+    public StringProperty nextUndoableStringProperty() {
+        return nextUndoableString;
     }
 
-    public StringProperty nextRedoableProperty() {
-        return nextRedoable;
+    public StringProperty nextRedoableStringProperty() {
+        return nextRedoableString;
     }
 
-    public BooleanProperty hasNoUndoableProperty() {
-        return hasNoUndoable;
+    public ReadOnlyBooleanProperty hasNoUndoableProperty() {
+        return undoablesProperty.emptyProperty();
     }
 
-    public BooleanProperty hasNoRedoableProperty() {
-        return hasNoRedoable;
+    public ReadOnlyBooleanProperty hasNoRedoableProperty() {
+        return redoablesProperty.emptyProperty();
     }
 }
