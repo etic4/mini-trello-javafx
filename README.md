@@ -20,7 +20,22 @@
     
 
 ## Notes de livraison itération 2
-
+* Pas de bug connu
+* Toutes les fonctionnalités sont implémentées
+* Choix de conception concernant les instructions pour l'itération 2:
+    * Un manager de commandes singleton
+    * Une classe Memento par objet, paramétrisable à l'instanciation en fonction du type de commande réalisée
+    * Pas de clonage en profondeur
+* refactorisation du modèle pour mieux gérer la visibilité de ses éléments
+* refactorisation assez profonde des view et view models:
+    * Le choix a été fait de faire systématiquement appel à des méthode du view model en réponse à des demandes d'action de l'utilisateur ie lors de l'édition d'un titre, du move d'un carte, etc.
+    * Un ensemble TrelloModel / TrelloViewModel / trelloViewModel a été créé, notamment pour contenir la barre de menu
+    * TrelloViewModel est un singleton pour faciliter les bindings avec des cartes par exemple
+    * Les bouttons sont maintenant une classe qui hérite de Button
+    * Idem pour le menu contextuel
+    * La classe EditableLabel a été refactorisée et fire maintenant un event lorsque l'edit du texte est terminé
+    
+    
 ## Notes de livraison itération 3
 
 ## Notes de livraison itération 4
