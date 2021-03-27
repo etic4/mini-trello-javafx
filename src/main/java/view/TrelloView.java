@@ -21,12 +21,10 @@ public class TrelloView extends VBox {
         buildView(primaryStage);
     }
 
-
     public void buildView(Stage primaryStage) {
         configStage(primaryStage);
         configViewComponents();
     }
-
 
     // taille et titre de la fenêtre
     private void configStage(Stage primaryStage) {
@@ -34,7 +32,6 @@ public class TrelloView extends VBox {
         primaryStage.setMinWidth(1000);
         primaryStage.setMinHeight(750);
     }
-
 
     private void configViewComponents() {
         // set view id

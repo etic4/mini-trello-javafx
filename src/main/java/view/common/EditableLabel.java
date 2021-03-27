@@ -1,7 +1,6 @@
 package view.common;
 
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.Event;
@@ -12,21 +11,24 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 
+
 /*
-* Editable Label fire event when text changed
+* Editable Label fire specific event when text changed
 * */
 public class EditableLabel extends HBox {
-    //text changed event type
+
+    // --- text changed event ---
+
     public static EventType<Event> TEXT_CHANGED = new EventType<>("TEXT_CHANGED");
 
-    // text changed event
     static class TextChangedEvent extends Event {
         public TextChangedEvent() {
             super(TEXT_CHANGED);
         }
     }
 
-    // texte field & text field backup
+    // --- EditableLabel ---
+
     private final TextField tf = new TextField();
     private String tfBackup;
 
@@ -34,11 +36,9 @@ public class EditableLabel extends HBox {
     private final BooleanProperty tfDisabled = new SimpleBooleanProperty(true);
 
 
-
     public EditableLabel() {
         buildView();
     }
-
 
     private void buildView() {
         //set css classes
@@ -54,27 +54,16 @@ public class EditableLabel extends HBox {
         //bind text field disabled property
         tf.disableProperty().bind(tfDisabled);
 
-        // Fire event when focus lose if text changed
-        configEventFiring();
-
         configEventsHandling();
+        configEventFiring();
     }
 
-
-    private void configEventFiring() {
-        tf.focusedProperty().addListener((a, oldValue, newValue) -> {
-            if (!newValue && !tf.getText().equals(tfBackup)) {
-                fireEvent(new TextChangedEvent());
-            }
-        });
-    }
-
+    /*
+     * on double click edit start
+     * if ENTER (or lose focus) tf.disabled
+     * on ESC text field's text is restored to previous text
+     * */
     private void configEventsHandling() {
-        /*
-        * on double click edit start
-        * if ENTER (or lose focus) tf.disabled
-        * on ESC text field's text is restored to previous text
-        * */
         this.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
                 tfBackup = tf.getText();
@@ -92,6 +81,15 @@ public class EditableLabel extends HBox {
             if (event.getCode().equals(KeyCode.ESCAPE)) {
                 tfDisabled.set(true);
                 tf.setText(tfBackup);
+            }
+        });
+    }
+
+    // Fire event when text field lose focus if text changed
+    private void configEventFiring() {
+        tf.focusedProperty().addListener((a, oldValue, newValue) -> {
+            if (!newValue && !tf.getText().equals(tfBackup)) {
+                fireEvent(new TextChangedEvent());
             }
         });
     }

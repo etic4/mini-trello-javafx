@@ -19,18 +19,20 @@ Est-ce correct de faire ça ? Est-ce que c'est toujours un singleton ?
 
 public class TrelloViewModel {
     public static TrelloViewModel instance = null;
-
     private final TrelloFacade trelloFacade;
     private final CommandManager commandManager;
     private final BooleanProperty noColumnSelected = new SimpleBooleanProperty(false);
     private final ObjectProperty<Column> selectedColumn = new SimpleObjectProperty<>();
 
+
+    // initialisation unique dans Main: Construction de l'instance avec TrelloFacade en argument
     public static void init(TrelloFacade trelloFacade) {
         if (instance != null) {
             throw new RuntimeException("TrelloViewModel a déjà été initialisé !");
         }
         instance = new TrelloViewModel(trelloFacade);
     }
+
 
     public static TrelloViewModel getInstance() {
         if (instance == null) {
@@ -50,6 +52,7 @@ public class TrelloViewModel {
         return trelloFacade.getBoardFacade();
     }
 
+    // --- commands ---
     public void undo() {
         commandManager.undo();
     }
@@ -70,6 +73,9 @@ public class TrelloViewModel {
         Platform.exit();
     }
 
+
+    // --- properties ---
+
     public StringProperty nextUndoableProperty() {
         return commandManager.nextUndoableStringProperty();
     }
@@ -86,11 +92,11 @@ public class TrelloViewModel {
         return commandManager.hasNoRedoableProperty();
     }
 
-    public void bindSelectedColumn(ReadOnlyObjectProperty<Column> selectedColumnProperty) {
-        selectedColumn.bind(selectedColumnProperty);
-    }
-
     public ReadOnlyBooleanProperty noColumnSelectedProperty() {
         return noColumnSelected;
+    }
+
+    public void bindSelectedColumn(ReadOnlyObjectProperty<Column> selectedColumnProperty) {
+        selectedColumn.bind(selectedColumnProperty);
     }
 }

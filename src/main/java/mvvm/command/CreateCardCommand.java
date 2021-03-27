@@ -6,6 +6,7 @@ public class CreateCardCommand extends Command {
     private final BoardFacade boardFacade;
     private final Column column;
 
+
     public CreateCardCommand(Column column, BoardFacade boardFacade) {
         this.boardFacade = boardFacade;
         this.column = column;

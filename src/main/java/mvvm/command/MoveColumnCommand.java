@@ -4,10 +4,10 @@ import direction.Direction;
 import model.*;
 
 public class MoveColumnCommand extends Command {
-
     private final Column column;
     private final Direction direction;
     private final BoardFacade boardFacade;
+
 
     public MoveColumnCommand(Column column, Direction direction, BoardFacade boardFacade) {
         this.column = column;

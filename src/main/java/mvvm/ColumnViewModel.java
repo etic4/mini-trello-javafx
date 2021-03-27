@@ -18,13 +18,15 @@ public class ColumnViewModel {
         this.column = column;
         boardFacade = new BoardFacade(column);
 
-        // set title view binded property to column title
+        // bind title view property to column title
         columnTitleView.set(column.getTitle());
 
-        // set title view binding on model value if changed
+        // set column's title property on model value if changed
         column.titleProperty().addListener((o, oldVal, newVal) -> columnTitleView.set(column.getTitle()));
     }
 
+
+    // --- properties ---
 
     public StringProperty columnTitleProperty() {
         return columnTitleView;

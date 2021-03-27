@@ -5,8 +5,8 @@ import javafx.beans.property.SimpleBooleanProperty;
 
 
 public class Column extends EntitledContainer<Card> implements History {
-
     private final Board board;
+
 
     public Column(Board board, String title) {
         super(title);

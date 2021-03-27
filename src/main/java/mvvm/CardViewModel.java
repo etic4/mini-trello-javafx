@@ -18,13 +18,15 @@ public class CardViewModel {
         this.card = card;
         boardFacade = new BoardFacade(card);
 
-        // set title view binded property to card title
+        // bind title view property to card title
         cardTitleView.set(card.getTitle());
 
-        // set title view binding on model value if changed
+        // set card's title property on model value if changed
         card.titleProperty().addListener((o, oldVal, newVal) -> cardTitleView.set(card.getTitle()));
     }
 
+
+    // --- properties ---
 
     public StringProperty cardTitleViewProperty() {
         return cardTitleView;

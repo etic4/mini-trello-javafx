@@ -7,6 +7,7 @@ public class ColumnMemento implements Memento {
     private final Column column;
     private final MemType memType;
 
+
     ColumnMemento(Column column, MemType memType) {
         this.column = column;
         this.memType = memType;

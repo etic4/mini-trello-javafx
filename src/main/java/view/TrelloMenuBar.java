@@ -47,6 +47,7 @@ public class TrelloMenuBar extends MenuBar {
         getMenus().add(fileMenu);
     }
 
+
     private void buildEditMenu() {
         Menu editionMenu = new Menu("Edition");
 

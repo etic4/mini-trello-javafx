@@ -10,6 +10,7 @@ public class EditTitleCommand<E extends Entitled & History> extends Command {
     private final BoardFacade boardFacade;
     private String commandString;
 
+
     public EditTitleCommand(E entitled, String title, BoardFacade boardFacade) {
             this.entitled = entitled;
             this.title = title;

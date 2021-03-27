@@ -5,6 +5,7 @@ import model.*;
 public class CreateColumnCommand extends Command {
     private final BoardFacade boardFacade;
 
+
     public CreateColumnCommand(BoardFacade boardFacade) {
         this.boardFacade = boardFacade;
     }

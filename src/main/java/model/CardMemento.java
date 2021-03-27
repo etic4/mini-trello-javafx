@@ -7,6 +7,7 @@ public class CardMemento implements Memento {
     private final Card card;
     private final MemType memType;
 
+
     CardMemento(Card card, MemType memType) {
         this.card = card;
         this.memType = memType;

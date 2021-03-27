@@ -4,7 +4,6 @@ import model.Board;
 import model.Card;
 import model.Column;
 
-//TODO: bien revoir editable label
 public class Data {
 
     public static Board init() {

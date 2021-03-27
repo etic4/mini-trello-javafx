@@ -10,7 +10,6 @@ import view.common.MoveButton;
 
 
 public class CardView extends BorderPane {
-
     private final MoveButton
             btUp = new MoveButton(Direction.UP),
             btRight = new MoveButton(Direction.RIGHT),
@@ -25,12 +24,10 @@ public class CardView extends BorderPane {
         this(new CardViewModel(card));
     }
 
-
     public CardView(CardViewModel cardviewModel) {
         this.cardViewModel = cardviewModel;
         buildView();
     }
-
 
     private void buildView() {
         buildGraphicComponents();

@@ -6,6 +6,7 @@ public class DeleteCardCommand extends Command {
     private final BoardFacade boardFacade;
     private final Card card;
 
+
     public DeleteCardCommand(Card card,  BoardFacade boardFacade) {
         this.boardFacade = boardFacade;
         this.card = card;

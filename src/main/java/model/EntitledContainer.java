@@ -10,6 +10,7 @@ import java.util.Collections;
 public abstract class EntitledContainer<E> extends Entitled {
     private final ObservableList<E> movables = FXCollections.observableArrayList();
 
+
     public EntitledContainer(String title) {
         super(title);
     }

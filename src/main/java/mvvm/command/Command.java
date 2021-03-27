@@ -10,5 +10,4 @@ public abstract class Command {
     void undo() {
         memento.restore();
     };
-
 }

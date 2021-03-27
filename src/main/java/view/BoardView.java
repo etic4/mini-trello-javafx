@@ -1,6 +1,5 @@
 package view;
 
-import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
@@ -8,6 +7,7 @@ import model.Column;
 import mvvm.BoardViewModel;
 import mvvm.TrelloViewModel;
 import view.common.EditableLabel;
+
 
 public class BoardView extends VBox {
     private final EditableLabel elTitle = new EditableLabel();
@@ -20,14 +20,12 @@ public class BoardView extends VBox {
         buildView();
     }
 
-
     public void buildView() {
         configGraphicComponents();
         configColumnFactory();
         configBindings();
         configEventsHandling();
     }
-
 
     public void configGraphicComponents() {
         // set styles classes and ids

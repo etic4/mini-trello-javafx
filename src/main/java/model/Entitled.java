@@ -3,8 +3,8 @@ package model;
 import javafx.beans.property.*;
 
 public abstract class Entitled {
-
     private final ReadOnlyStringWrapper title = new ReadOnlyStringWrapper();
+
 
     public Entitled(String title) {
         this.title.set(title);

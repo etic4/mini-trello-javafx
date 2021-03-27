@@ -6,6 +6,7 @@ public class DeleteColumnCommand extends Command {
     private final BoardFacade boardFacade;
     private final Column column;
 
+
     public DeleteColumnCommand(Column column, BoardFacade boardFacade) {
         this.boardFacade = boardFacade;
         this.column = column;

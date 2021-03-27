@@ -21,15 +21,14 @@ public class CommandManager {
     private final StringProperty nextRedoableString = new SimpleStringProperty("Refaire");
 
 
+
     public static CommandManager getInstance() {
         return instance;
     }
 
-
     private CommandManager() {
         configListeners();
     };
-
 
     // change content of string representation of last commands
     private void configListeners() {
@@ -72,7 +71,6 @@ public class CommandManager {
             addUndoable(command);
         }
     }
-
 
     // add element to history
     // remove first if max size reached

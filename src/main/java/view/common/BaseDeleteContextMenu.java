@@ -1,6 +1,5 @@
 package view.common;
 
-
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContextMenu;
@@ -8,15 +7,13 @@ import javafx.scene.control.MenuItem;
 
 import java.util.Optional;
 
-/* Base context menu, comporte un seul élément actuellement, pourrait donc s'appeler BaseDeleteContextMenu,
-* Mais ça me semble exagérément spécifique
-* */
-
+// L'essentiel du delete contextuel est partagé par card et column
 public abstract class BaseDeleteContextMenu extends ContextMenu {
     // title's object
     private final String title;
 
     protected abstract void executeDeleteCommand();
+
 
     public BaseDeleteContextMenu(String title) {
         super();

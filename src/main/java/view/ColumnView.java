@@ -23,9 +23,7 @@ public class ColumnView extends VBox {
 
     private final EditableLabel elTitle = new EditableLabel();
     private final ListView<Card> lvCards = new ListView<>();
-
     private final ColumnViewModel columnViewModel;
-
     private final IntegerProperty nbrItems = new SimpleIntegerProperty();
 
 
@@ -125,6 +123,5 @@ public class ColumnView extends VBox {
             contextMenu.show(lvCards, e.getScreenX(), e.getScreenY());
             e.consume();
         });
-
     }
 }

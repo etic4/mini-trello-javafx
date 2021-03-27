@@ -4,7 +4,6 @@ import direction.Direction;
 import model.*;
 
 public class MoveCardCommand extends Command {
-
     private final Card card;
     private final Direction direction;
     private final BoardFacade boardFacade;
