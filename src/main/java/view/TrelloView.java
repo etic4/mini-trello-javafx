@@ -1,52 +1,56 @@
 package view;
 
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.MenuBar;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import mvvm.BoardViewModel;
+import mvvm.TrelloViewModel;
+
 
 public class TrelloView extends VBox {
+    private final TrelloViewModel trelloViewModel;
 
-    private static final Color BACKGROUND_COLOR = Color.web("#E5E5E5");
 
-    private final BoardViewModel boardViewModel;
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    //  CONSTRUCTOR
-
-    public TrelloView(Stage primaryStage, BoardViewModel boardViewModel) {
-        this.boardViewModel = boardViewModel;
+    public TrelloView(Stage primaryStage) {
+        trelloViewModel = TrelloViewModel.getInstance();
         Scene scene = new Scene(this);
-        primaryStage.setTitle("Trello");
+        scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+
         primaryStage.setScene(scene);
-        build();
+        buildView(primaryStage);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    //  CONFIG GRAPHIC COMPONENTS
-
-    public void build() {
-        makeComponentsHierarchy();
-        configStylesVBow();
+    public void buildView(Stage primaryStage) {
+        configStage(primaryStage);
+        configViewComponents();
     }
 
-    private void makeComponentsHierarchy() {
-        this.getChildren().add(new BoardView(boardViewModel));
+
+    // taille et titre de la fenêtre
+    private void configStage(Stage primaryStage) {
+        primaryStage.setTitle("Trello");
+        primaryStage.setMinWidth(1000);
+        primaryStage.setMinHeight(750);
     }
 
-    private void configStylesVBow() {
-        CornerRadii corners = new CornerRadii(0);
-        BackgroundFill backgroundFill = new BackgroundFill(BACKGROUND_COLOR, corners, Insets.EMPTY);
-        Background background = new Background(backgroundFill);
-        setBackground(background);
-        setPrefSize(1000, 750);
-        setSpacing(15);
-        setPadding(new Insets(25));
-        setVgrow(this.getChildren().get(0), Priority.ALWAYS);
-    }
 
+    private void configViewComponents() {
+        // set view id
+        setId("vb-trello");
+
+        // create main menubar
+        MenuBar menuBar = new TrelloMenuBar(trelloViewModel);
+
+        // create boardView & board viewmodel
+        BoardViewModel boardViewModel = new BoardViewModel(trelloViewModel.getBoardFacade());
+        BoardView boardView = new BoardView(boardViewModel);
+
+        // add components to view
+        getChildren().addAll(menuBar, boardView);
+
+        // set boardview vgrow priority
+        setVgrow(boardView, Priority.ALWAYS);
+    }
 }

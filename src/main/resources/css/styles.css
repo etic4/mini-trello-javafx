@@ -1,0 +1,120 @@
+ --- Généralités ---
+ .root {
+     -fx-background: #ffffff;
+     -fx-body-color: #ffffff;
+ }
+
+/* --- TrelloView ---*/
+#vb-trello {
+    -fx-pref-width: 1000;
+    -fx-pref-height: 750;
+}
+
+/* --- EditableLabel ---*/
+
+.el-container {
+}
+
+.el-text {
+    -fx-font: 14px "Arial";
+    -fx-background-color: #ffffff;
+    -fx-opacity: 1;
+    -fx-alignment: center;
+}
+
+#el-title {
+    -fx-font: 20px "Arial";
+    -fx-font-weight: bold;
+    -fx-alignment: center-left;
+}
+
+.el-container #el-title {
+    -fx-pref-height: 50;
+}
+
+.el-column {
+    -fx-font-weight: bold;
+    -fx-background-color: #fcfcfc;
+}
+
+.el-container .el-column {
+    -fx-pref-height: 40;
+    -fx-pref-width: 190;
+}
+
+.el-card {
+    -fx-pref-height: 40;
+    -fx-pref-width: 160;
+}
+
+.el-container .el-card {
+    -fx-min-width: 70;
+}
+
+/* --- ListView Columns*/
+.lv-columns {
+    -fx-orientation: horizontal;
+    -fx-padding: 0;
+    -fx-background-color: #ffffff;
+}
+
+.lv-columns .list-cell {
+    -fx-padding: 6;
+    -fx-background-color: #ffffff;
+}
+
+ .lv-columns .list-cell:selected {
+     -fx-background-color: #ffffff, #338fff, #ffffff, #ffffff;
+ }
+
+/* --- ColumnView --- */
+.col-vbox {
+    -fx-border-color: #dddddd;
+    -fx-padding: 6 6 60 6;
+}
+
+.col-header {
+    -fx-background-color: #fcfcfc;
+}
+
+/* --- ListView Cards --- */
+.lv-cards {
+    -fx-background-color: #fcfcfc;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+ .lv-cards .list-cell {
+     -fx-background-color: #fcfcfc;
+     -fx-pref-height: 117;
+     -fx-pref-width: 90;
+ }
+
+ .lv-cards .list-cell:selected {
+     -fx-background-color: #ffffff, #338fff, #ffffff, #ffffff;
+ }
+
+/* --- CardView --- */
+.card-bp {
+    -fx-padding: 2;
+    -fx-border-color: #dddddd;
+    -fx-background-color: #ffffff;
+}
+
+.move-button {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #f1f1f1;
+    -fx-pref-height: 30;
+    -fx-pref-width: 30;
+}
+
+
+
+/* --- Boutons déplacement --- */
+/*??!!*/
+
+/* --- tests ---*/
+
+/*.lv-columns .list-cell:filled:selected:focused {*/
+/*    -fx-border-color: #3a9ac1;*/
+/*}*/

@@ -1,44 +1,58 @@
 package model;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 
 
-public class Column extends Entitled implements Container<Card>, Movable<Column, Board> {
+public class Column extends EntitledContainer<Card> implements History {
 
     private final Board board;
-    private final ObservableList<Card> cards = FXCollections.observableArrayList();
 
     public Column(Board board, String title) {
         super(title);
-
         this.board = board;
         board.add(this);
+
+        if (this.getTitle().equals("")) {
+            setTitle("Column " + board.size());
+        }
     }
 
     public Column(Board board) {
         this(board, "");
     }
 
-    @Override
-    public Board getContainer() {
+    Board getBoard() {
         return board;
+    };
+
+    void moveLeft() {
+        getBoard().moveUp(this);
+    }
+
+    void moveRight() {
+        getBoard().moveDown(this);
+    }
+
+    void delete() {
+        getBoard().remove(this);
+    }
+
+    public ReadOnlyBooleanProperty isFirstProperty() {
+        return new SimpleBooleanProperty(getBoard().isFirst(this));
+    }
+
+    public ReadOnlyBooleanProperty isLastProperty() {
+        return new SimpleBooleanProperty(getBoard().isLast(this));
     }
 
     @Override
-    public void setContainer(Board board) {
-        throw new UnsupportedOperationException("Une colonne n'a pas -pour l'instant- la capacité de changer de board");
+    public String toString() {
+        return "colonne \"" + getTitle() +  "\"";
     }
 
     @Override
-    public Column getMovable() {
-        return this;
+    public Memento save(MemType memType) {
+        return new ColumnMemento(this, memType);
     }
-
-
-    @Override
-    public ObservableList<Card> getMovables() {
-        return cards;
-    }
-
 }

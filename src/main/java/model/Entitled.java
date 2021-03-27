@@ -1,24 +1,30 @@
 package model;
 
+import javafx.beans.property.*;
 
-abstract class Entitled {
+public abstract class Entitled {
 
-    private String title;
+    private final ReadOnlyStringWrapper title = new ReadOnlyStringWrapper();
 
     public Entitled(String title) {
-        this.title = title;
+        this.title.set(title);
     }
 
     public String getTitle() {
-        return title;
+        return title.getValue();
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    void setTitle(String title) {
+        this.title.set(title);
+    }
+
+    public ReadOnlyStringProperty titleProperty() {
+        return title.getReadOnlyProperty() ;
     }
 
     @Override
     public String toString() {
-        return title;
+        return title.getValue();
     }
 }
+

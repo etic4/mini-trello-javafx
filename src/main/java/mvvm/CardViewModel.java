@@ -1,5 +1,6 @@
 package mvvm;
 
+import mvvm.command.*;
 import direction.Direction;
 import model.*;
 import javafx.beans.property.*;
@@ -7,77 +8,57 @@ import javafx.beans.property.*;
 
 public class CardViewModel {
 
-    private final StringProperty
-            cardTitle = new SimpleStringProperty("");
-
-    private final ObjectProperty<Direction>
-            direction = new SimpleObjectProperty<>(null);
+    private final StringProperty cardTitleView = new SimpleStringProperty();
 
     private final Card card;
-
     private final BoardFacade boardFacade;
 
 
-    //  CONSTRUCTOR
-
     public CardViewModel(Card card) {
         this.card = card;
-        this.boardFacade = new BoardFacade();
-        this.cardTitle.set(card.getTitle());
-        configListeners();
+        boardFacade = new BoardFacade(card);
+
+        // set title view binded property to card title
+        cardTitleView.set(card.getTitle());
+
+        // set title view binding on model value if changed
+        card.titleProperty().addListener((o, oldVal, newVal) -> cardTitleView.set(card.getTitle()));
     }
 
 
-    //   LISTENERS
-
-    private void configListeners() {
-        addMoveListener();
-        addTitleListener();
+    public StringProperty cardTitleViewProperty() {
+        return cardTitleView;
     }
 
-    private void addMoveListener() {
-        direction.addListener((obj, oldVal, direction) -> {
-            if (direction != null) {
-                boardFacade.move(card, direction);
-            }
-        });
+    public ReadOnlyBooleanProperty btRightDisabledProperty() {
+        return card.isColumnLastProperty();
     }
 
-    private void addTitleListener() {
-        cardTitle.addListener((a, oldTitle, newTitle) -> {
-            if (newTitle != null)
-                card.setTitle(newTitle);
-        });
+    public ReadOnlyBooleanProperty btLeftDisabledProperty() {
+        return card.isColumnFirstProperty();
     }
 
-
-    //   BINDING
-
-    public void bindMoveDirection(ObjectProperty<Direction> direction) {
-        this.direction.bind(direction);
-    }
-
-
-    //  PROPERTIES
-
-    public StringProperty cardTitleProperty() {
-        return cardTitle;
-    }
-
-    public BooleanProperty btRightDisabledProperty() {
-        return (card.getContainer()).isLastProperty();
-    }
-
-    public BooleanProperty btLeftDisabledProperty() {
-        return (card.getContainer()).isFirstProperty();
-    }
-
-    public BooleanProperty btUpDisabledProperty() {
+    public ReadOnlyBooleanProperty btUpDisabledProperty() {
         return card.isFirstProperty();
     }
 
-    public BooleanProperty btDownDisabledProperty() {
+    public ReadOnlyBooleanProperty btDownDisabledProperty() {
         return card.isLastProperty();
     }
 
+
+    //--- Commands ---
+
+    public void deleteCard() {
+        CommandManager.getInstance().execute(new DeleteCardCommand(card, boardFacade));
+    }
+
+    public void moveCard(Direction direction) {
+        if (direction != null) {
+            CommandManager.getInstance().execute(new MoveCardCommand(card, direction, boardFacade));
+        }
+    }
+    public void setTitle(String title) {
+        CommandManager.getInstance().execute(new EditTitleCommand<>(card, title, boardFacade));
+    }
 }

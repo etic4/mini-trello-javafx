@@ -1,5 +1,6 @@
 package mvvm;
 
+import mvvm.command.*;
 import javafx.beans.property.*;
 import model.Board;
 import model.Column;
@@ -7,17 +8,8 @@ import model.BoardFacade;
 
 public class BoardViewModel {
 
-    private final ListProperty<Column>
-            columnsList = new SimpleListProperty<>();
-
-    private final StringProperty
-            boardTitle = new SimpleStringProperty("");
-
-    private final IntegerProperty
-            selectedColumn = new SimpleIntegerProperty();
-
+    private final StringProperty boardTitleView = new SimpleStringProperty();
     private final Board board;
-
     private final BoardFacade boardFacade;
 
 
@@ -26,59 +18,30 @@ public class BoardViewModel {
     public BoardViewModel(BoardFacade boardFacade) {
         this.boardFacade = boardFacade;
         board = boardFacade.getBoard();
-        boardTitle.set(board.getTitle());
-        setColumnsList();
-        addTitleListener();
+
+        // set title view binded property tot board title
+        boardTitleView.set(board.getTitle());
+
+        // set title view binding on model value if changed
+        board.titleProperty().addListener((o, oldVal, newVal) -> boardTitleView.set(board.getTitle()));
     }
 
-
-    //   SETTER
-
-    private void setColumnsList() {
-        columnsList.set(boardFacade.getColumns(board));
-    }
-
-
-    //   LISTENER
-
-    private void addTitleListener() {
-        boardTitle.addListener((a, oldTitle, newTitle) -> {
-            if (newTitle != null)
-                board.setTitle(newTitle);
-        });
-    }
-
-
-    //  PROPERTIES
 
     public StringProperty boardTitleProperty() {
-        return boardTitle;
+        return boardTitleView;
     }
 
     public ListProperty<Column> columnsListProperty() {
-        return columnsList;
+        return new SimpleListProperty<>(boardFacade.getColumns(board));
     }
 
-    private Column getColumn() {
-        int index = selectedColumn.get();
-        return index == -1 ? null : columnsListProperty().get(index);
+    // --- commands ---
+
+    public void setTitle(String title) {
+        CommandManager.getInstance().execute(new EditTitleCommand<>(board, title, boardFacade));
     }
-
-    public void selectedColumnBinding(ReadOnlyIntegerProperty integerProperty) {
-        selectedColumn.bind(integerProperty);
-    }
-
-
-    //   ACTIONS
 
     public void addColumn() {
-        boardFacade.addColumn(board);
-    }
-
-    public void delete() {
-        Column column = getColumn();
-        if(column != null) {
-            boardFacade.delete(column);
-        }
+        CommandManager.getInstance().execute(new CreateColumnCommand(boardFacade));
     }
 }

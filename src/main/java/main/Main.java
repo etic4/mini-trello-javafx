@@ -2,8 +2,8 @@ package main;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import model.BoardFacade;
-import mvvm.BoardViewModel;
+import model.TrelloFacade;
+import mvvm.TrelloViewModel;
 import view.TrelloView;
 
 
@@ -12,9 +12,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        BoardFacade boardFacade = new BoardFacade();
-        BoardViewModel boardViewModel = new BoardViewModel(boardFacade);
-        TrelloView trelloView = new TrelloView(primaryStage, boardViewModel);
+        TrelloFacade trelloFacade = new TrelloFacade();
+        TrelloViewModel.init(trelloFacade);
+        TrelloView trelloView = new TrelloView(primaryStage);
         primaryStage.show();
     }
 

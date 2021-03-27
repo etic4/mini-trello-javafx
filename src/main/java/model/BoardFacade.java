@@ -1,15 +1,23 @@
 package model;
 
 import direction.Direction;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import main.Data;
 
 public class BoardFacade {
 
     private final Board board;
 
-    public BoardFacade() {
-        board = Data.init();
+    public BoardFacade(Board board) {
+        this.board = board;
+    }
+
+    public BoardFacade(Column column) {
+        this.board = column.getBoard();
+    }
+
+    public BoardFacade(Card card) {
+        this.board = card.getBoard();
     }
 
     public Board getBoard() {
@@ -17,27 +25,32 @@ public class BoardFacade {
     }
 
     public ObservableList<Column> getColumns(Board board) {
-        return board.getMovables();
+        return FXCollections.unmodifiableObservableList(board.getMovables());
     }
 
     public ObservableList<Card> getCards(Column column) {
-        return column.getMovables();
+        return FXCollections.unmodifiableObservableList(column.getMovables());
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // --- Title ---
 
-    //  BOARD
-
-    public void addColumn(Board board) {
-        new Column(board);
+    public void setTitle(Entitled entitled, String title) {
+        entitled.setTitle(title);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // --- Board ---
 
-    //  COLUMN
+    // TODO: changer ça
 
-    public void addCard(Column column) {
-        new Card(column);
+    public Column addColumn() {
+        return new Column(board);
+    }
+
+
+    // ---  Column ---
+
+    public Card addCard(Column column) {
+        return new Card(column);
     }
 
     public void delete(Column column) {
@@ -47,16 +60,19 @@ public class BoardFacade {
     public void move(Column column, Direction direction) {
         switch (direction) {
             case LEFT:
-                column.moveUp();
+                column.moveLeft();
                 break;
             case RIGHT:
-                column.moveDown();
+                column.moveRight();
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    //  CARD
+    // ---  Card ---
+
+    public Column getColumn(Card card) {
+        return card.getColumn();
+    }
 
     public void delete(Card card) {
         card.delete();
@@ -76,5 +92,15 @@ public class BoardFacade {
             case RIGHT:
                 card.moveRight();
         }
+    }
+
+    public Column getMoveDestinationColumn(Card card, Direction direction) {
+        if (direction.equals(Direction.LEFT)) {
+            return card.getPreviousColumn();
+        }
+        else if (direction.equals(Direction.RIGHT)) {
+            return card.getNextColumn();
+        }
+        return null;
     }
 }
