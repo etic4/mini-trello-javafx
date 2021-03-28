@@ -9,7 +9,6 @@ import view.TrelloView;
 
 public class Main {
 
-
     @Override
     public void start(Stage primaryStage) throws Exception {
         TrelloFacade trelloFacade = new TrelloFacade();
@@ -21,6 +20,4 @@ public class Main {
     public static void main(String[] args) {
         launch(args);
     }
-
-
 }
