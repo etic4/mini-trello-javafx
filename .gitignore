@@ -6,6 +6,10 @@
 # fichiers .iml de intellij
 .iml
 
+
+#Visual paradigm backups
+*.vpp.*
+
 # Node artifact files
 node_modules/
 dist/
