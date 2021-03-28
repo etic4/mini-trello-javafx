@@ -7,7 +7,7 @@ import mvvm.TrelloViewModel;
 import view.TrelloView;
 
 
-public class Main extends Application {
+public class Main {
 
 
     @Override
