@@ -7,7 +7,7 @@ import mvvm.TrelloViewModel;
 import view.TrelloView;
 
 
-public class Main {
+public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
