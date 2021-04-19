@@ -7,7 +7,7 @@ import java.util.Deque;
 import java.util.LinkedList;
 
 //TODO: Revoir fonctionnement memento -> bug: possible de refaire move card après suppression colonne
-// => problème de conception
+// => si commande pas restorable, mettre texte à "" et désactiver undo ou redo
 //TODO: simplifier CommandManager et relations avec trelloVM et menu (en cours)
 
 //Singleton
