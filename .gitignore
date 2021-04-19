@@ -9,6 +9,7 @@
 
 #Visual paradigm backups
 *.vpp.*
+*.vpp
 
 # Node artifact files
 node_modules/
