@@ -29,6 +29,11 @@ public class EditTitleCommand<E extends Entitled & History<T>, T> extends Comman
         entitled.restore(memento);
     }
 
+    @Override
+    boolean isRestorable() {
+        return true;
+    }
+
     private void setCommandString() {
         String objName = entitled.getClass().getSimpleName().toLowerCase();
         String oldTitle = entitled.getTitle();

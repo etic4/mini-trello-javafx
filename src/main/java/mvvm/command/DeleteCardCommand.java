@@ -24,6 +24,11 @@ public class DeleteCardCommand extends Command {
     }
 
     @Override
+    boolean isRestorable() {
+        return card.isRestorable(memento);
+    }
+
+    @Override
     public String toString() {
         return "Suppression de la " + card;
     }

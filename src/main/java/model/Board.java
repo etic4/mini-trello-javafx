@@ -18,4 +18,8 @@ public class Board extends EntitledContainer<Column> implements History<Board> {
         setTitle(boardMemento.get_title());
     }
 
+    public boolean isRestorable(Memento<Board> memento) {
+        return true;
+    }
+
 }

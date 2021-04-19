@@ -24,6 +24,11 @@ public class DeleteColumnCommand extends Command {
     }
 
     @Override
+    boolean isRestorable() {
+        return column.isRestorable(memento);
+    }
+
+    @Override
     public String toString() {
         return "Suppression de la " + column;
     }

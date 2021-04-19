@@ -75,4 +75,8 @@ public class Column extends EntitledContainer<Card> implements History<Column> {
                 columnMemento.getBoard().add(columnMemento.getPosition(), columnMemento.getColumn());
         }
     }
+
+    public boolean isRestorable(Memento<Column> memento) {
+        return true;
+    }
 }

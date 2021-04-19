@@ -27,6 +27,11 @@ public class MoveColumnCommand extends Command {
     }
 
     @Override
+    boolean isRestorable() {
+        return column.isRestorable(memento);
+    }
+
+    @Override
     public String toString() {
         return "Déplacement de la " + column + "vers la " + direction;
     }

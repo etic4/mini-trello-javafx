@@ -30,6 +30,11 @@ public class MoveCardCommand extends Command {
 
     }
 
+    @Override
+    boolean isRestorable() {
+        return card.isRestorable(memento);
+    }
+
     private void setCommandString() {
         if (direction == Direction.LEFT || direction == Direction.RIGHT) {
             var sourceColumn = boardFacade.getColumn(card);

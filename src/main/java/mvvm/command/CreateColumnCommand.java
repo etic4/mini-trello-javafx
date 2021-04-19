@@ -23,6 +23,11 @@ public class CreateColumnCommand extends Command {
     }
 
     @Override
+    boolean isRestorable() {
+        return column.isRestorable(memento);
+    }
+
+    @Override
     public String toString() {
         return "Ajout d'une colonne au board " + boardFacade.getBoard();
     }

@@ -32,6 +32,14 @@ public class BoardFacade {
         return FXCollections.unmodifiableObservableList(column.getMovables());
     }
 
+    // reçoit une instance de column et retourne True si elle existe
+    //   dans le board
+    // permet déterminer si une carte est restorable (cas d'une colonne supprimée)
+
+    public boolean isInBoard(Column column) {
+        return board.getMovables().contains(column);
+    }
+
     // --- Title ---
 
     public void setTitle(Entitled entitled, String title) {

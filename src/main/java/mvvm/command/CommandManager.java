@@ -4,6 +4,8 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.util.Stack;
+
 //TODO: Revoir fonctionnement memento -> bug: possible de refaire move card après suppression colonne
 //TODO: simplifier CommandManager et relations avec trelloVM et menu
 
@@ -15,6 +17,10 @@ public class CommandManager {
 
     private final ObservableList<Command>  undoables = FXCollections.observableArrayList();
     private final ObservableList<Command>  redoables = FXCollections.observableArrayList();
+
+    private final Stack<Command> undoablesStack = new Stack<>();
+    private final Stack<Command> redoablesStack = new Stack<>();
+
 
     // change content of string representation of last commands after change
     private final ListProperty<Command> undoablesProperty = new SimpleListProperty<>(undoables);

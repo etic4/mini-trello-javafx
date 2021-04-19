@@ -25,6 +25,12 @@ public class CreateCardCommand extends Command {
     }
 
     @Override
+    boolean isRestorable() {
+        return card.isRestorable(memento);
+    }
+
+
+    @Override
     public String toString() {
         return "Ajout d'une carte à la " + column;
     }
