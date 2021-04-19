@@ -46,18 +46,18 @@ public class ColumnViewModel {
     // --- Commands ---
 
     public void addCard() {
-        CommandManager.getInstance().execute(new CreateCardCommand(column, boardFacade));
+        CommandManager.execute(new CreateCardCommand(column, boardFacade));
     }
 
     public void deleteColumn() {
-        CommandManager.getInstance().execute(new DeleteColumnCommand(column, boardFacade));
+        CommandManager.execute(new DeleteColumnCommand(column, boardFacade));
     }
 
     public void moveColumn(Direction direction) {
-        CommandManager.getInstance().execute(new MoveColumnCommand(column, direction, boardFacade));
+        CommandManager.execute(new MoveColumnCommand(column, direction, boardFacade));
     }
 
     public void setTitle(String title) {
-        CommandManager.getInstance().execute(new EditTitleCommand<>(column, columnTitleView.get(), boardFacade));
+        CommandManager.execute(new EditTitleCommand<>(column, columnTitleView.get(), boardFacade));
     }
 }

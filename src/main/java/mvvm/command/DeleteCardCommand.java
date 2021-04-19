@@ -19,7 +19,7 @@ public class DeleteCardCommand extends Command {
     }
 
     @Override
-    void undo() {
+    void restore() {
         card.restore(memento);
     }
 

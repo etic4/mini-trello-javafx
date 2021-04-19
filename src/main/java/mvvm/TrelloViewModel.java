@@ -59,30 +59,30 @@ public class TrelloViewModel {
     }
 
     public void commandCreateColumn() {
-        CommandManager.getInstance().execute(new CreateColumnCommand(getBoardFacade()));
+        CommandManager.execute(new CreateColumnCommand(getBoardFacade()));
     }
 
     public void commandCreateCard() {
-        CommandManager.getInstance().execute(new CreateCardCommand(selectedColumn.get(), getBoardFacade()));
+        CommandManager.execute(new CreateCardCommand(selectedColumn.get(), getBoardFacade()));
     }
 
     public void commandQuit() {
         Platform.exit();
     }
 
-    public StringProperty nextUndoableProperty() {
-        return commandManager.nextUndoableStringProperty();
+    public SimpleStringProperty firstUndoableProperty() {
+        return commandManager.firstUndoableProperty();
     }
 
-    public StringProperty nextRedoableProperty() {
-        return commandManager.nextRedoableStringProperty();
+    public SimpleStringProperty firstRedoableProperty() {
+        return commandManager.firstRedoableProperty();
     }
 
-    public ReadOnlyBooleanProperty hasNoUndoableProperty() {
+    public SimpleBooleanProperty hasNoUndoableProperty() {
         return commandManager.hasNoUndoableProperty();
     }
 
-    public ReadOnlyBooleanProperty hasNoRedoableProperty() {
+    public SimpleBooleanProperty hasNoRedoableProperty() {
         return commandManager.hasNoRedoableProperty();
     }
 

@@ -19,7 +19,7 @@ public class DeleteColumnCommand extends Command {
     }
 
     @Override
-    void undo() {
+    void restore() {
         column.restore(memento);
     }
 

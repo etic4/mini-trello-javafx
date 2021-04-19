@@ -25,7 +25,7 @@ public class EditTitleCommand<E extends Entitled & History<T>, T> extends Comman
     }
 
     @Override
-    void undo() {
+    void restore() {
         entitled.restore(memento);
     }
 

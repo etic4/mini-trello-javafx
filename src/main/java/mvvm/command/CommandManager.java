@@ -1,13 +1,14 @@
 package mvvm.command;
 
-import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
 
-import java.util.Stack;
+import java.util.Deque;
+import java.util.LinkedList;
 
 //TODO: Revoir fonctionnement memento -> bug: possible de refaire move card après suppression colonne
-//TODO: simplifier CommandManager et relations avec trelloVM et menu
+// => problème de conception
+//TODO: simplifier CommandManager et relations avec trelloVM et menu (en cours)
 
 //Singleton
 public class CommandManager {
@@ -15,108 +16,102 @@ public class CommandManager {
 
     private static final CommandManager instance = new CommandManager();
 
-    private final ObservableList<Command>  undoables = FXCollections.observableArrayList();
-    private final ObservableList<Command>  redoables = FXCollections.observableArrayList();
+    private final Deque<Command> undoables = new LinkedList<>();
+    private final Deque<Command> redoables = new LinkedList<>();
 
-    private final Stack<Command> undoablesStack = new Stack<>();
-    private final Stack<Command> redoablesStack = new Stack<>();
+    private final SimpleStringProperty firstUndoable = new SimpleStringProperty();
+    private final SimpleStringProperty firstRedoable = new SimpleStringProperty();
+
+    private final SimpleBooleanProperty hasUndoable = new SimpleBooleanProperty(false);
+    private final SimpleBooleanProperty hasRedoable = new SimpleBooleanProperty(false);
 
 
-    // change content of string representation of last commands after change
-    private final ListProperty<Command> undoablesProperty = new SimpleListProperty<>(undoables);
-    private final ListProperty<Command> redoablesProperty = new SimpleListProperty<>(redoables);
-
-    private final StringProperty nextUndoableString = new SimpleStringProperty("Annuler");
-    private final StringProperty nextRedoableString = new SimpleStringProperty("Refaire");
-
+    public static void execute(Command command) {
+        instance.executeCommand(command);
+    }
 
     public static CommandManager getInstance() {
         return instance;
     }
 
+    private CommandManager() { };
 
-    private CommandManager() {
-        configListeners();
-    };
-
-
-    // change content of string representation of last commands
-    private void configListeners() {
-        undoablesProperty.addListener((lst, old, newval) -> {
-            if (newval.isEmpty()) {
-                nextUndoableString.set("Annuler");
-            } else {
-                nextUndoableString.set("Annuler " + newval.get(newval.size()- 1).toString());
-            }
-        });
-
-        redoablesProperty.addListener((lst, old, newval) -> {
-            if (newval.isEmpty()) {
-                nextRedoableString.set("Refaire");
-            } else {
-                nextRedoableString.set("Refaire " + newval.get(newval.size()- 1).toString());
-            }
-        });
-    }
-
-
-    // execute command
-    public void execute(Command command) {
+    private void executeCommand(Command command) {
         command.execute();
-        addUndoable(command);
+        pushUndoable(command);
+        firstRedoable.set(command.toString());
+        hasRedoable.set(true);
     }
 
     public void undo() {
-        Command command = popCommand(undoables);
+        Command command = popUndoable();
+        var commandString = "";
+
         if (command != null) {
-            command.undo();
-            redoables.add(command);
+            command.restore();
+            pushRedoable(command);
+            commandString = command.toString();
         }
+        firstRedoable.set(commandString);
+        hasRedoable.set(command != null);
     }
 
     public void redo() {
-        Command command = popCommand(redoables);
+        Command command = popReDoable();
+        var commandString = "";
+
         if (command != null) {
             command.execute();
-            addUndoable(command);
+            pushUndoable(command);
+            commandString = command.toString();
         }
+        firstUndoable.set(commandString);
+        hasUndoable.set(command != null);
     }
 
-
-    // add element to history
-    // remove first if max size reached
-    private void addUndoable(Command command) {
-        if (undoables.size() == CAPACITY) {
-            undoables.remove(0);
-        }
-        undoables.add(command);
+    private Command popUndoable(){
+        return popCommand(undoables);
     }
 
+    private Command popReDoable(){
+        return popCommand(redoables);
+    }
 
-    // pop or nul
-    private Command popCommand(ObservableList<Command> lst) {
-        if (!lst.isEmpty()) {
-            return lst.remove(lst.size() - 1);
+    private void pushUndoable(Command command) {
+        pushCommand(command, undoables);
+    }
+
+    private void pushRedoable(Command command) {
+        pushCommand(command, redoables);
+    }
+
+    private Command popCommand(Deque<Command> deque) {
+        if (deque.size() != 0) {
+            return deque.pop();
         }
         return null;
     }
 
-
-    // --- Properties ---
-
-    public StringProperty nextUndoableStringProperty() {
-        return nextUndoableString;
+    private void pushCommand(Command command, Deque<Command> deque) {
+        if (deque.size() == CAPACITY) {
+            deque.pollLast();
+        }
+        deque.push(command);
     }
 
-    public StringProperty nextRedoableStringProperty() {
-        return nextRedoableString;
+    public SimpleStringProperty firstUndoableProperty() {
+        return firstUndoable;
     }
 
-    public ReadOnlyBooleanProperty hasNoUndoableProperty() {
-        return undoablesProperty.emptyProperty();
+    public SimpleStringProperty firstRedoableProperty() {
+        return firstRedoable;
     }
 
-    public ReadOnlyBooleanProperty hasNoRedoableProperty() {
-        return redoablesProperty.emptyProperty();
+    public SimpleBooleanProperty hasNoUndoableProperty() {
+        return hasUndoable;
+    }
+
+    public SimpleBooleanProperty hasNoRedoableProperty() {
+        return hasRedoable;
     }
 }

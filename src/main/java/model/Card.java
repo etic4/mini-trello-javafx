@@ -111,21 +111,6 @@ public class Card extends Entitled implements History<Card> {
         return new CardMemento(this, memType);
     }
 
-    public boolean isRestorable(Memento<Card> memento) {
-        var cardMemento = (CardMemento) memento;
-        boolean restorable = true;
-
-        switch (cardMemento.getMemType()) {
-            case POSITION:
-            case ADD:
-            case DELETE:
-                var boardFacade = new BoardFacade(this);
-                restorable = boardFacade.isInBoard(cardMemento.getColumn());
-        }
-
-        return restorable;
-    }
-
     @Override
     public void restore(Memento<Card> memento) {
         var cardMemento = (CardMemento) memento;
@@ -143,5 +128,23 @@ public class Card extends Entitled implements History<Card> {
             case DELETE:
                 cardMemento.getColumn().add(cardMemento.getPosition(), cardMemento.getCard());
         }
+    }
+
+    public boolean isRestorable(Memento<Card> memento) {
+        var cardMemento = (CardMemento) memento;
+        var boardFacade = new BoardFacade(this);
+        boolean restorable = true;
+
+        switch (cardMemento.getMemType()) {
+            case POSITION:
+            case ADD:
+            case DELETE:
+                restorable = boardFacade.isInBoard(cardMemento.getColumn());
+                break;
+            case TITLE:
+                restorable = boardFacade.isInBoard(cardMemento.getCard());
+        }
+
+        return restorable;
     }
 }

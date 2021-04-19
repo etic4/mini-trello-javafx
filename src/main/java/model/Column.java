@@ -77,6 +77,14 @@ public class Column extends EntitledContainer<Card> implements History<Column> {
     }
 
     public boolean isRestorable(Memento<Column> memento) {
-        return true;
+        var columnMemento = (ColumnMemento) memento;
+        var boardFacade = new BoardFacade(this);
+        boolean restorable = true;
+
+        if (columnMemento.getMemType() == MemType.TITLE) {
+            restorable = boardFacade.isInBoard(columnMemento.getColumn());
+        }
+
+        return restorable;
     }
 }

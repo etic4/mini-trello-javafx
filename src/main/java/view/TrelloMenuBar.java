@@ -53,14 +53,14 @@ public class TrelloMenuBar extends MenuBar {
         // --- undo ---
         var undo = new MenuItem("Annuler");
         undo.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN));
-        undo.textProperty().bind(trelloViewModel.nextUndoableProperty());
+        undo.textProperty().bind(trelloViewModel.firstUndoableProperty());
         undo.disableProperty().bind(trelloViewModel.hasNoUndoableProperty());
         undo.setOnAction(e -> trelloViewModel.undo());
 
         // --- redo ---
         var redo = new MenuItem("Refaire");
         redo.setAccelerator(new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN));
-        redo.textProperty().bind(trelloViewModel.nextRedoableProperty());
+        redo.textProperty().bind(trelloViewModel.firstRedoableProperty());
         redo.disableProperty().bind(trelloViewModel.hasNoRedoableProperty());
         redo.setOnAction(e -> trelloViewModel.redo());
 

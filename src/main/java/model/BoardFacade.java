@@ -40,6 +40,11 @@ public class BoardFacade {
         return board.getMovables().contains(column);
     }
 
+    public boolean isInBoard(Card card) {
+        var column = card.getColumn();
+        return board.getMovables().contains(column) && column.getMovables().contains(card);
+    }
+
     // --- Title ---
 
     public void setTitle(Entitled entitled, String title) {

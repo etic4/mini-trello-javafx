@@ -6,8 +6,7 @@ public abstract class Command {
 
     abstract void execute();
 
-    abstract void undo();
+    abstract void restore();
 
     abstract boolean isRestorable();
-
 }

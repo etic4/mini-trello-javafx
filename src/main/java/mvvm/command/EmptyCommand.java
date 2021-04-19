@@ -7,7 +7,7 @@ public class EmptyCommand extends Command {
     }
 
     @Override
-    public void undo() {
+    public void restore() {
 
     }
 

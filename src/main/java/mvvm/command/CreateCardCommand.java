@@ -20,7 +20,7 @@ public class CreateCardCommand extends Command {
     }
 
     @Override
-    void undo() {
+    void restore() {
         card.restore(memento);
     }
 
@@ -28,7 +28,6 @@ public class CreateCardCommand extends Command {
     boolean isRestorable() {
         return card.isRestorable(memento);
     }
-
 
     @Override
     public String toString() {

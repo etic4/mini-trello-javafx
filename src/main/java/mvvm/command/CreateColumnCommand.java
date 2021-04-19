@@ -18,7 +18,7 @@ public class CreateColumnCommand extends Command {
     }
 
     @Override
-    void undo() {
+    void restore() {
         column.restore(memento);
     }
 

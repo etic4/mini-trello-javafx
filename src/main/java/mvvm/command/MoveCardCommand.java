@@ -25,7 +25,7 @@ public class MoveCardCommand extends Command {
     }
 
     @Override
-    void undo() {
+    void restore() {
         card.restore(memento);
 
     }
