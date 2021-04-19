@@ -4,7 +4,7 @@ import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
 
-public class Column extends EntitledContainer<Card> implements History {
+public class Column extends EntitledContainer<Card> implements History<Column> {
 
     private final Board board;
 
@@ -52,7 +52,27 @@ public class Column extends EntitledContainer<Card> implements History {
     }
 
     @Override
-    public Memento save(MemType memType) {
+    public Memento<Column> save(MemType memType) {
         return new ColumnMemento(this, memType);
+    }
+
+    @Override
+    public void restore(Memento<Column> memento) {
+        var columnMemento = (ColumnMemento) memento;
+
+        switch (columnMemento.getMemType()) {
+            case TITLE:
+                this.setTitle(columnMemento.getTitle());
+                break;
+            case POSITION:
+                board.remove(this);
+                board.add(columnMemento.getPosition(), this);
+                break;
+            case ADD:
+                columnMemento.getBoard().remove(columnMemento.getColumn());
+                break;
+            case DELETE:
+                columnMemento.getBoard().add(columnMemento.getPosition(), columnMemento.getColumn());
+        }
     }
 }

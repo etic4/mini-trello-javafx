@@ -1,6 +1,6 @@
 package model;
 
-public class ColumnMemento implements Memento {
+public class ColumnMemento implements Memento<Column> {
     private Board board;
     private int position;
     private String title;
@@ -23,20 +23,23 @@ public class ColumnMemento implements Memento {
         }
     }
 
-    public void restore() {
-        switch (memType) {
-            case TITLE:
-                column.setTitle(title);
-                break;
-            case POSITION:
-                board.remove(column);
-                board.add(position, column);
-                break;
-            case ADD:
-                board.remove(column);
-                break;
-            case DELETE:
-                board.add(position, column);
-        }
+    Board getBoard() {
+        return board;
+    }
+
+    int getPosition() {
+        return position;
+    }
+
+    String getTitle() {
+        return title;
+    }
+
+    Column getColumn() {
+        return column;
+    }
+
+    MemType getMemType() {
+        return memType;
     }
 }

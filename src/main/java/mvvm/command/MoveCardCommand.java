@@ -8,8 +8,8 @@ public class MoveCardCommand extends Command {
     private final Card card;
     private final Direction direction;
     private final BoardFacade boardFacade;
+    private Memento<Card> memento;
     private String commandString = "";
-
 
     public MoveCardCommand(Card card, Direction direction, BoardFacade boardFacade) {
         this.card = card;
@@ -22,6 +22,12 @@ public class MoveCardCommand extends Command {
         setCommandString();
         memento = card.save(MemType.POSITION);
         boardFacade.move(card, direction);
+    }
+
+    @Override
+    void undo() {
+        card.restore(memento);
+
     }
 
     private void setCommandString() {

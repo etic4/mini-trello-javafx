@@ -1,6 +1,6 @@
 package model;
 
-public class CardMemento implements Memento {
+public class CardMemento implements Memento<Card> {
     private Column column;
     private int position;
     private String title;
@@ -23,19 +23,23 @@ public class CardMemento implements Memento {
         }
     }
 
-    public void restore() {
-        switch (memType) {
-            case TITLE:
-                card.setTitle(title);
-                break;
-            case ADD:
-                column.remove(card);
-                break;
-            case DELETE:
-                column.add(position, card);
-            case POSITION:
-                card.switchTo(column, card, position);
-                break;
-        }
+    Column getColumn() {
+        return column;
+    }
+
+    int getPosition() {
+        return position;
+    }
+
+    String getTitle() {
+        return title;
+    }
+
+    Card getCard() {
+        return card;
+    }
+
+    MemType getMemType() {
+        return memType;
     }
 }

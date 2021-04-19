@@ -4,11 +4,12 @@ import model.*;
 
 import java.util.Locale;
 
-public class EditTitleCommand<E extends Entitled & History> extends Command {
+public class EditTitleCommand<E extends Entitled & History<T>, T> extends Command {
     private final E entitled;
     private final String title;
     private final BoardFacade boardFacade;
     private String commandString;
+    private Memento<T> memento;
 
     public EditTitleCommand(E entitled, String title, BoardFacade boardFacade) {
             this.entitled = entitled;
@@ -21,6 +22,11 @@ public class EditTitleCommand<E extends Entitled & History> extends Command {
         setCommandString();
         memento = entitled.save(MemType.TITLE);
         boardFacade.setTitle(entitled, title);
+    }
+
+    @Override
+    void undo() {
+        entitled.restore(memento);
     }
 
     private void setCommandString() {

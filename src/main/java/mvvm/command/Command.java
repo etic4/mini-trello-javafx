@@ -7,8 +7,6 @@ public abstract class Command {
 
     abstract void execute();
 
-    void undo() {
-        memento.restore();
-    };
+    abstract void undo();
 
 }
