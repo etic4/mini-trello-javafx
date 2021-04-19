@@ -5,6 +5,7 @@ import model.*;
 public class DeleteColumnCommand extends Command {
     private final BoardFacade boardFacade;
     private final Column column;
+    private Memento<Column> memento;
 
     public DeleteColumnCommand(Column column, BoardFacade boardFacade) {
         this.boardFacade = boardFacade;
@@ -15,6 +16,11 @@ public class DeleteColumnCommand extends Command {
     public void execute() {
         memento = column.save(MemType.DELETE);
         boardFacade.delete(column);
+    }
+
+    @Override
+    void undo() {
+        column.restore(memento);
     }
 
     @Override

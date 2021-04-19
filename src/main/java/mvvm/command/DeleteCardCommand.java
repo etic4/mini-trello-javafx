@@ -5,6 +5,7 @@ import model.*;
 public class DeleteCardCommand extends Command {
     private final BoardFacade boardFacade;
     private final Card card;
+    private Memento<Card> memento;
 
     public DeleteCardCommand(Card card,  BoardFacade boardFacade) {
         this.boardFacade = boardFacade;
@@ -15,6 +16,11 @@ public class DeleteCardCommand extends Command {
     public void execute() {
         memento = card.save(MemType.DELETE);
         boardFacade.delete(card);
+    }
+
+    @Override
+    void undo() {
+        card.restore(memento);
     }
 
     @Override
