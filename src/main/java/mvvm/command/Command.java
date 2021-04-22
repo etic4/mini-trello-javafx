@@ -3,10 +3,12 @@ package mvvm.command;
 import model.Memento;
 
 public abstract class Command {
-    protected Memento memento;
 
     abstract void execute();
 
-    abstract void undo();
+    abstract void restore();
 
+    abstract boolean isUndoable();
+
+    abstract boolean isRedoable();
 }

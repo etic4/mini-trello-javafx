@@ -25,8 +25,19 @@ public class EditTitleCommand<E extends Entitled & History<T>, T> extends Comman
     }
 
     @Override
-    void undo() {
+    void restore() {
         entitled.restore(memento);
+    }
+
+    @Override
+    boolean isUndoable() {
+        return true;
+    }
+
+    // TODO: déterminer si entiteled existe toujours
+    @Override
+    boolean isRedoable() {
+        return true;
     }
 
     private void setCommandString() {

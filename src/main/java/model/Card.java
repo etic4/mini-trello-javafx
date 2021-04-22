@@ -55,20 +55,24 @@ public class Card extends Entitled implements History<Card> {
         getColumn().moveDown(this);
     }
 
-    void moveLeft() {
+    Column moveLeft() {
         var previous = getPreviousColumn();
 
         if (previous != null) {
             switchTo(previous, this);
         }
+
+        return previous;
     }
 
-    void moveRight() {
+    Column moveRight() {
         var next = getNextColumn();
 
         if (next != null) {
             switchTo(next, this);
         }
+
+        return next;
     }
 
     void delete() {
@@ -128,5 +132,27 @@ public class Card extends Entitled implements History<Card> {
             case DELETE:
                 cardMemento.getColumn().add(cardMemento.getPosition(), cardMemento.getCard());
         }
+    }
+
+    public boolean isUndoable(Memento<Card> memento) {
+        var cardMemento = (CardMemento) memento;
+        var boardFacade = new BoardFacade(this);
+        boolean restorable = true;
+
+        switch (cardMemento.getMemType()) {
+            case POSITION:
+            case ADD:
+            case DELETE:
+                var board = this.getBoard();
+                var column = cardMemento.getColumn();
+                var boardMoveables = board.getColumns();
+
+                restorable = boardFacade.isInBoard(cardMemento.getColumn());
+                break;
+            case TITLE:
+                restorable = boardFacade.isInBoard(cardMemento.getCard());
+        }
+
+        return restorable;
     }
 }

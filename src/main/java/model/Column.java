@@ -2,6 +2,7 @@ package model;
 
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.collections.ObservableList;
 
 
 public class Column extends EntitledContainer<Card> implements History<Column> {
@@ -25,6 +26,10 @@ public class Column extends EntitledContainer<Card> implements History<Column> {
     Board getBoard() {
         return board;
     };
+
+    ObservableList<Card> getCards() {
+        return getMovables();
+    }
 
     void moveLeft() {
         getBoard().moveUp(this);
@@ -74,5 +79,23 @@ public class Column extends EntitledContainer<Card> implements History<Column> {
             case DELETE:
                 columnMemento.getBoard().add(columnMemento.getPosition(), columnMemento.getColumn());
         }
+    }
+
+    public boolean isUndoable(Memento<Column> memento) {
+        var columnMemento = (ColumnMemento) memento;
+        var boardFacade = new BoardFacade(this);
+        boolean restorable = true;
+
+        switch (columnMemento.getMemType()) {
+            case POSITION:
+                System.out.println(columnMemento.getPosition());
+                System.out.println(columnMemento.getBoard().getColumns().size());
+                restorable = columnMemento.getPosition() < columnMemento.getBoard().getColumns().size();
+                break;
+            case TITLE:
+                restorable = boardFacade.isInBoard(columnMemento.getColumn());
+                break;
+        }
+        return restorable;
     }
 }

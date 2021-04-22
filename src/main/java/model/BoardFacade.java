@@ -5,7 +5,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class BoardFacade {
-
     private final Board board;
 
     public BoardFacade(Board board) {
@@ -25,11 +24,24 @@ public class BoardFacade {
     }
 
     public ObservableList<Column> getColumns(Board board) {
-        return FXCollections.unmodifiableObservableList(board.getMovables());
+        return FXCollections.unmodifiableObservableList(board.getColumns());
     }
 
     public ObservableList<Card> getCards(Column column) {
-        return FXCollections.unmodifiableObservableList(column.getMovables());
+        return FXCollections.unmodifiableObservableList(column.getCards());
+    }
+
+    // reçoit une instance de column et retourne True si elle existe
+    //   dans le board
+    // permet déterminer si une carte est restorable (cas d'une colonne supprimée)
+
+    public boolean isInBoard(Column column) {
+        return board.getColumns().contains(column);
+    }
+
+    public boolean isInBoard(Card card) {
+        var column = card.getColumn();
+        return board.getColumns().contains(column) && column.getCards().contains(card);
     }
 
     // --- Title ---
@@ -78,7 +90,8 @@ public class BoardFacade {
         card.delete();
     }
 
-    public void move(Card card, Direction direction) {
+    public Column move(Card card, Direction direction) {
+        var column = card.getColumn();
         switch (direction) {
             case UP:
                 card.moveUp();
@@ -87,11 +100,12 @@ public class BoardFacade {
                 card.moveDown();
                 break;
             case LEFT:
-                card.moveLeft();
+                column = card.moveLeft();
                 break;
             case RIGHT:
-                card.moveRight();
+                column = card.moveRight();
         }
+        return column;
     }
 
     public Column getMoveDestinationColumn(Card card, Direction direction) {

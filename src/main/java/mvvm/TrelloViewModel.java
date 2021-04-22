@@ -21,7 +21,6 @@ public class TrelloViewModel {
     public static TrelloViewModel instance = null;
 
     private final TrelloFacade trelloFacade;
-    private final CommandManager commandManager;
     private final BooleanProperty noColumnSelected = new SimpleBooleanProperty(false);
     private final ObjectProperty<Column> selectedColumn = new SimpleObjectProperty<>();
 
@@ -42,7 +41,6 @@ public class TrelloViewModel {
 
     private TrelloViewModel(TrelloFacade trelloFacade) {
         this.trelloFacade = trelloFacade;
-        commandManager = CommandManager.getInstance();
         noColumnSelected.bind(Bindings.isNull(selectedColumn));
     }
 
@@ -50,40 +48,16 @@ public class TrelloViewModel {
         return trelloFacade.getBoardFacade();
     }
 
-    public void undo() {
-        commandManager.undo();
-    }
-
-    public void redo() {
-        commandManager.redo();
-    }
-
     public void commandCreateColumn() {
-        CommandManager.getInstance().execute(new CreateColumnCommand(getBoardFacade()));
+        CommandManager.execute(new CreateColumnCommand(getBoardFacade()));
     }
 
     public void commandCreateCard() {
-        CommandManager.getInstance().execute(new CreateCardCommand(selectedColumn.get(), getBoardFacade()));
+        CommandManager.execute(new CreateCardCommand(selectedColumn.get(), getBoardFacade()));
     }
 
     public void commandQuit() {
         Platform.exit();
-    }
-
-    public StringProperty nextUndoableProperty() {
-        return commandManager.nextUndoableStringProperty();
-    }
-
-    public StringProperty nextRedoableProperty() {
-        return commandManager.nextRedoableStringProperty();
-    }
-
-    public ReadOnlyBooleanProperty hasNoUndoableProperty() {
-        return commandManager.hasNoUndoableProperty();
-    }
-
-    public ReadOnlyBooleanProperty hasNoRedoableProperty() {
-        return commandManager.hasNoRedoableProperty();
     }
 
     public void bindSelectedColumn(ReadOnlyObjectProperty<Column> selectedColumnProperty) {

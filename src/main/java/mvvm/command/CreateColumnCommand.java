@@ -18,8 +18,19 @@ public class CreateColumnCommand extends Command {
     }
 
     @Override
-    void undo() {
+    void restore() {
         column.restore(memento);
+    }
+
+    @Override
+    boolean isUndoable() {
+        return column.isUndoable(memento);
+    }
+
+    // true tant qu'il y a 1 seul board
+    @Override
+    boolean isRedoable() {
+        return true;
     }
 
     @Override

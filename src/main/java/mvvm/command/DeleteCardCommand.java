@@ -19,8 +19,19 @@ public class DeleteCardCommand extends Command {
     }
 
     @Override
-    void undo() {
+    void restore() {
         card.restore(memento);
+    }
+
+    @Override
+    boolean isUndoable() {
+        return card.isUndoable(memento);
+    }
+
+    // la carte existe dans le board
+    @Override
+    boolean isRedoable() {
+        return boardFacade.isInBoard(card);
     }
 
     @Override

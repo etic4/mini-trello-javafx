@@ -38,10 +38,10 @@ public class BoardViewModel {
     // --- commands ---
 
     public void setTitle(String title) {
-        CommandManager.getInstance().execute(new EditTitleCommand<>(board, title, boardFacade));
+        CommandManager.execute(new EditTitleCommand<>(board, title, boardFacade));
     }
 
     public void addColumn() {
-        CommandManager.getInstance().execute(new CreateColumnCommand(boardFacade));
+        CommandManager.execute(new CreateColumnCommand(boardFacade));
     }
 }
