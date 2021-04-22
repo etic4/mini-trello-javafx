@@ -23,8 +23,14 @@ public class CreateColumnCommand extends Command {
     }
 
     @Override
-    boolean isRestorable() {
-        return column.isRestorable(memento);
+    boolean isUndoable() {
+        return column.isUndoable(memento);
+    }
+
+    // true tant qu'il y a 1 seul board
+    @Override
+    boolean isRedoable() {
+        return true;
     }
 
     @Override

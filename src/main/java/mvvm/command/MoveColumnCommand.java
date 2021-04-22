@@ -27,8 +27,13 @@ public class MoveColumnCommand extends Command {
     }
 
     @Override
-    boolean isRestorable() {
-        return column.isRestorable(memento);
+    boolean isUndoable() {
+        return column.isUndoable(memento);
+    }
+
+    @Override
+    boolean isRedoable() {
+        return true;
     }
 
     @Override

@@ -24,8 +24,14 @@ public class DeleteCardCommand extends Command {
     }
 
     @Override
-    boolean isRestorable() {
-        return card.isRestorable(memento);
+    boolean isUndoable() {
+        return card.isUndoable(memento);
+    }
+
+    // la carte existe dans le board
+    @Override
+    boolean isRedoable() {
+        return boardFacade.isInBoard(card);
     }
 
     @Override

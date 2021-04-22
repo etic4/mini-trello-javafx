@@ -24,8 +24,14 @@ public class DeleteColumnCommand extends Command {
     }
 
     @Override
-    boolean isRestorable() {
-        return column.isRestorable(memento);
+    boolean isUndoable() {
+        return column.isUndoable(memento);
+    }
+
+    // tant qu'il n'y a qu'un seul board
+    @Override
+    boolean isRedoable() {
+        return true;
     }
 
     @Override

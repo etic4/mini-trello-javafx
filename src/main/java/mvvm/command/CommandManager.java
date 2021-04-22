@@ -99,10 +99,6 @@ public class CommandManager {
         return commands.isEmpty() ? "" : commands.peek().toString();
     }
 
-    private boolean firstCommandNotRestorable(Deque<Command> commands) {
-        return commands.isEmpty() || !commands.peek().isRestorable();
-    }
-
     private void setUndoRedoProperties() {
         setUndoRedoStrings();
         setUndoRedoStates();
@@ -114,8 +110,8 @@ public class CommandManager {
     }
 
     private void setUndoRedoStates() {
-        hasNoUndoableProperty.set(firstCommandNotRestorable(undoables));
-        hasNoRedoableProperty.set(firstCommandNotRestorable(redoables));
+        hasNoUndoableProperty.set(undoables.isEmpty() || !undoables.peek().isUndoable());
+        hasNoRedoableProperty.set(redoables.isEmpty() || !redoables.peek().isRedoable());
     }
 
     public SimpleStringProperty firstUndoableStringProperty() {

@@ -1,10 +1,16 @@
 package model;
 
 
+import javafx.collections.ObservableList;
+
 public class Board extends EntitledContainer<Column> implements History<Board> {
 
     public Board(String title) {
         super(title);
+    }
+
+    ObservableList<Column> getColumns() {
+        return getMovables();
     }
 
     @Override
@@ -18,7 +24,7 @@ public class Board extends EntitledContainer<Column> implements History<Board> {
         setTitle(boardMemento.get_title());
     }
 
-    public boolean isRestorable(Memento<Board> memento) {
+    public boolean isUndoable(Memento<Board> memento) {
         return true;
     }
 

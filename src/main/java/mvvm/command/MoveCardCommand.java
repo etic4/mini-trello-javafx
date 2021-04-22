@@ -9,7 +9,7 @@ public class MoveCardCommand extends Command {
     private final Direction direction;
     private final BoardFacade boardFacade;
     private Memento<Card> memento;
-    private String commandString = "";
+    private Column column;
 
     public MoveCardCommand(Card card, Direction direction, BoardFacade boardFacade) {
         this.card = card;
@@ -19,23 +19,29 @@ public class MoveCardCommand extends Command {
 
     @Override
     public void execute() {
-        setCommandString();
+        getCommandString();
         memento = card.save(MemType.POSITION);
-        boardFacade.move(card, direction);
+        column = boardFacade.move(card, direction);
     }
 
     @Override
     void restore() {
         card.restore(memento);
-
     }
 
     @Override
-    boolean isRestorable() {
-        return card.isRestorable(memento);
+    boolean isUndoable() {
+        return card.isUndoable(memento);
     }
 
-    private void setCommandString() {
+    //Faut que colonne existe
+    @Override
+    boolean isRedoable() {
+        return boardFacade.isInBoard(column);
+    }
+
+    private String getCommandString() {
+        var commandString = "";
         if (direction == Direction.LEFT || direction == Direction.RIGHT) {
             var sourceColumn = boardFacade.getColumn(card);
             var destColumn = boardFacade.getMoveDestinationColumn(card, direction);
@@ -43,10 +49,11 @@ public class MoveCardCommand extends Command {
         } else {
             commandString = "Déplacement de la " + card + "vers le " + direction;
         }
+        return commandString;
     }
 
     @Override
     public String toString() {
-        return commandString;
+        return getCommandString();
     }
 }
