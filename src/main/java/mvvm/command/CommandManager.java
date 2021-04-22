@@ -21,11 +21,11 @@ public class CommandManager {
     private final Deque<Command> undoables = new LinkedList<>();
     private final Deque<Command> redoables = new LinkedList<>();
 
-    private final SimpleStringProperty firstUndoable = new SimpleStringProperty();
-    private final SimpleStringProperty firstRedoable = new SimpleStringProperty();
+    private final SimpleStringProperty firstUndoableString = new SimpleStringProperty("Annuler");
+    private final SimpleStringProperty firstRedoableString = new SimpleStringProperty("Refaire");
 
-    private final SimpleBooleanProperty hasUndoable = new SimpleBooleanProperty(false);
-    private final SimpleBooleanProperty hasRedoable = new SimpleBooleanProperty(false);
+    private final SimpleBooleanProperty hasNoUndoableProperty = new SimpleBooleanProperty(true);
+    private final SimpleBooleanProperty hasNoRedoableProperty = new SimpleBooleanProperty(true);
 
 
     public static void execute(Command command) {
@@ -41,34 +41,28 @@ public class CommandManager {
     private void executeCommand(Command command) {
         command.execute();
         pushUndoable(command);
-        firstRedoable.set(command.toString());
-        hasRedoable.set(true);
+        setUndoRedoProperties();
     }
 
     public void undo() {
         Command command = popUndoable();
-        var commandString = "";
 
         if (command != null) {
             command.restore();
             pushRedoable(command);
-            commandString = command.toString();
         }
-        firstRedoable.set(commandString);
-        hasRedoable.set(command != null);
+        setUndoRedoProperties();
     }
+
 
     public void redo() {
         Command command = popReDoable();
-        var commandString = "";
 
         if (command != null) {
             command.execute();
             pushUndoable(command);
-            commandString = command.toString();
         }
-        firstUndoable.set(commandString);
-        hasUndoable.set(command != null);
+        setUndoRedoProperties();
     }
 
     private Command popUndoable(){
@@ -94,26 +88,49 @@ public class CommandManager {
         return null;
     }
 
-    private void pushCommand(Command command, Deque<Command> deque) {
-        if (deque.size() == CAPACITY) {
-            deque.pollLast();
+    private void pushCommand(Command command, Deque<Command> commands) {
+        if (commands.size() == CAPACITY) {
+            commands.pollLast();
         }
-        deque.push(command);
+        commands.push(command);
     }
 
-    public SimpleStringProperty firstUndoableProperty() {
-        return firstUndoable;
+    private String peekStringCommand(Deque<Command> commands) {
+        return commands.isEmpty() ? "" : commands.peek().toString();
     }
 
-    public SimpleStringProperty firstRedoableProperty() {
-        return firstRedoable;
+    private boolean firstCommandNotRestorable(Deque<Command> commands) {
+        return commands.isEmpty() || !commands.peek().isRestorable();
+    }
+
+    private void setUndoRedoProperties() {
+        setUndoRedoStrings();
+        setUndoRedoStates();
+    }
+
+    private void setUndoRedoStrings() {
+        firstUndoableString.set("Annuler " + peekStringCommand(undoables));
+        firstRedoableString.set("Refaire " + peekStringCommand(redoables));
+    }
+
+    private void setUndoRedoStates() {
+        hasNoUndoableProperty.set(firstCommandNotRestorable(undoables));
+        hasNoRedoableProperty.set(firstCommandNotRestorable(redoables));
+    }
+
+    public SimpleStringProperty firstUndoableStringProperty() {
+        return firstUndoableString;
+    }
+
+    public SimpleStringProperty firstRedoableStringProperty() {
+        return firstRedoableString;
     }
 
     public SimpleBooleanProperty hasNoUndoableProperty() {
-        return hasUndoable;
+        return hasNoUndoableProperty;
     }
 
     public SimpleBooleanProperty hasNoRedoableProperty() {
-        return hasRedoable;
+        return hasNoRedoableProperty;
     }
 }
