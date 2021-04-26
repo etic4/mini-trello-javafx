@@ -24,17 +24,6 @@ public class DeleteCardCommand extends Command {
     }
 
     @Override
-    boolean isUndoable() {
-        return card.isUndoable(memento);
-    }
-
-    // la carte existe dans le board
-    @Override
-    boolean isRedoable() {
-        return boardFacade.isInBoard(card);
-    }
-
-    @Override
     public String toString() {
         return "Suppression de la " + card;
     }

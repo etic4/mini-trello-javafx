@@ -25,19 +25,6 @@ public class CreateCardCommand extends Command {
     }
 
     @Override
-    boolean isUndoable() {
-        return card.isUndoable(memento);
-    }
-
-    //déterminer si les conditions sont remplies pour refaire la commande.
-    // -> colonne existe toujours (et si pas dans même position, quoi ?)
-    @Override
-    boolean isRedoable() {
-        return boardFacade.isInBoard(column);
-    }
-
-
-    @Override
     public String toString() {
         return "Ajout d'une carte à la " + column;
     }

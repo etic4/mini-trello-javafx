@@ -39,7 +39,6 @@ public class ColumnView extends VBox {
         this(new ColumnViewModel(column));
     }
 
-
     private void buildView() {
         buildGraphicComponents();
         configCardFactory();

@@ -19,6 +19,7 @@ public class BoardViewModel {
         this.boardFacade = boardFacade;
         board = boardFacade.getBoard();
 
+
         // set title view binded property tot board title
         boardTitleView.set(board.getTitle());
 

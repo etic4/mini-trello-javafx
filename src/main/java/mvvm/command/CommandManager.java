@@ -110,8 +110,8 @@ public class CommandManager {
     }
 
     private void setUndoRedoStates() {
-        hasNoUndoableProperty.set(undoables.isEmpty() || !undoables.peek().isUndoable());
-        hasNoRedoableProperty.set(redoables.isEmpty() || !redoables.peek().isRedoable());
+        hasNoUndoableProperty.set(undoables.isEmpty());
+        hasNoRedoableProperty.set(redoables.isEmpty());
     }
 
     public SimpleStringProperty firstUndoableStringProperty() {

@@ -16,7 +16,7 @@ public class ColumnViewModel {
 
     public ColumnViewModel(Column column) {
         this.column = column;
-        boardFacade = new BoardFacade(column);
+        boardFacade = new BoardFacade(column.getBoard());
 
         // set title view binded property to column title
         columnTitleView.set(column.getTitle());

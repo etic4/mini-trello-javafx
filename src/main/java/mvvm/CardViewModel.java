@@ -16,7 +16,7 @@ public class CardViewModel {
 
     public CardViewModel(Card card) {
         this.card = card;
-        boardFacade = new BoardFacade(card);
+        boardFacade = new BoardFacade(card.getBoard());
 
         // set title view binded property to card title
         cardTitleView.set(card.getTitle());

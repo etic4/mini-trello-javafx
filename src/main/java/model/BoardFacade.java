@@ -5,18 +5,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class BoardFacade {
+    private final DaoFactory dao;
     private final Board board;
 
     public BoardFacade(Board board) {
         this.board = board;
-    }
-
-    public BoardFacade(Column column) {
-        this.board = column.getBoard();
-    }
-
-    public BoardFacade(Card card) {
-        this.board = card.getBoard();
+        this.dao = new DaoFactory(DaoBackendType.SQLITE);
     }
 
     public Board getBoard() {
@@ -24,10 +18,13 @@ public class BoardFacade {
     }
 
     public ObservableList<Column> getColumns(Board board) {
-        return FXCollections.unmodifiableObservableList(board.getColumns());
+        var columns = dao.getColumnDao().get_all(board.getId());
+        var observableColumns = FXCollections.observableArrayList(columns);
+        return FXCollections.unmodifiableObservableList(observableColumns);
     }
 
     public ObservableList<Card> getCards(Column column) {
+        dao.getColumnDao().get_all(column.getId());
         return FXCollections.unmodifiableObservableList(column.getCards());
     }
 

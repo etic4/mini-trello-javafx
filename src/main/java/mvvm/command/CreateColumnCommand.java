@@ -23,17 +23,6 @@ public class CreateColumnCommand extends Command {
     }
 
     @Override
-    boolean isUndoable() {
-        return column.isUndoable(memento);
-    }
-
-    // true tant qu'il y a 1 seul board
-    @Override
-    boolean isRedoable() {
-        return true;
-    }
-
-    @Override
     public String toString() {
         return "Ajout d'une colonne au board " + boardFacade.getBoard();
     }

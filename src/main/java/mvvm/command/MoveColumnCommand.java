@@ -27,16 +27,6 @@ public class MoveColumnCommand extends Command {
     }
 
     @Override
-    boolean isUndoable() {
-        return column.isUndoable(memento);
-    }
-
-    @Override
-    boolean isRedoable() {
-        return true;
-    }
-
-    @Override
     public String toString() {
         return "Déplacement de la " + column + "vers la " + direction;
     }

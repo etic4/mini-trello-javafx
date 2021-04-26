@@ -6,8 +6,14 @@ import javafx.collections.ObservableList;
 
 
 public class Column extends EntitledContainer<Card> implements History<Column> {
+    private Board board;
 
-    private final Board board;
+    public int id;
+
+    public Column(int id, String title, int position, int boardId) {
+        super(title);
+
+    }
 
     public Column(Board board, String title) {
         super(title);
@@ -19,13 +25,26 @@ public class Column extends EntitledContainer<Card> implements History<Column> {
         }
     }
 
+    int getId() {
+        return id;
+    }
+
+    void setId(int id) {
+        this.id = id;
+    }
+
     public Column(Board board) {
         this(board, "");
     }
 
-    Board getBoard() {
+    public Board getBoard() {
         return board;
     };
+
+
+    int getPosition() {
+        return getBoard().getPosition(this);
+    }
 
     ObservableList<Card> getCards() {
         return getMovables();
@@ -79,23 +98,5 @@ public class Column extends EntitledContainer<Card> implements History<Column> {
             case DELETE:
                 columnMemento.getBoard().add(columnMemento.getPosition(), columnMemento.getColumn());
         }
-    }
-
-    public boolean isUndoable(Memento<Column> memento) {
-        var columnMemento = (ColumnMemento) memento;
-        var boardFacade = new BoardFacade(this);
-        boolean restorable = true;
-
-        switch (columnMemento.getMemType()) {
-            case POSITION:
-                System.out.println(columnMemento.getPosition());
-                System.out.println(columnMemento.getBoard().getColumns().size());
-                restorable = columnMemento.getPosition() < columnMemento.getBoard().getColumns().size();
-                break;
-            case TITLE:
-                restorable = boardFacade.isInBoard(columnMemento.getColumn());
-                break;
-        }
-        return restorable;
     }
 }

@@ -29,16 +29,6 @@ public class MoveCardCommand extends Command {
         card.restore(memento);
     }
 
-    @Override
-    boolean isUndoable() {
-        return card.isUndoable(memento);
-    }
-
-    //Faut que colonne existe
-    @Override
-    boolean isRedoable() {
-        return boardFacade.isInBoard(column);
-    }
 
     private String getCommandString() {
         var commandString = "";

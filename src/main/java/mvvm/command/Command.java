@@ -8,7 +8,4 @@ public abstract class Command {
 
     abstract void restore();
 
-    abstract boolean isUndoable();
-
-    abstract boolean isRedoable();
 }

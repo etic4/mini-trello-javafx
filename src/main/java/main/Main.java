@@ -13,7 +13,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         TrelloFacade trelloFacade = new TrelloFacade();
         TrelloViewModel.init(trelloFacade);
-        TrelloView trelloView = new TrelloView(primaryStage);
+        new TrelloView(primaryStage);
         primaryStage.show();
     }
 

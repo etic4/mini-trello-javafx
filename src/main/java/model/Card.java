@@ -1,13 +1,17 @@
 package model;
 
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
 
 public class Card extends Entitled implements History<Card> {
+    private int id;
 
     private Column column;
+
+    public Card(int id, String title, int position, int column_id) {
+        super(title);
+    }
 
     public Card(Column column, String title) {
         super(title);
@@ -19,9 +23,22 @@ public class Card extends Entitled implements History<Card> {
         }
     }
 
+    int getId() {
+        return id;
+    }
+
+    void setId(int id) {
+        this.id = id;
+    }
     public Card(Column column) {
         this(column, "");
     }
+
+
+    public Board getBoard() {
+        return getColumn().getBoard();
+    }
+
 
     Column getColumn() {
         return column;
@@ -33,10 +50,6 @@ public class Card extends Entitled implements History<Card> {
 
     int getPosition() {
         return getColumn().getPosition(this);
-    }
-
-    Board getBoard() {
-        return getColumn().getBoard();
     }
 
     Column getNextColumn() {
@@ -132,27 +145,5 @@ public class Card extends Entitled implements History<Card> {
             case DELETE:
                 cardMemento.getColumn().add(cardMemento.getPosition(), cardMemento.getCard());
         }
-    }
-
-    public boolean isUndoable(Memento<Card> memento) {
-        var cardMemento = (CardMemento) memento;
-        var boardFacade = new BoardFacade(this);
-        boolean restorable = true;
-
-        switch (cardMemento.getMemType()) {
-            case POSITION:
-            case ADD:
-            case DELETE:
-                var board = this.getBoard();
-                var column = cardMemento.getColumn();
-                var boardMoveables = board.getColumns();
-
-                restorable = boardFacade.isInBoard(cardMemento.getColumn());
-                break;
-            case TITLE:
-                restorable = boardFacade.isInBoard(cardMemento.getCard());
-        }
-
-        return restorable;
     }
 }
