@@ -3,6 +3,7 @@ package model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.util.Collections;
+import java.util.List;
 
 /*
 * Un container qui étend Entitled
@@ -28,6 +29,10 @@ public abstract class EntitledContainer<E> extends Entitled {
 
     void add(int i, E e) {
         getMovables().add(i, e);
+    }
+
+    void addAll(List<E> elems) {
+        getMovables().addAll(elems);
     }
 
     void remove(E e) {

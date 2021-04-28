@@ -6,7 +6,8 @@ import java.util.List;
 
 class SqLiteCardDao implements Dao<Card> {
     private static final String SQL_GET_BY_ID = "SELECT * FROM `Card` WHERE card_id = ?";
-    private static final String SQL_GET_ALL = "SELECT * FROM `Card` WHERE `column` = ?";
+    private static final String SQL_GET_ALL = "SELECT * FROM `Card` WHERE `column` = ? " +
+                                            "ORDER BY `position`";
     private static final String SQL_INSERT = "INSERT INTO `Card` VALUES(?, ?, ?)";
     private static final String SQL_UPDATE = "UPDATE `Card` SET " +
                                             "title = ?, " +
@@ -63,7 +64,7 @@ class SqLiteCardDao implements Dao<Card> {
     }
 
     @Override
-    public void save(Card card) {
+    public Card save(Card card) {
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(SQL_INSERT,
                     Statement.RETURN_GENERATED_KEYS);
@@ -78,13 +79,16 @@ class SqLiteCardDao implements Dao<Card> {
             var CardId = preparedStatement.getGeneratedKeys().getInt(1);
             card.setId(CardId);
 
+            return card;
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+        return null;
     }
 
     @Override
-    public void update(Card card, String[] params) {
+    public void update(Card card) {
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(SQL_UPDATE);
             setValues(card, preparedStatement);

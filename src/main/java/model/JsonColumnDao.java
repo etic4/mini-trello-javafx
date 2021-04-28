@@ -14,12 +14,12 @@ class JsonColumnDao implements Dao<Column> {
     }
 
     @Override
-    public void save(Column column) {
-
+    public Column save(Column column) {
+        return null;
     }
 
     @Override
-    public void update(Column column, String[] params) {
+    public void update(Column column) {
 
     }
 

@@ -1,7 +1,6 @@
 package model;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
 class SqLiteBoardDao implements Dao<Board> {
@@ -41,12 +40,12 @@ class SqLiteBoardDao implements Dao<Board> {
     }
 
     @Override
-    public void save(Board board) {
+    public Board save(Board board) {
         throw new UnsupportedOperationException("Il n'y a qu'un board");
     }
 
     @Override
-    public void update(Board board, String[] params) {
+    public void update(Board board) {
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(SQL_UPDATE);
             setValues(board, preparedStatement);

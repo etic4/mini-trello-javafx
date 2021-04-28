@@ -6,7 +6,8 @@ import java.util.List;
 
 class SqLiteColumnDao implements Dao<Column> {
     private static final String SQL_GET_BY_ID = "SELECT * FROM `Column` WHERE column_id = ?";
-    private static final String SQL_GET_ALL = "SELECT * FROM `Column` WHERE board = ?";
+    private static final String SQL_GET_ALL = "SELECT * FROM `Column` WHERE board = ? " +
+                                            "ORDER BY `position`";
     private static final String SQL_INSERT = "INSERT INTO `Column` VALUES(?, ?, ?)";
     private static final String SQL_UPDATE = "UPDATE `Column` SET " +
                                             "title = ?, " +
@@ -65,7 +66,7 @@ class SqLiteColumnDao implements Dao<Column> {
     }
 
     @Override
-    public void save(Column column) {
+    public Column save(Column column) {
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(SQL_INSERT,
                     Statement.RETURN_GENERATED_KEYS);
@@ -80,13 +81,17 @@ class SqLiteColumnDao implements Dao<Column> {
             var columnId = preparedStatement.getGeneratedKeys().getInt(1);
             column.setId(columnId);
 
+            return column;
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+
+        return null;
     }
 
     @Override
-    public void update(Column column, String[] params) {
+    public void update(Column column) {
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(SQL_UPDATE);
             setValues(column, preparedStatement);

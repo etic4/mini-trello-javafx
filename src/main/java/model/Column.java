@@ -25,6 +25,11 @@ public class Column extends EntitledContainer<Card> implements History<Column> {
         }
     }
 
+    public Column(Board board) {
+        this(board, "");
+    }
+
+
     int getId() {
         return id;
     }
@@ -33,14 +38,10 @@ public class Column extends EntitledContainer<Card> implements History<Column> {
         this.id = id;
     }
 
-    public Column(Board board) {
-        this(board, "");
-    }
 
     public Board getBoard() {
         return board;
     };
-
 
     int getPosition() {
         return getBoard().getPosition(this);

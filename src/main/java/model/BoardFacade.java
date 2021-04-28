@@ -18,33 +18,28 @@ public class BoardFacade {
     }
 
     public ObservableList<Column> getColumns(Board board) {
-        var columns = dao.getColumnDao().get_all(board.getId());
-        var observableColumns = FXCollections.observableArrayList(columns);
-        return FXCollections.unmodifiableObservableList(observableColumns);
+        return FXCollections.unmodifiableObservableList(board.getColumns());
     }
 
     public ObservableList<Card> getCards(Column column) {
-        dao.getColumnDao().get_all(column.getId());
         return FXCollections.unmodifiableObservableList(column.getCards());
     }
 
-    // reçoit une instance de column et retourne True si elle existe
-    //   dans le board
-    // permet déterminer si une carte est restorable (cas d'une colonne supprimée)
-
-    public boolean isInBoard(Column column) {
-        return board.getColumns().contains(column);
-    }
-
-    public boolean isInBoard(Card card) {
-        var column = card.getColumn();
-        return board.getColumns().contains(column) && column.getCards().contains(card);
-    }
 
     // --- Title ---
 
     public void setTitle(Entitled entitled, String title) {
         entitled.setTitle(title);
+
+        if (entitled instanceof Board) {
+            dao.getBoardDao().update(board);
+        } else if (entitled instanceof Column) {
+            var column = (Column) entitled;
+            dao.getColumnDao().update(column);
+        } else {
+            var card = (Card) entitled;
+            dao.getCardDao().update(card);
+        }
     }
 
     // --- Board ---
@@ -52,18 +47,21 @@ public class BoardFacade {
     // TODO: changer ça
 
     public Column addColumn() {
-        return new Column(board);
+        var column = new Column(board);
+        return dao.getColumnDao().save(column);
     }
 
 
     // ---  Column ---
 
     public Card addCard(Column column) {
-        return new Card(column);
+        var card = new Card(column);
+        return dao.getCardDao().save(card);
     }
 
     public void delete(Column column) {
         column.delete();
+        dao.getColumnDao().delete(column);
     }
 
     public void move(Column column, Direction direction) {
@@ -74,8 +72,8 @@ public class BoardFacade {
             case RIGHT:
                 column.moveRight();
         }
+        dao.getColumnDao().update(column);
     }
-
 
     // ---  Card ---
 
@@ -85,10 +83,12 @@ public class BoardFacade {
 
     public void delete(Card card) {
         card.delete();
+        dao.getCardDao().delete(card);
     }
 
     public Column move(Card card, Direction direction) {
         var column = card.getColumn();
+
         switch (direction) {
             case UP:
                 card.moveUp();
@@ -102,6 +102,13 @@ public class BoardFacade {
             case RIGHT:
                 column = card.moveRight();
         }
+
+        dao.getCardDao().update(card);
+
+        if (direction == Direction.LEFT || direction == Direction.RIGHT) {
+            dao.getColumnDao().update(column);
+        }
+
         return column;
     }
 

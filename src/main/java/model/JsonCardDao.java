@@ -14,12 +14,12 @@ class JsonCardDao implements Dao<Card> {
     }
 
     @Override
-    public void save(Card card) {
-
+    public Card save(Card card) {
+        return null;
     }
 
     @Override
-    public void update(Card card, String[] params) {
+    public void update(Card card) {
 
     }
 

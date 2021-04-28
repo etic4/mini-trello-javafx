@@ -12,6 +12,8 @@ public class DaoFactory {
     public void seedData(){
         if (daoBackendType == DaoBackendType.SQLITE) {
             new SqliteDao().seedData();
+        } else {
+            new JsonDao().seedData();
         }
     }
 

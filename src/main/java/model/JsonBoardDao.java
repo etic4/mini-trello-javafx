@@ -11,21 +11,21 @@ class JsonBoardDao implements Dao<Board> {
 
     @Override
     public List<Board> get_all(int i) {
-        return null;
+        throw new UnsupportedOperationException("Il n'y a qu'un board");
     }
 
     @Override
-    public void save(Board board) {
-
+    public Board save(Board board) {
+        throw new UnsupportedOperationException("Il n'y a qu'un board");
     }
 
     @Override
-    public void update(Board board, String[] params) {
+    public void update(Board board) {
 
     }
 
     @Override
     public void delete(Board board) {
-
+        throw new UnsupportedOperationException("Il n'y a qu'un board");
     }
 }
