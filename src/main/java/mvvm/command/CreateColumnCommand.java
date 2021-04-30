@@ -13,13 +13,13 @@ public class CreateColumnCommand extends Command {
 
     @Override
     public void execute() {
-        column = boardFacade.addColumn();
-        memento = column.save(MemType.ADD);
+        column = boardFacade.newColumn();
+        memento = column.getMemento(MemType.ADD);
     }
 
     @Override
     void restore() {
-        column.restore(memento);
+        memento = column.restore(memento);
     }
 
     @Override

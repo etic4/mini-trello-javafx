@@ -17,13 +17,13 @@ public class MoveColumnCommand extends Command {
 
     @Override
     public void execute() {
-        memento = column.save(MemType.POSITION);
+        memento = column.getMemento(MemType.POSITION);
         boardFacade.move(column, direction);
     }
 
     @Override
     void restore() {
-        column.restore(memento);
+        memento = column.restore(memento);
     }
 
     @Override

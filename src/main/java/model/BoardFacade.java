@@ -10,7 +10,7 @@ public class BoardFacade {
 
     public BoardFacade(Board board) {
         this.board = board;
-        this.dao = new DaoFactory(DaoBackendType.SQLITE);
+        this.dao = new DaoFactory();
     }
 
     public Board getBoard() {
@@ -42,21 +42,25 @@ public class BoardFacade {
         }
     }
 
-    // --- Board ---
+    // ---  Column ---
 
-    // TODO: changer ça
-
-    public Column addColumn() {
-        var column = new Column(board);
+    // ajout d'une nouvelle colonne
+    public Column newColumn() {
+        var column = new Column(board, "");
         return dao.getColumnDao().save(column);
     }
 
+    // undo delete column
+    public void restoreColumn(Column column) {
+        column.setInBoard(board);
 
-    // ---  Column ---
+        var savedCol = dao.getColumnDao().save(column);
+        column.setId(savedCol.getId());
 
-    public Card addCard(Column column) {
-        var card = new Card(column);
-        return dao.getCardDao().save(card);
+        for (var card : column.getCards()) {
+            var id = dao.getCardDao().save(card).getId();
+            card.setId(id);
+        }
     }
 
     public void delete(Column column) {
@@ -65,20 +69,39 @@ public class BoardFacade {
     }
 
     public void move(Column column, Direction direction) {
+        Column otherColumn = null;
+
         switch (direction) {
             case LEFT:
-                column.moveLeft();
+                otherColumn = column.moveLeft();
                 break;
             case RIGHT:
-                column.moveRight();
+                otherColumn = column.moveRight();
         }
-        dao.getColumnDao().update(column);
+
+        // En principe ça doit toujours être null car déplacement
+        // pas possible depuis l'interface si move pas possible
+        // et otherCard n'est null que si move impossible
+        if (otherColumn != null) {
+            dao.getColumnDao().update(column);
+            dao.getColumnDao().update(otherColumn);
+        }
+
     }
 
     // ---  Card ---
 
-    public Column getColumn(Card card) {
-        return card.getColumn();
+    // ajout d'une nouvelle carte
+    public Card newCard(Column column) {
+        var card = new Card(column, "");
+        return dao.getCardDao().save(card);
+    }
+
+    // undo delete et changement de colonne
+    public void restoreCard(Card card, Column column, int position) {
+        card.setInColumn(column, position);
+        var id = dao.getCardDao().save(card).getId();
+        card.setId(id);
     }
 
     public void delete(Card card) {
@@ -88,13 +111,14 @@ public class BoardFacade {
 
     public Column move(Card card, Direction direction) {
         var column = card.getColumn();
+        Card otherCard = null;
 
         switch (direction) {
             case UP:
-                card.moveUp();
+                otherCard = card.moveUp();
                 break;
             case DOWN:
-                card.moveDown();
+                otherCard = card.moveDown();
                 break;
             case LEFT:
                 column = card.moveLeft();
@@ -105,13 +129,18 @@ public class BoardFacade {
 
         dao.getCardDao().update(card);
 
-        if (direction == Direction.LEFT || direction == Direction.RIGHT) {
-            dao.getColumnDao().update(column);
+        // En principe pas possible depuis l'interface
+        if (otherCard != null) {
+            dao.getCardDao().update(otherCard);
         }
 
         return column;
     }
 
+    public Column getColumn(Card card) {
+        return card.getColumn();
+    }
+    
     public Column getMoveDestinationColumn(Card card, Direction direction) {
         if (direction.equals(Direction.LEFT)) {
             return card.getPreviousColumn();

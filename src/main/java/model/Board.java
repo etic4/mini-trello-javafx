@@ -7,6 +7,7 @@ public class Board extends EntitledContainer<Column> implements History<Board> {
 
     public Board(int id, String title) {
         super(title);
+        setId(id);
     }
 
     int getId() {
@@ -22,14 +23,20 @@ public class Board extends EntitledContainer<Column> implements History<Board> {
     }
 
     @Override
-    public Memento<Board> save(MemType memType) {
+    public Memento<Board> getMemento(MemType memType) {
         return new BoardMemento(this.getTitle(), memType);
     }
 
     @Override
-    public void restore(Memento<Board> memento) {
+    public Memento<Board> restore(Memento<Board> memento) {
         var boardMemento = (BoardMemento) memento;
-        setTitle(boardMemento.get_title());
+        var boardFacade = new BoardFacade(this);
+
+        var newMemento = getNewMemento(MemType.TITLE);
+
+        boardFacade.setTitle(this, boardMemento.get_title());
+
+        return newMemento;
     }
 
 }

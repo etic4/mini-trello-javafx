@@ -2,96 +2,23 @@ package model;
 
 import java.sql.*;
 
-class SqliteDao {
-    private final static String url = "jdbc:sqlite:trello.sqlite";
-
-    public Connection getConnection() {
-        try {
-            return DriverManager.getConnection(url);
-        } catch (SQLException throwable) {
-            throwable.printStackTrace();
-        }
-
-        // TODO: mauvaise idée, mais demande trop de réflexion maintenant pour imaginer comment gérer ça.
-        return null;
-    }
+class SqliteDao implements Backend {
 
     public Dao<Board> getBoardDao() {
-        return new SqLiteBoardDao(getConnection());
+        return new SqLiteBoardDao();
     }
 
     public Dao<Column> getColumnDao() {
-        return new SqLiteColumnDao(getConnection());
+        return new SqLiteColumnDao();
     }
 
     public Dao<Card> getCardDao() {
-        return new SqLiteCardDao(getConnection());
-    }
-
-    private static void configDB(Connection conn) throws SQLException {
-        Statement stmt = conn.createStatement();
-        String sql;
-
-        // Activation of checks FK
-        sql = "PRAGMA foreign_keys = ON;";
-        stmt.execute(sql);
-    }
-
-    private static void createTables(Connection conn) throws SQLException {
-        String sql;
-        Statement stmt = conn.createStatement();
-
-        // création table board
-        sql = "CREATE TABLE IF NOT EXISTS `Board` " +
-                "("
-                + "	board_id integer PRIMARY KEY,"
-                + "	title TEXT NOT NULL" +
-                ");";
-        stmt.execute(sql);
-
-        // création table colonnes
-        sql = "CREATE TABLE IF NOT EXISTS `Column` " +
-                "("
-                + "	column_id integer PRIMARY KEY,"
-                + "	title TEXT NOT NULL,"
-                + " `position` integer NOT NULL,"
-                + " board integer NOT NULL,"
-                + " FOREIGN  KEY('board') REFERENCES `Board`(board_id)" +
-                ")";
-        stmt.execute(sql);
-
-        // création table cartes
-        sql = "CREATE TABLE IF NOT EXISTS `Card` " +
-                "("
-                + "	card_id integer PRIMARY KEY,"
-                + "	title TEXT NOT NULL,"
-                + " `position` integer NOT NULL,"
-                + " `column` integer NOT NULL,"
-                + " FOREIGN  KEY(`column`) REFERENCES `Column`(column_id)" +
-                ")";
-        stmt.execute(sql);
-
-    }
-
-    private static void dropTables(Connection conn) throws SQLException {
-        Statement statement = conn.createStatement();
-        String sql;
-
-        sql = "DROP TABLE IF EXISTS Card;";
-        statement.executeUpdate(sql);
-
-        sql = "DROP TABLE IF EXISTS `Column`;";
-        statement.executeUpdate(sql);
-
-        sql = "DROP TABLE IF EXISTS Board;";
-        statement.executeUpdate(sql);
-
+        return new SqLiteCardDao();
     }
 
     public void seedData() {
         try {
-            Connection conn = DriverManager.getConnection(url);
-            configDB(conn);
+            Connection conn = SqliteConnection.getConnection();
             dropTables(conn);
             createTables(conn);
 
@@ -148,6 +75,58 @@ class SqliteDao {
             throwables.printStackTrace();
         }
     }
+
+    private void createTables(Connection conn) throws SQLException {
+        String sql;
+        Statement stmt = conn.createStatement();
+
+        // création table board
+        sql = "CREATE TABLE IF NOT EXISTS `Board` " +
+                "("
+                + "	board_id integer PRIMARY KEY,"
+                + "	title TEXT NOT NULL" +
+                ");";
+        stmt.execute(sql);
+
+        // création table colonnes
+        sql = "CREATE TABLE IF NOT EXISTS `Column` " +
+                "("
+                + "	column_id integer PRIMARY KEY,"
+                + "	title TEXT NOT NULL,"
+                + " `position` integer NOT NULL,"
+                + " board integer NOT NULL,"
+                + " FOREIGN  KEY('board') REFERENCES `Board`(board_id)" +
+                ")";
+        stmt.execute(sql);
+
+        // création table cartes
+        sql = "CREATE TABLE IF NOT EXISTS `Card` " +
+                "("
+                + "	card_id integer PRIMARY KEY,"
+                + "	title TEXT NOT NULL,"
+                + " `position` integer NOT NULL,"
+                + " `column` integer NOT NULL,"
+                + " FOREIGN  KEY(`column`) REFERENCES `Column`(column_id)"
+                + " ON DELETE CASCADE" +
+                ")";
+        stmt.execute(sql);
+
+    }
+
+    private void dropTables(Connection conn) throws SQLException {
+        Statement statement = conn.createStatement();
+        String sql;
+
+        sql = "DROP TABLE IF EXISTS Card;";
+        statement.executeUpdate(sql);
+
+        sql = "DROP TABLE IF EXISTS `Column`;";
+        statement.executeUpdate(sql);
+
+        sql = "DROP TABLE IF EXISTS Board;";
+        statement.executeUpdate(sql);
+    }
+
 
     public static void main(String[] args) {
         new SqliteDao().seedData();

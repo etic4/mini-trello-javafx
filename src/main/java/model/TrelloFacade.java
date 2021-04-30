@@ -4,7 +4,7 @@ public class TrelloFacade {
     private final DaoFactory dao;
 
     public TrelloFacade() {
-        this.dao = new DaoFactory(DaoBackendType.SQLITE);
+        this.dao = new DaoFactory();
     }
 
     public BoardFacade getBoardFacade() {
@@ -19,14 +19,13 @@ public class TrelloFacade {
     private Board loadBoard(int boardId) {
         var board = dao.getBoardDao().get(boardId);
 
-        var columns = dao.getColumnDao().get_all(boardId);
-        board.addAll(columns);
+        for (var column : dao.getColumnDao().get_all(boardId)) {
+            column.setInBoard(board);
 
-        for (var column : columns) {
-            var cards = dao.getCardDao().get_all(column.getId());
-            column.addAll(cards);
+            for (var card : dao.getCardDao().get_all(column.getId())) {
+                card.setInColumn(column, card.getPosition());
+            }
         }
-
         return board;
     }
 }

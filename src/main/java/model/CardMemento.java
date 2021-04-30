@@ -1,15 +1,15 @@
 package model;
 
 public class CardMemento implements Memento<Card> {
+    private final Card card;
     private Column column;
     private int position;
     private String title;
-    private final Card card;
     private final MemType memType;
 
     CardMemento(Card card, MemType memType) {
-        this.card = card;
         this.memType = memType;
+        this.card = card;
 
         switch (memType) {
             case TITLE:
@@ -23,6 +23,10 @@ public class CardMemento implements Memento<Card> {
         }
     }
 
+    Card getCard() {
+        return card;
+    }
+
     Column getColumn() {
         return column;
     }
@@ -33,10 +37,6 @@ public class CardMemento implements Memento<Card> {
 
     String getTitle() {
         return title;
-    }
-
-    Card getCard() {
-        return card;
     }
 
     MemType getMemType() {

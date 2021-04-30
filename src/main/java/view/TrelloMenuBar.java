@@ -40,13 +40,18 @@ public class TrelloMenuBar extends MenuBar {
         createCard.setAccelerator(new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN));
         createCard.disableProperty().bind(trelloViewModel.noColumnSelectedProperty());
 
+        // --- re-seedData
+        var reseed = new MenuItem("Reseed data");
+        reseed.setOnAction((e -> trelloViewModel.seedData()));
+
+
         // --- quit ---
         var quit = new MenuItem("Quitter");
-        quit.setOnAction(e -> trelloViewModel.commandQuit());
+        quit.setOnAction(e -> trelloViewModel.quit());
         quit.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.CONTROL_DOWN));
 
         // --- add items to menu ---
-        fileMenu.getItems().addAll(createColumn, createCard, quit);
+        fileMenu.getItems().addAll(createColumn, createCard, reseed, quit);
         getMenus().add(fileMenu);
     }
 

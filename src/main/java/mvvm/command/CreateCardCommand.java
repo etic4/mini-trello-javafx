@@ -15,13 +15,13 @@ public class CreateCardCommand extends Command {
 
     @Override
     public void execute() {
-        card = boardFacade.addCard(column);
-        memento = card.save(MemType.ADD);
+        card = boardFacade.newCard(column);
+        memento = card.getMemento(MemType.ADD);
     }
 
     @Override
     void restore() {
-        card.restore(memento);
+        memento = card.restore(memento);
     }
 
     @Override

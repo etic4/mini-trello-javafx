@@ -10,9 +10,17 @@ import view.TrelloView;
 public class Main extends Application {
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
+//        TrelloFacade trelloFacade = new TrelloFacade();
+//        TrelloViewModel.setFacade(trelloFacade);
+//        new TrelloView(primaryStage);
+//        primaryStage.show();
+         startTrello(primaryStage);
+    }
+
+    public void startTrello(Stage primaryStage) {
         TrelloFacade trelloFacade = new TrelloFacade();
-        TrelloViewModel.init(trelloFacade);
+        TrelloViewModel.setFacade(trelloFacade);
         new TrelloView(primaryStage);
         primaryStage.show();
     }

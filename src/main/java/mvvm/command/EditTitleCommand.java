@@ -18,13 +18,13 @@ public class EditTitleCommand<E extends Entitled & History<E>> extends Command {
     @Override
     public void execute() {
         setCommandString();
-        memento = entitled.save(MemType.TITLE);
+        memento = entitled.getMemento(MemType.TITLE);
         boardFacade.setTitle(entitled, title);
     }
 
     @Override
     void restore() {
-        entitled.restore(memento);
+        memento = entitled.restore(memento);
     }
 
     private void setCommandString() {

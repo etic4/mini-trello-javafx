@@ -1,7 +1,6 @@
 package model;
 
 public class ColumnMemento implements Memento<Column> {
-    private Board board;
     private int position;
     private String title;
     private final Column column;
@@ -18,13 +17,8 @@ public class ColumnMemento implements Memento<Column> {
             case ADD:
             case DELETE:
             case POSITION:
-                board = column.getBoard();
-                position = board.getPosition(column);
+                position = column.getPosition();
         }
-    }
-
-    Board getBoard() {
-        return board;
     }
 
     int getPosition() {

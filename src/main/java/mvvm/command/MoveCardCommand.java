@@ -20,18 +20,19 @@ public class MoveCardCommand extends Command {
     @Override
     public void execute() {
         getCommandString();
-        memento = card.save(MemType.POSITION);
+        memento = card.getMemento(MemType.POSITION);
         column = boardFacade.move(card, direction);
     }
 
     @Override
     void restore() {
-        card.restore(memento);
+        memento = card.restore(memento);
     }
 
 
     private String getCommandString() {
         var commandString = "";
+
         if (direction == Direction.LEFT || direction == Direction.RIGHT) {
             var sourceColumn = boardFacade.getColumn(card);
             var destColumn = boardFacade.getMoveDestinationColumn(card, direction);
@@ -39,6 +40,7 @@ public class MoveCardCommand extends Command {
         } else {
             commandString = "Déplacement de la " + card + "vers le " + direction;
         }
+
         return commandString;
     }
 

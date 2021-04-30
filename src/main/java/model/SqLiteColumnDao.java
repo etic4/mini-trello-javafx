@@ -5,29 +5,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 class SqLiteColumnDao implements Dao<Column> {
-    private static final String SQL_GET_BY_ID = "SELECT * FROM `Column` WHERE column_id = ?";
-    private static final String SQL_GET_ALL = "SELECT * FROM `Column` WHERE board = ? " +
+    private static final String SQL_GET_BY_ID = "SELECT * FROM `Column` WHERE `column_id` = ?";
+    private static final String SQL_GET_ALL = "SELECT * FROM `Column` WHERE `board` = ? " +
                                             "ORDER BY `position`";
-    private static final String SQL_INSERT = "INSERT INTO `Column` VALUES(?, ?, ?)";
+    private static final String SQL_INSERT = "INSERT INTO `Column` (`title`, `position`, `board`) VALUES(?, ?, ?)";
     private static final String SQL_UPDATE = "UPDATE `Column` SET " +
-                                            "title = ?, " +
-                                            "position = ?, " +
-                                            "board = ? " +
-                                            "WHERE column_id = ?";
-    private static final String SQL_DELETE = "DELETE FROM `Column` WHERE column_id = ?";
-
-    private Connection conn;
-
-
-    public SqLiteColumnDao(Connection conn) {
-        this.conn = conn;
-    }
+                                            "`title` = ?, " +
+                                            "`position` = ?, " +
+                                            "`board` = ? " +
+                                            "WHERE `column_id` = ?";
+    private static final String SQL_DELETE = "DELETE FROM `Column` WHERE `column_id` = ?";
 
     @Override
     public  Column get(int id) {
         Column column = null;
 
         try {
+            Connection conn = SqliteConnection.getConnection();
             PreparedStatement preparedStatement = conn.prepareStatement(SQL_GET_BY_ID);
             preparedStatement.setInt(1, id);
 
@@ -36,6 +30,8 @@ class SqLiteColumnDao implements Dao<Column> {
             if (res.next()) {
                 column = getInstance(res);
             }
+
+            conn.close();
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -50,6 +46,7 @@ class SqLiteColumnDao implements Dao<Column> {
         ArrayList<Column> columns = new ArrayList<>();
 
         try {
+            Connection conn = SqliteConnection.getConnection();
             PreparedStatement preparedStatement = conn.prepareStatement(SQL_GET_ALL);
             preparedStatement.setInt(1, id);
 
@@ -58,6 +55,7 @@ class SqLiteColumnDao implements Dao<Column> {
             while (res.next()) {
                 columns.add(getInstance(res));
             }
+            conn.close();
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -68,6 +66,7 @@ class SqLiteColumnDao implements Dao<Column> {
     @Override
     public Column save(Column column) {
         try {
+            Connection conn = SqliteConnection.getConnection();
             PreparedStatement preparedStatement = conn.prepareStatement(SQL_INSERT,
                     Statement.RETURN_GENERATED_KEYS);
 
@@ -81,6 +80,7 @@ class SqLiteColumnDao implements Dao<Column> {
             var columnId = preparedStatement.getGeneratedKeys().getInt(1);
             column.setId(columnId);
 
+            conn.close();
             return column;
 
         } catch (SQLException throwables) {
@@ -93,6 +93,7 @@ class SqLiteColumnDao implements Dao<Column> {
     @Override
     public void update(Column column) {
         try {
+            Connection conn = SqliteConnection.getConnection();
             PreparedStatement preparedStatement = conn.prepareStatement(SQL_UPDATE);
             setValues(column, preparedStatement);
             // clause WHERE
@@ -102,6 +103,7 @@ class SqLiteColumnDao implements Dao<Column> {
             if (affectedRows == 0) {
                 throw new SQLException("La mise à jour de la colonne a échoué: aucune colonne modifiée.");
             }
+            conn.close();
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -111,13 +113,16 @@ class SqLiteColumnDao implements Dao<Column> {
     @Override
     public void delete(Column column) {
         try {
-            PreparedStatement preparedStatement = conn.prepareStatement(SQL_UPDATE);
+            Connection conn = SqliteConnection.getConnection();
+            PreparedStatement preparedStatement = conn.prepareStatement(SQL_DELETE);
             preparedStatement.setInt(1, column.getId());
+
 
             int affectedRows = preparedStatement.executeUpdate();
             if (affectedRows == 0) {
                 throw new SQLException("La suppression de la colonne a échoué: aucune colonne modifiée.");
             }
+            conn.close();
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -127,14 +132,14 @@ class SqLiteColumnDao implements Dao<Column> {
     private void setValues(Column column, PreparedStatement preparedStatement) throws SQLException {
         preparedStatement.setString(1, column.getTitle());
         preparedStatement.setInt(2, column.getPosition());
-        preparedStatement.setInt(3, column.getBoard().getId());
+        preparedStatement.setInt(3, column.getBoardId());
     }
 
     private Column getInstance(ResultSet res) throws SQLException {
         var id = res.getInt(1);
         var title = res.getString(2);
         var position = res.getInt(3);
-        var boardId = res.getInt(4);
-        return new Column(id, title, position, boardId);
+
+        return new Column(id, title, position);
     }
 }

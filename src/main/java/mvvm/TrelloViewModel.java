@@ -1,7 +1,9 @@
 package mvvm;
 
+import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
+import main.Main;
 import model.Column;
 import mvvm.command.CommandManager;
 import mvvm.command.CreateCardCommand;
@@ -11,7 +13,7 @@ import model.BoardFacade;
 import model.TrelloFacade;
 
 /* Cette classe est "une sorte de singleton" qui est paramétré
-lors de l'appel à TrelloViewModel.init(). L'instance peut ensuite être obtenue avec un getInstance();
+lors de l'appel à TrelloViewModel.setFacade(). L'instance peut ensuite être obtenue avec un getInstance();
 Permet de binder tout ce qu'on veut depuis d'autres instance de ViewModel, principalement pour gérer des actions
 de menus
 Est-ce correct de faire ça ? Est-ce que c'est toujours un singleton ?
@@ -24,7 +26,7 @@ public class TrelloViewModel {
     private final BooleanProperty noColumnSelected = new SimpleBooleanProperty(false);
     private final ObjectProperty<Column> selectedColumn = new SimpleObjectProperty<>();
 
-    public static void init(TrelloFacade trelloFacade) {
+    public static void setFacade(TrelloFacade trelloFacade) {
         if (instance != null) {
             throw new RuntimeException("TrelloViewModel a déjà été initialisé !");
         }
@@ -56,7 +58,12 @@ public class TrelloViewModel {
         CommandManager.execute(new CreateCardCommand(selectedColumn.get(), getBoardFacade()));
     }
 
-    public void commandQuit() {
+    // TODO: voir comment reset la boardview
+    public void seedData() {
+        trelloFacade.seedData();
+    }
+
+    public void quit() {
         Platform.exit();
     }
 

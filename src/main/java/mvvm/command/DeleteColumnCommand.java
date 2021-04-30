@@ -14,13 +14,13 @@ public class DeleteColumnCommand extends Command {
 
     @Override
     public void execute() {
-        memento = column.save(MemType.DELETE);
+        memento = column.getMemento(MemType.DELETE);
         boardFacade.delete(column);
     }
 
     @Override
     void restore() {
-        column.restore(memento);
+        memento = column.restore(memento);
     }
 
     @Override

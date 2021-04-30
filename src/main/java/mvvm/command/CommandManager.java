@@ -2,6 +2,7 @@ package mvvm.command;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
+import main.Config;
 
 import java.util.Deque;
 import java.util.LinkedList;
@@ -14,10 +15,12 @@ import java.util.LinkedList;
 
 //Singleton
 public class CommandManager {
-    private static final int CAPACITY = 10;
+    private static final int CAPACITY = Config.UNDO_REDO_MAX;
 
     private static final CommandManager instance = new CommandManager();
 
+    // Dequeu pour pouvoir limiter le nombre de undo / redo
+    // Sans limite, un stack le ferait
     private final Deque<Command> undoables = new LinkedList<>();
     private final Deque<Command> redoables = new LinkedList<>();
 
@@ -41,6 +44,7 @@ public class CommandManager {
     private void executeCommand(Command command) {
         command.execute();
         pushUndoable(command);
+        emptyRedoables();
         setUndoRedoProperties();
     }
 
@@ -59,7 +63,7 @@ public class CommandManager {
         Command command = popReDoable();
 
         if (command != null) {
-            command.execute();
+            command.restore();
             pushUndoable(command);
         }
         setUndoRedoProperties();
@@ -97,6 +101,10 @@ public class CommandManager {
 
     private String peekStringCommand(Deque<Command> commands) {
         return commands.isEmpty() ? "" : commands.peek().toString();
+    }
+
+    private void emptyRedoables() {
+        redoables.clear();
     }
 
     private void setUndoRedoProperties() {

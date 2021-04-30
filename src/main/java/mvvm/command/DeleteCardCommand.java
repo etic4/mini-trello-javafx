@@ -14,13 +14,13 @@ public class DeleteCardCommand extends Command {
 
     @Override
     public void execute() {
-        memento = card.save(MemType.DELETE);
+        memento = card.getMemento(MemType.DELETE);
         boardFacade.delete(card);
     }
 
     @Override
     void restore() {
-        card.restore(memento);
+        memento = card.restore(memento);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package model;
 
 
-class JsonDao {
+class JsonDao implements Backend {
 
     public Dao<Board> getBoardDao() {
         return new JsonBoardDao();
