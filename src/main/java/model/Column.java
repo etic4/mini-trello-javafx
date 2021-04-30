@@ -16,7 +16,7 @@ public class Column extends EntitledContainer<Card> implements History<Column> {
         super(title);
         setBoard(board);
         board.add(this);
-        setPositionInBoard();
+        updatePosition();
         if (this.getTitle().equals("")) {
             setTitle("Column " + board.size());
         }
@@ -49,7 +49,7 @@ public class Column extends EntitledContainer<Card> implements History<Column> {
         this.board = board;
     }
 
-    void setInBoard(Board board) {
+    void addInPosition(Board board) {
         setBoard(board);
         board.add(this.getPosition(), this);
 
@@ -58,11 +58,11 @@ public class Column extends EntitledContainer<Card> implements History<Column> {
 
     private void updateAllColumnsPosition() {
         for (var column : getBoard().getColumns()) {
-            column.setPositionInBoard();
+            column.updatePosition();
         }
     }
 
-    void setPositionInBoard() {
+    void updatePosition() {
         position = getBoard().getPositionInArray(this);
     }
 
@@ -76,16 +76,16 @@ public class Column extends EntitledContainer<Card> implements History<Column> {
 
     Column moveLeft() {
         var otherColumn = getBoard().moveUp(this);
-        setPositionInBoard();
-        otherColumn.setPositionInBoard();
+        updatePosition();
+        otherColumn.updatePosition();
 
         return otherColumn;
     }
 
     Column moveRight() {
         var otherColumn = getBoard().moveDown(this);
-        setPositionInBoard();
-        otherColumn.setPositionInBoard();
+        updatePosition();
+        otherColumn.updatePosition();
 
         return otherColumn;
     }

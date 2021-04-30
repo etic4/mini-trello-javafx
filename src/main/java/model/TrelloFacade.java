@@ -26,10 +26,10 @@ public class TrelloFacade {
         var board = dao.getBoardDao().get(boardId);
 
         for (var column : dao.getColumnDao().get_all(boardId)) {
-            column.setInBoard(board);
+            column.addInPosition(board);
 
             for (var card : dao.getCardDao().get_all(column.getId())) {
-                card.setInColumn(column, card.getPosition());
+                card.addAtPosition(column, card.getPosition());
             }
         }
         return board;

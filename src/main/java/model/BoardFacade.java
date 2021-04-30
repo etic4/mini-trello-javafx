@@ -4,9 +4,6 @@ import direction.Direction;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.util.List;
-import java.util.Set;
-
 public class BoardFacade {
     private final DaoFactory dao;
     private final Board board;
@@ -55,7 +52,7 @@ public class BoardFacade {
 
     // undo delete column
     public void restoreColumn(Column column) {
-        column.setInBoard(board);
+        column.addInPosition(board);
 
         var savedCol = dao.getColumnDao().save(column);
         column.setId(savedCol.getId());
@@ -105,7 +102,7 @@ public class BoardFacade {
 
     // undo delete et changement de colonne
     public void restoreCard(Card card, Column column, int position) {
-        card.setInColumn(column, position);
+        card.addAtPosition(column, position);
         var id = dao.getCardDao().save(card).getId();
         card.setId(id);
         dao.getCardDao().updatePositions(column.getCards());

@@ -15,7 +15,7 @@ public class Card extends Entitled implements History<Card> {
         super(title);
         setColumn(column);
         column.add(this);
-        setPositionInColumn();
+        updatePosition();
 
         if (getTitle().equals("")) {
             setTitle("Card " + column.size());
@@ -43,13 +43,13 @@ public class Card extends Entitled implements History<Card> {
 
     Column getColumn() {
         return column;
-    };
+    }
 
     void setColumn(Column column) {
         this.column = column;
-    };
+    }
 
-    void setInColumn(Column column, int position) {
+    void addAtPosition(Column column, int position) {
         setColumn(column);
         column.add(position, this);
         updateAllCardsPosition(column);
@@ -57,11 +57,11 @@ public class Card extends Entitled implements History<Card> {
 
     void updateAllCardsPosition(Column column) {
         for (var card : column.getCards()) {
-            card.setPositionInColumn();
+            card.updatePosition();
         }
     }
 
-    void setPositionInColumn() {
+    void updatePosition() {
         position  = getColumn().getPositionInArray(this);
     }
 
@@ -83,16 +83,16 @@ public class Card extends Entitled implements History<Card> {
 
     Card moveUp() {
         var otherCard = getColumn().moveUp(this);
-        setPositionInColumn();
-        otherCard.setPositionInColumn();
+        updatePosition();
+        otherCard.updatePosition();
 
         return otherCard;
     }
 
     Card moveDown() {
         var otherCard = getColumn().moveDown(this);
-        setPositionInColumn();
-        otherCard.setPositionInColumn();
+        updatePosition();
+        otherCard.updatePosition();
 
         return otherCard;
     }
