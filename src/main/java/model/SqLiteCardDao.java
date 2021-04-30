@@ -113,26 +113,27 @@ class SqLiteCardDao implements Dao<Card> {
 
     @Override
     public void updatePositions(List<Card> cards) {
-        try {
-            Connection conn = SqliteConnection.getConnection();
-            PreparedStatement preparedStatement = conn.prepareStatement(SQL_UPDATE_POSITION);
+        if (cards.size() > 0) {
+            try {
+                Connection conn = SqliteConnection.getConnection();
+                PreparedStatement preparedStatement = conn.prepareStatement(SQL_UPDATE_POSITION);
 
-            for (var card : cards) {
-                preparedStatement.setInt(1, card.getPosition());
-                preparedStatement.setInt(2, card.getId());
-                preparedStatement.addBatch();
+                for (var card : cards) {
+                    preparedStatement.setInt(1, card.getPosition());
+                    preparedStatement.setInt(2, card.getId());
+                    preparedStatement.addBatch();
+                }
+
+                int[] affectedRows = preparedStatement.executeBatch();
+                if (affectedRows.length == 0) {
+                    throw new SQLException("La mise à jour des cartes a échoué: aucune colonne modifiée.");
+                }
+                conn.close();
+
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
             }
-
-            int[] affectedRows = preparedStatement.executeBatch();
-            if (affectedRows.length == 0) {
-                throw new SQLException("La mise à jour des cartes a échoué: aucune colonne modifiée.");
-            }
-            conn.close();
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
         }
-
     }
 
     @Override
@@ -162,8 +163,7 @@ class SqLiteCardDao implements Dao<Card> {
     private Card getInstance(ResultSet res) throws SQLException {
         var id = res.getInt(1);
         var title = res.getString(2);
-        var position = res.getInt(3);
 
-        return new Card(id, title, position);
+        return new Card(id, title);
     }
 }

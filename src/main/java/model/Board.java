@@ -22,6 +22,16 @@ public class Board extends EntitledContainer<Column> implements History<Board> {
         return getMovables();
     }
 
+    void addColumn(Column column) {
+        column.setBoard(this);
+        add(column);
+    }
+
+    void addColumn(int position, Column column) {
+        column.setBoard(this);
+        add(position, column);
+    }
+
     @Override
     public Memento<Board> getMemento(MemType memType) {
         return new BoardMemento(this.getTitle(), memType);

@@ -8,25 +8,22 @@ import javafx.collections.ObservableList;
 
 public class Column extends EntitledContainer<Card> implements History<Column> {
     private int id;
-    private int position;
 
     private Board board;
 
     public Column(Board board, String title) {
         super(title);
-        setBoard(board);
-        board.add(this);
-        updatePosition();
+        board.addColumn(this);
+
         if (this.getTitle().equals("")) {
             setTitle("Column " + board.size());
         }
     }
 
     // constructeur pour backend
-    Column(int id, String title, int position) {
+    Column(int id, String title) {
         super(title);
         this.id = id;
-        this.position = position;
     }
 
     int getId() {
@@ -49,50 +46,34 @@ public class Column extends EntitledContainer<Card> implements History<Column> {
         this.board = board;
     }
 
-    void addInPosition(Board board) {
-        setBoard(board);
-        board.add(this.getPosition(), this);
-
-        updateAllColumnsPosition();
-    }
-
-    private void updateAllColumnsPosition() {
-        for (var column : getBoard().getColumns()) {
-            column.updatePosition();
-        }
-    }
-
-    void updatePosition() {
-        position = getBoard().getPositionInArray(this);
-    }
-
     int getPosition() {
-        return position;
+        return getBoard().getPositionInArray(this);
     }
 
     ObservableList<Card> getCards() {
         return getMovables();
     }
 
-    Column moveLeft() {
-        var otherColumn = getBoard().moveUp(this);
-        updatePosition();
-        otherColumn.updatePosition();
+    void addCard(Card card) {
+        card.setColumn(this);
+        add(card);
+    }
 
-        return otherColumn;
+    void addCard(int position, Card card) {
+        card.setColumn(this);
+        add(position, card);
+    }
+
+    Column moveLeft() {
+        return getBoard().moveUp(this);
     }
 
     Column moveRight() {
-        var otherColumn = getBoard().moveDown(this);
-        updatePosition();
-        otherColumn.updatePosition();
-
-        return otherColumn;
+        return getBoard().moveDown(this);
     }
 
     void delete() {
         getBoard().remove(this);
-        updateAllColumnsPosition();
     }
 
     public ReadOnlyBooleanProperty isFirstProperty() {
@@ -135,7 +116,7 @@ public class Column extends EntitledContainer<Card> implements History<Column> {
                 boardFacade.delete(this);
                 break;
             case DELETE:
-                boardFacade.restoreColumn(this);
+                boardFacade.restoreColumn(this, columnMemento.getPosition());
         }
 
         return newMemento;

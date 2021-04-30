@@ -7,15 +7,12 @@ import javafx.beans.property.SimpleBooleanProperty;
 
 public class Card extends Entitled implements History<Card> {
     private int id;
-    private int position;
     private Column column;
 
 
     public Card(Column column, String title) {
         super(title);
-        setColumn(column);
-        column.add(this);
-        updatePosition();
+        column.addCard(this);
 
         if (getTitle().equals("")) {
             setTitle("Card " + column.size());
@@ -23,10 +20,9 @@ public class Card extends Entitled implements History<Card> {
     }
 
     // constructeur pour backend
-    Card(int id, String title, int position) {
+    Card(int id, String title) {
         super(title);
         this.id = id;
-        this.position = position;
     }
 
     int getId() {
@@ -49,24 +45,8 @@ public class Card extends Entitled implements History<Card> {
         this.column = column;
     }
 
-    void addAtPosition(Column column, int position) {
-        setColumn(column);
-        column.add(position, this);
-        updateAllCardsPosition(column);
-    }
-
-    void updateAllCardsPosition(Column column) {
-        for (var card : column.getCards()) {
-            card.updatePosition();
-        }
-    }
-
-    void updatePosition() {
-        position  = getColumn().getPositionInArray(this);
-    }
-
     int getPosition() {
-        return position;
+        return getColumn().getPositionInArray(this);
     }
 
     public Board getBoard() {
@@ -82,42 +62,28 @@ public class Card extends Entitled implements History<Card> {
     }
 
     Card moveUp() {
-        var otherCard = getColumn().moveUp(this);
-        updatePosition();
-        otherCard.updatePosition();
-
-        return otherCard;
+        return getColumn().moveUp(this);
     }
 
     Card moveDown() {
-        var otherCard = getColumn().moveDown(this);
-        updatePosition();
-        otherCard.updatePosition();
-
-        return otherCard;
+        return getColumn().moveDown(this);
     }
 
     Column moveLeft() {
-        var column = getColumn();
         var destColumn = getPreviousColumn();
 
         if (destColumn != null) {
             switchTo(destColumn, this);
-            updateAllCardsPosition(destColumn);
-            updateAllCardsPosition(column);
         }
 
         return destColumn;
     }
 
     Column moveRight() {
-        var column = getColumn();
         var destColumn = getNextColumn();
 
         if (destColumn != null) {
             switchTo(destColumn, this);
-            updateAllCardsPosition(destColumn);
-            updateAllCardsPosition(column);
         }
 
         return destColumn;
@@ -126,7 +92,6 @@ public class Card extends Entitled implements History<Card> {
     void delete() {
         var column = getColumn();
         column.remove(this);
-        updateAllCardsPosition(column);
     }
 
     public ReadOnlyBooleanProperty isFirstProperty() {

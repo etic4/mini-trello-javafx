@@ -116,26 +116,27 @@ class SqLiteColumnDao implements Dao<Column> {
 
     @Override
     public void updatePositions(List<Column> columns) {
-        try {
-            Connection conn = SqliteConnection.getConnection();
-            PreparedStatement preparedStatement = conn.prepareStatement(SQL_UPDATE_POSITION);
+        if (columns.size() > 0) {
+            try {
+                Connection conn = SqliteConnection.getConnection();
+                PreparedStatement preparedStatement = conn.prepareStatement(SQL_UPDATE_POSITION);
 
-            for (var column : columns) {
-                preparedStatement.setInt(1, column.getPosition());
-                preparedStatement.setInt(2, column.getId());
-                preparedStatement.addBatch();
+                for (var column : columns) {
+                    preparedStatement.setInt(1, column.getPosition());
+                    preparedStatement.setInt(2, column.getId());
+                    preparedStatement.addBatch();
+                }
+
+                int[] affectedRows = preparedStatement.executeBatch();
+                if (affectedRows.length == 0) {
+                    throw new SQLException("La mise à jour des colonnes a échoué: aucune colonne modifiée.");
+                }
+                conn.close();
+
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
             }
-
-            int[] affectedRows = preparedStatement.executeBatch();
-            if (affectedRows.length == 0) {
-                throw new SQLException("La mise à jour des colonnes a échoué: aucune colonne modifiée.");
-            }
-            conn.close();
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
         }
-
     }
 
     @Override
@@ -166,8 +167,7 @@ class SqLiteColumnDao implements Dao<Column> {
     private Column getInstance(ResultSet res) throws SQLException {
         var id = res.getInt(1);
         var title = res.getString(2);
-        var position = res.getInt(3);
 
-        return new Column(id, title, position);
+        return new Column(id, title);
     }
 }
