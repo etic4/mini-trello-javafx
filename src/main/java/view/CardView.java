@@ -25,12 +25,10 @@ public class CardView extends BorderPane {
         this(new CardViewModel(card));
     }
 
-
     public CardView(CardViewModel cardviewModel) {
         this.cardViewModel = cardviewModel;
         buildView();
     }
-
 
     private void buildView() {
         buildGraphicComponents();
@@ -40,23 +38,30 @@ public class CardView extends BorderPane {
 
 
     private void buildGraphicComponents() {
-        // set css classes
+        configStyles();
+        configComponentsHierarchy();
+        setButtonsAlignement();
+
+    }
+
+    private void configStyles() {
         getStyleClass().add("card-bp");
         elTitle.addTextFieldClasses("el-card");
+    }
 
-        // make components hierarchy
+    private void configComponentsHierarchy() {
         setTop(btUp);
         setRight(btRight);
         setBottom(btDown);
         setLeft(btLeft);
         setCenter(elTitle);
+    }
 
-        // set buttons
+    private void setButtonsAlignement() {
         for (var btn : new MoveButton[] {btLeft, btUp, btRight, btDown}) {
             setAlignment(btn, Pos.CENTER);
         }
     }
-
 
     private void configBindings() {
         // ViewModel bindings
@@ -69,19 +74,25 @@ public class CardView extends BorderPane {
         btLeft.disableProperty().bind(cardViewModel.btLeftDisabledProperty());
     }
 
-
     private void configEventsHandling() {
-        // Title text changed
+        addTitleListener();
+        configActions();
+        configContextMenus();
+    }
+
+    private void addTitleListener() {
         elTitle.addEventHandler(EditableLabel.TEXT_CHANGED, e -> {
             cardViewModel.setTitle(elTitle.textProperty().get());
         });
+    }
 
-        // buttons clicks
+    private void configActions() {
         for(var button : new MoveButton[]{btLeft, btUp, btRight, btDown}) {
             button.setOnAction(e -> cardViewModel.moveCard(button.getDirection()));
         }
+    }
 
-        // set context menu
+    private void configContextMenus() {
         var contextMenu = new CardDeleteContextMenu(cardViewModel, elTitle.textProperty().get());
 
         setOnContextMenuRequested(e -> {

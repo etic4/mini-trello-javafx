@@ -102,7 +102,6 @@ public class ColumnView extends VBox {
     }
 
     private void addtitleListener() {
-        // Title text changed
         elTitle.addEventHandler(EditableLabel.TEXT_CHANGED, e -> {
             columnViewModel.setTitle(elTitle.textProperty().get());
         });
