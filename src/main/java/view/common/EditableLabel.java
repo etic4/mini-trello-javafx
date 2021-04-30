@@ -1,7 +1,6 @@
 package view.common;
 
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.Event;
@@ -34,11 +33,9 @@ public class EditableLabel extends HBox {
     private final BooleanProperty tfDisabled = new SimpleBooleanProperty(true);
 
 
-
     public EditableLabel() {
         buildView();
     }
-
 
     private void buildView() {
         //set css classes

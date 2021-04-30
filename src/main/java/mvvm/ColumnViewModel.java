@@ -17,14 +17,19 @@ public class ColumnViewModel {
     public ColumnViewModel(Column column) {
         this.column = column;
         boardFacade = new BoardFacade(column.getBoard());
+        bindColumnTitle();
+        addTitlePropertyListener();
+    }
 
+    private void bindColumnTitle() {
         // set title view binded property to column title
         columnTitleView.set(column.getTitle());
+    }
 
+    private void addTitlePropertyListener() {
         // set title view binding on model value if changed
         column.titleProperty().addListener((o, oldVal, newVal) -> columnTitleView.set(column.getTitle()));
     }
-
 
     public StringProperty columnTitleProperty() {
         return columnTitleView;

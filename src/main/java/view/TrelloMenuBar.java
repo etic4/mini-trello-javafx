@@ -41,8 +41,8 @@ public class TrelloMenuBar extends MenuBar {
         createCard.disableProperty().bind(trelloViewModel.noColumnSelectedProperty());
 
         // --- re-seedData
-        var reseed = new MenuItem("Reseed data");
-        reseed.setOnAction((e -> trelloViewModel.seedData()));
+        var reseed = new MenuItem("Reseed et rafraîchit board");
+        reseed.setOnAction((e -> trelloViewModel.seedAndRefresh()));
 
 
         // --- quit ---

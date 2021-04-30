@@ -1,9 +1,9 @@
 package mvvm;
 
-import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
-import main.Main;
+import javafx.event.Event;
+import javafx.event.EventType;
 import model.Column;
 import mvvm.command.CommandManager;
 import mvvm.command.CreateCardCommand;
@@ -11,6 +11,8 @@ import mvvm.command.CreateColumnCommand;
 import javafx.application.Platform;
 import model.BoardFacade;
 import model.TrelloFacade;
+
+
 
 /* Cette classe est "une sorte de singleton" qui est paramétré
 lors de l'appel à TrelloViewModel.setFacade(). L'instance peut ensuite être obtenue avec un getInstance();
@@ -25,6 +27,17 @@ public class TrelloViewModel {
     private final TrelloFacade trelloFacade;
     private final BooleanProperty noColumnSelected = new SimpleBooleanProperty(false);
     private final ObjectProperty<Column> selectedColumn = new SimpleObjectProperty<>();
+    private final BooleanProperty boardNeedsRefresh = new SimpleBooleanProperty(false);
+
+    // Board refresh event type
+    public static EventType<Event> BOARD_REFRESH = new EventType<>("BOARD_REFRESH");
+
+    // Board refresh event
+    static class BoardRefreshEvent extends Event {
+        public BoardRefreshEvent() {
+            super(BOARD_REFRESH);
+        }
+    }
 
     public static void setFacade(TrelloFacade trelloFacade) {
         if (instance != null) {
@@ -39,7 +52,6 @@ public class TrelloViewModel {
         }
         return instance;
     }
-
 
     private TrelloViewModel(TrelloFacade trelloFacade) {
         this.trelloFacade = trelloFacade;
@@ -58,9 +70,10 @@ public class TrelloViewModel {
         CommandManager.execute(new CreateCardCommand(selectedColumn.get(), getBoardFacade()));
     }
 
-    // TODO: voir comment reset la boardview
-    public void seedData() {
+    public void seedAndRefresh() {
         trelloFacade.seedData();
+        CommandManager.getInstance().reset();
+        boardNeedsRefresh.set(true);
     }
 
     public void quit() {
@@ -73,5 +86,9 @@ public class TrelloViewModel {
 
     public ReadOnlyBooleanProperty noColumnSelectedProperty() {
         return noColumnSelected;
+    }
+
+    public BooleanProperty boardNeedsRefreshProperty() {
+        return boardNeedsRefresh;
     }
 }

@@ -7,13 +7,8 @@ import main.Config;
 import java.util.Deque;
 import java.util.LinkedList;
 
-//TODO: Revoir fonctionnement memento -> bug: possible de refaire move card après suppression colonne
-// => si commande pas restorable, mettre texte à "" et désactiver undo ou redo
 
-//TODO: simplifier CommandManager et relations avec trelloVM et menu -> EN COURS, fixer probs et factoriser
-//TODO: voir ce qu'il y a moyen de faire avec la classe Bindings
-
-//Singleton
+// Singleton
 public class CommandManager {
     private static final int CAPACITY = Config.UNDO_REDO_MAX;
 
@@ -40,6 +35,12 @@ public class CommandManager {
     }
 
     private CommandManager() { };
+
+    public void reset() {
+        emptyRedoables();
+        emptyUndoables();
+        setUndoRedoProperties();
+    }
 
     private void executeCommand(Command command) {
         command.execute();
@@ -105,6 +106,10 @@ public class CommandManager {
 
     private void emptyRedoables() {
         redoables.clear();
+    }
+
+    private void emptyUndoables() {
+        undoables.clear();
     }
 
     private void setUndoRedoProperties() {
