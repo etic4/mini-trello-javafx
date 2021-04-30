@@ -36,12 +36,10 @@ public class CardView extends BorderPane {
         configEventsHandling();
     }
 
-
     private void buildGraphicComponents() {
         configStyles();
         configComponentsHierarchy();
         setButtonsAlignement();
-
     }
 
     private void configStyles() {
