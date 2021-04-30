@@ -2,14 +2,19 @@ package model;
 
 public class TrelloFacade {
     private final DaoFactory dao;
+    private BoardFacade boardFacade;
 
     public TrelloFacade() {
         this.dao = new DaoFactory();
     }
 
     public BoardFacade getBoardFacade() {
-        var board = loadBoard(1);
-        return new BoardFacade(board);
+        if (boardFacade == null) {
+            var board = loadBoard(1);
+            boardFacade = new BoardFacade(board);
+        }
+
+        return boardFacade;
     }
 
     public void seedData() {
