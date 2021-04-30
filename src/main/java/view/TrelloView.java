@@ -50,7 +50,7 @@ public class TrelloView extends VBox {
 
     private void setComponentsHierarchy() {
         MenuBar menuBar = new TrelloMenuBar(trelloViewModel);
-        BoardViewModel boardViewModel = new BoardViewModel(trelloViewModel.getBoardFacade());
+        BoardViewModel boardViewModel = new BoardViewModel(trelloViewModel.buildBoardFacade());
         BoardView boardView = new BoardView(boardViewModel);
 
         getChildren().addAll(menuBar, boardView);

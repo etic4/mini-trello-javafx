@@ -29,15 +29,6 @@ public class TrelloViewModel {
     private final ObjectProperty<Column> selectedColumn = new SimpleObjectProperty<>();
     private final BooleanProperty boardNeedsRefresh = new SimpleBooleanProperty(false);
 
-    // Board refresh event type
-    public static EventType<Event> BOARD_REFRESH = new EventType<>("BOARD_REFRESH");
-
-    // Board refresh event
-    static class BoardRefreshEvent extends Event {
-        public BoardRefreshEvent() {
-            super(BOARD_REFRESH);
-        }
-    }
 
     public static void setFacade(TrelloFacade trelloFacade) {
         if (instance != null) {
@@ -56,6 +47,10 @@ public class TrelloViewModel {
     private TrelloViewModel(TrelloFacade trelloFacade) {
         this.trelloFacade = trelloFacade;
         noColumnSelected.bind(Bindings.isNull(selectedColumn));
+    }
+
+    public BoardFacade buildBoardFacade() {
+        return trelloFacade.buildBoardFacade();
     }
 
     public BoardFacade getBoardFacade() {

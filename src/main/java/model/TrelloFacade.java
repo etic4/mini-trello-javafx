@@ -8,12 +8,13 @@ public class TrelloFacade {
         this.dao = new DaoFactory();
     }
 
-    public BoardFacade getBoardFacade() {
-        if (boardFacade == null) {
-            var board = loadBoard(1);
-            boardFacade = new BoardFacade(board);
-        }
+    public BoardFacade buildBoardFacade() {
+        var board = loadBoard(1);
+        boardFacade = new BoardFacade(board);
+        return boardFacade;
+    }
 
+    public BoardFacade getBoardFacade() {
         return boardFacade;
     }
 
