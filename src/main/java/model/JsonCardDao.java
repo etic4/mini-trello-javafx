@@ -24,6 +24,11 @@ class JsonCardDao implements Dao<Card> {
     }
 
     @Override
+    public void updatePositions(List<Card> cards) {
+
+    }
+
+    @Override
     public void delete(Card card) {
 
     }

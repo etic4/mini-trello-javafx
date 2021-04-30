@@ -52,7 +52,14 @@ public class Column extends EntitledContainer<Card> implements History<Column> {
     void setInBoard(Board board) {
         setBoard(board);
         board.add(this.getPosition(), this);
-        setPositionInBoard();
+
+        updateAllColumnsPosition();
+    }
+
+    private void updateAllColumnsPosition() {
+        for (var column : getBoard().getColumns()) {
+            column.setPositionInBoard();
+        }
     }
 
     void setPositionInBoard() {
@@ -66,7 +73,6 @@ public class Column extends EntitledContainer<Card> implements History<Column> {
     ObservableList<Card> getCards() {
         return getMovables();
     }
-
 
     Column moveLeft() {
         var otherColumn = getBoard().moveUp(this);
@@ -86,6 +92,7 @@ public class Column extends EntitledContainer<Card> implements History<Column> {
 
     void delete() {
         getBoard().remove(this);
+        updateAllColumnsPosition();
     }
 
     public ReadOnlyBooleanProperty isFirstProperty() {

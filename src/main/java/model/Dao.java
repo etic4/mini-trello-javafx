@@ -7,5 +7,6 @@ public interface Dao<T> {
     List<T> get_all(int id);
     T save(T t);
     void update(T t);
+    void updatePositions(List<T> ts);
     void delete(T t);
 }

@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
 class SqLiteColumnDao implements Dao<Column> {
     private static final String SQL_GET_BY_ID = "SELECT * FROM `Column` WHERE `column_id` = ?";
     private static final String SQL_GET_ALL = "SELECT * FROM `Column` WHERE `board` = ? " +
@@ -13,6 +14,9 @@ class SqLiteColumnDao implements Dao<Column> {
                                             "`title` = ?, " +
                                             "`position` = ?, " +
                                             "`board` = ? " +
+                                            "WHERE `column_id` = ?";
+    private static final String SQL_UPDATE_POSITION = "UPDATE `Column` SET " +
+                                            "`position` = ? " +
                                             "WHERE `column_id` = ?";
     private static final String SQL_DELETE = "DELETE FROM `Column` WHERE `column_id` = ?";
 
@@ -108,6 +112,30 @@ class SqLiteColumnDao implements Dao<Column> {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+    }
+
+    @Override
+    public void updatePositions(List<Column> columns) {
+        try {
+            Connection conn = SqliteConnection.getConnection();
+            PreparedStatement preparedStatement = conn.prepareStatement(SQL_UPDATE_POSITION);
+
+            for (var column : columns) {
+                preparedStatement.setInt(1, column.getPosition());
+                preparedStatement.setInt(2, column.getId());
+                preparedStatement.addBatch();
+            }
+
+            int[] affectedRows = preparedStatement.executeBatch();
+            if (affectedRows.length == 0) {
+                throw new SQLException("La mise à jour des colonnes a échoué: aucune colonne modifiée.");
+            }
+            conn.close();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
     }
 
     @Override

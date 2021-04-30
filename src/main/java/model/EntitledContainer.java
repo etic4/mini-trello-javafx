@@ -34,7 +34,7 @@ public abstract class EntitledContainer<E> extends Entitled {
         getMovables().remove(e);
     }
 
-    protected int getPositionInArray(E e) {
+    int getPositionInArray(E e) {
         return getMovables().indexOf(e);
     }
 

@@ -14,6 +14,9 @@ class SqLiteCardDao implements Dao<Card> {
                                             "`position` = ?, " +
                                             "`column` = ? " +
                                             "WHERE `card_id` = ?";
+    private static final String SQL_UPDATE_POSITION = "UPDATE `Card` SET " +
+                                                "`position` = ? " +
+                                                "WHERE `card_id` = ?";
     private static final String SQL_DELETE = "DELETE FROM `Card` WHERE `card_id` = ?";
 
 
@@ -106,6 +109,30 @@ class SqLiteCardDao implements Dao<Card> {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+    }
+
+    @Override
+    public void updatePositions(List<Card> cards) {
+        try {
+            Connection conn = SqliteConnection.getConnection();
+            PreparedStatement preparedStatement = conn.prepareStatement(SQL_UPDATE_POSITION);
+
+            for (var card : cards) {
+                preparedStatement.setInt(1, card.getPosition());
+                preparedStatement.setInt(2, card.getId());
+                preparedStatement.addBatch();
+            }
+
+            int[] affectedRows = preparedStatement.executeBatch();
+            if (affectedRows.length == 0) {
+                throw new SQLException("La mise à jour des cartes a échoué: aucune colonne modifiée.");
+            }
+            conn.close();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
     }
 
     @Override

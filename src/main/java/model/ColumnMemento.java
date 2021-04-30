@@ -3,11 +3,9 @@ package model;
 public class ColumnMemento implements Memento<Column> {
     private int position;
     private String title;
-    private final Column column;
     private final MemType memType;
 
     ColumnMemento(Column column, MemType memType) {
-        this.column = column;
         this.memType = memType;
 
         switch (memType) {
@@ -27,10 +25,6 @@ public class ColumnMemento implements Memento<Column> {
 
     String getTitle() {
         return title;
-    }
-
-    Column getColumn() {
-        return column;
     }
 
     MemType getMemType() {

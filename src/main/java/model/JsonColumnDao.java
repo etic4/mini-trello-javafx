@@ -24,6 +24,11 @@ class JsonColumnDao implements Dao<Column> {
     }
 
     @Override
+    public void updatePositions(List<Column> columns) {
+
+    }
+
+    @Override
     public void delete(Column column) {
 
     }

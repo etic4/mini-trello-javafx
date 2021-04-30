@@ -52,7 +52,13 @@ public class Card extends Entitled implements History<Card> {
     void setInColumn(Column column, int position) {
         setColumn(column);
         column.add(position, this);
-        setPositionInColumn();
+        updateAllCardsPosition(column);
+    }
+
+    void updateAllCardsPosition(Column column) {
+        for (var card : column.getCards()) {
+            card.setPositionInColumn();
+        }
     }
 
     void setPositionInColumn() {
@@ -92,29 +98,35 @@ public class Card extends Entitled implements History<Card> {
     }
 
     Column moveLeft() {
-        var previous = getPreviousColumn();
+        var column = getColumn();
+        var destColumn = getPreviousColumn();
 
-        if (previous != null) {
-            switchTo(previous, this);
-            setPositionInColumn();
+        if (destColumn != null) {
+            switchTo(destColumn, this);
+            updateAllCardsPosition(destColumn);
+            updateAllCardsPosition(column);
         }
 
-        return previous;
+        return destColumn;
     }
 
     Column moveRight() {
-        var next = getNextColumn();
+        var column = getColumn();
+        var destColumn = getNextColumn();
 
-        if (next != null) {
-            switchTo(next, this);
-            setPositionInColumn();
+        if (destColumn != null) {
+            switchTo(destColumn, this);
+            updateAllCardsPosition(destColumn);
+            updateAllCardsPosition(column);
         }
 
-        return next;
+        return destColumn;
     }
 
     void delete() {
-        getColumn().remove(this);
+        var column = getColumn();
+        column.remove(this);
+        updateAllCardsPosition(column);
     }
 
     public ReadOnlyBooleanProperty isFirstProperty() {

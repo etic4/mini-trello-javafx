@@ -1,7 +1,6 @@
 package model;
 
 public class CardMemento implements Memento<Card> {
-    private final Card card;
     private Column column;
     private int position;
     private String title;
@@ -9,7 +8,6 @@ public class CardMemento implements Memento<Card> {
 
     CardMemento(Card card, MemType memType) {
         this.memType = memType;
-        this.card = card;
 
         switch (memType) {
             case TITLE:
@@ -21,10 +19,6 @@ public class CardMemento implements Memento<Card> {
                 column = card.getColumn();
                 position = card.getPosition();
         }
-    }
-
-    Card getCard() {
-        return card;
     }
 
     Column getColumn() {

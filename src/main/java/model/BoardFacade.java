@@ -4,6 +4,9 @@ import direction.Direction;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.util.List;
+import java.util.Set;
+
 public class BoardFacade {
     private final DaoFactory dao;
     private final Board board;
@@ -57,6 +60,8 @@ public class BoardFacade {
         var savedCol = dao.getColumnDao().save(column);
         column.setId(savedCol.getId());
 
+        dao.getColumnDao().updatePositions(board.getColumns());
+
         for (var card : column.getCards()) {
             var id = dao.getCardDao().save(card).getId();
             card.setId(id);
@@ -66,6 +71,7 @@ public class BoardFacade {
     public void delete(Column column) {
         column.delete();
         dao.getColumnDao().delete(column);
+        dao.getColumnDao().updatePositions(board.getColumns());
     }
 
     public void move(Column column, Direction direction) {
@@ -102,15 +108,21 @@ public class BoardFacade {
         card.setInColumn(column, position);
         var id = dao.getCardDao().save(card).getId();
         card.setId(id);
+        dao.getCardDao().updatePositions(column.getCards());
     }
 
     public void delete(Card card) {
         card.delete();
         dao.getCardDao().delete(card);
+
+        var column = card.getColumn();
+        dao.getCardDao().updatePositions(column.getCards());
     }
 
     public Column move(Card card, Direction direction) {
         var column = card.getColumn();
+
+        Column destColumn = null;
         Card otherCard = null;
 
         switch (direction) {
@@ -121,17 +133,22 @@ public class BoardFacade {
                 otherCard = card.moveDown();
                 break;
             case LEFT:
-                column = card.moveLeft();
+                destColumn = card.moveLeft();
                 break;
             case RIGHT:
-                column = card.moveRight();
+                destColumn = card.moveRight();
         }
 
         dao.getCardDao().update(card);
 
-        // En principe pas possible depuis l'interface
         if (otherCard != null) {
             dao.getCardDao().update(otherCard);
+        }
+
+        if (destColumn != null) {
+            dao.getCardDao().updatePositions(column.getCards());
+            dao.getCardDao().updatePositions(destColumn.getCards());
+            column = destColumn;
         }
 
         return column;

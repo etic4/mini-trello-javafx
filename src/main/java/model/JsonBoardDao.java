@@ -25,6 +25,11 @@ class JsonBoardDao implements Dao<Board> {
     }
 
     @Override
+    public void updatePositions(List<Board> boards) {
+        throw new UnsupportedOperationException("Un board n'a pas de position");
+    }
+
+    @Override
     public void delete(Board board) {
         throw new UnsupportedOperationException("Il n'y a qu'un board");
     }
