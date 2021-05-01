@@ -1,0 +1,53 @@
+{
+  "last_id": 10,
+  "boards": [
+    {
+      "board_id": 1,
+      "columns": [
+        {
+          "column_id": 2,
+          "cards": [
+            {
+              "title": "Une carte",
+              "card_id": 3
+            },
+            {
+              "title": "Autre carte",
+              "card_id": 4
+            }
+          ],
+          "title": "Première colonne"
+        },
+        {
+          "column_id": 5,
+          "cards": [
+            {
+              "title": "Trouver un titre",
+              "card_id": 6
+            }
+          ],
+          "title": "A faire"
+        },
+        {
+          "column_id": 7,
+          "cards": [
+            {
+              "title": "Tout mélanger",
+              "card_id": 8
+            },
+            {
+              "title": "Ne pas étudier",
+              "card_id": 9
+            },
+            {
+              "title": "Trop travailler",
+              "card_id": 10
+            }
+          ],
+          "title": "A ne pas faire"
+        }
+      ],
+      "title": "Board 1"
+    }
+  ]
+}

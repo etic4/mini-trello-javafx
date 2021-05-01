@@ -3,6 +3,7 @@ module demo {
     requires javafx.fxml;
     requires junit;
     requires java.sql;
+    requires json.simple;
 
     opens main to javafx.fxml;
     exports main;
