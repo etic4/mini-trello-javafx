@@ -2,8 +2,6 @@ package mvvm;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
-import javafx.event.Event;
-import javafx.event.EventType;
 import model.Column;
 import mvvm.command.CommandManager;
 import mvvm.command.CreateCardCommand;
@@ -16,13 +14,15 @@ import model.TrelloFacade;
 
 /* Cette classe est "une sorte de singleton" qui est paramétré
 lors de l'appel à TrelloViewModel.setFacade(). L'instance peut ensuite être obtenue avec un getInstance();
-Permet de binder tout ce qu'on veut depuis d'autres instance de ViewModel, principalement pour gérer des actions
-de menus
+Permet de binder depuis d'autres instance de ViewModel, principalement pour gérer des actions
+de menus.
 Est-ce correct de faire ça ? Est-ce que c'est toujours un singleton ?
 */
 
 public class TrelloViewModel {
     public static TrelloViewModel instance = null;
+
+    private final CommandManager commandManager;
 
     private final TrelloFacade trelloFacade;
     private final BooleanProperty noColumnSelected = new SimpleBooleanProperty(false);
@@ -44,8 +44,14 @@ public class TrelloViewModel {
         return instance;
     }
 
+
     private TrelloViewModel(TrelloFacade trelloFacade) {
         this.trelloFacade = trelloFacade;
+        commandManager = CommandManager.getInstance();
+        configBindings();
+    }
+
+    private void configBindings() {
         noColumnSelected.bind(Bindings.isNull(selectedColumn));
     }
 
@@ -65,14 +71,38 @@ public class TrelloViewModel {
         CommandManager.execute(new CreateCardCommand(selectedColumn.get(), getBoardFacade()));
     }
 
-    public void seedAndRefresh() {
+    public void commandUndo() {
+        commandManager.undo();
+    }
+
+    public void commandRedo() {
+        commandManager.redo();
+    }
+
+    public void commandQuit() {
+        Platform.exit();
+    }
+
+    public void commandSeedAndRefresh() {
         trelloFacade.seedData();
         CommandManager.getInstance().reset();
         boardNeedsRefresh.set(true);
     }
 
-    public void quit() {
-        Platform.exit();
+    public SimpleStringProperty firstUndoableStringProperty() {
+        return commandManager.firstUndoableStringProperty();
+    }
+
+    public SimpleBooleanProperty hasNoUndoableProperty() {
+        return commandManager.hasNoUndoableProperty();
+    }
+
+    public SimpleStringProperty firstRedoableStringProperty() {
+        return commandManager.firstRedoableStringProperty();
+    }
+
+    public SimpleBooleanProperty hasNoRedoableProperty() {
+        return commandManager.hasNoRedoableProperty();
     }
 
     public void bindSelectedColumn(ReadOnlyObjectProperty<Column> selectedColumnProperty) {
