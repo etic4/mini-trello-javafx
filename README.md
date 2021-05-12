@@ -1,7 +1,4 @@
-# Projet ANC3 2021 - Trello - Groupe a03
-
-                                                                    Etienne Carlier  
-                                                                    Denis Capece
+# Projet ANC3 2021 - Trello
 
 ## Notes de livraison itération 1
 * Pas de bug connu;
@@ -19,9 +16,6 @@
     
 
 ## Notes de livraison itération 2
-
-                Etienne Carlier  
-
 * Pas de bug connu
 * Toutes les fonctionnalités sont implémentées
 * Choix de conception concernant les instructions pour l'itération 2:
