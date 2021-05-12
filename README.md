@@ -43,18 +43,15 @@
 ## Notes de livraison finale
 ### DAO
 * Implémentation d'une Factory pour DAO, avec deux backend, Sqlite et Json. Le backend Json n'est pas implémenté, à part le seed data
-* Le backend utilisé est défini comme attribut statique dans la classe main/Config
-* Une entrée "Reseed & reset" a été ajoutée au menu "Fichier" qui permet de recréer la db, reseed la db et reset la vue
+* Le backend utilisé est par un enum attribut statique dans la classe main/Config
+* Une entrée "Reseed & reset" a été ajoutée au menu "Fichier" qui permet de recréer la db, la reseed mettre à jour la vue.
 
 ### Rectifications à l'itération 2
 * Rectification de la classe _CommandManager_ pour simplication et clarification
-* Command manager est à nouveau accédé par la vue à travers _TrelloViewModel_
-* Des Dequeues plutôt que des stacks ont été utilisés pour stocker les _undoables_ et _redoables_ afin de pouvoir en limiter la capacité.
+* _CommandManager_ est à nouveau accédé par la vue à travers _TrelloViewModel_
+* Dans _CommandManager_, des Dequeuesont été utilisés plutôt que des stacks pour stocker les _undoables_ et _redoables_ ,afin de pouvoir en limiter la capacité.
   
 * Les commandes ne comportent maintenant qu'une méthode _execute_ (qui a comme effet de bord de reset les _redoables_) et une méthode
-_restore_. À l'exécution (dans certains cas avant l'exécution) et lors d'un _restore_ un l'objet concerné retourne un nouveau mémento représentant son état avant exécution (ou restore).
+_restore_. À l'exécution (dans certains cas avant l'exécution) et lors d'un _restore_ l'objet concerné retourne un nouveau mémento représentant son état avant exécution ou restore.
   
-* Les méthodes de config des vues ont été réduites et factorisées en méthodes plus petites
-
-
-
+* Les méthodes de config des vues ont été réduites et à nouveau factorisées en méthodes plus petites.
