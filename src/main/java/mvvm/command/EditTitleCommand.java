@@ -2,13 +2,12 @@ package mvvm.command;
 
 import model.*;
 
-import java.util.Locale;
-
-public class EditTitleCommand<E extends Entitled & History> extends Command {
+public class EditTitleCommand<E extends Entitled & History<E>> extends Command {
     private final E entitled;
     private final String title;
     private final BoardFacade boardFacade;
     private String commandString;
+    private Memento<E> memento;
 
 
     public EditTitleCommand(E entitled, String title, BoardFacade boardFacade) {
@@ -20,8 +19,13 @@ public class EditTitleCommand<E extends Entitled & History> extends Command {
     @Override
     public void execute() {
         setCommandString();
-        memento = entitled.save(MemType.TITLE);
+        memento = entitled.getMemento(MemType.TITLE);
         boardFacade.setTitle(entitled, title);
+    }
+
+    @Override
+    void restore() {
+        memento = entitled.restore(memento);
     }
 
     private void setCommandString() {

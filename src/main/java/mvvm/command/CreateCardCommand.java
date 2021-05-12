@@ -5,6 +5,8 @@ import model.*;
 public class CreateCardCommand extends Command {
     private final BoardFacade boardFacade;
     private final Column column;
+    private Card card;
+    private Memento<Card> memento;
 
 
     public CreateCardCommand(Column column, BoardFacade boardFacade) {
@@ -14,8 +16,13 @@ public class CreateCardCommand extends Command {
 
     @Override
     public void execute() {
-        var card = boardFacade.addCard(column);
-        memento = card.save(MemType.ADD);
+        card = boardFacade.newCard(column);
+        memento = card.getMemento(MemType.ADD);
+    }
+
+    @Override
+    void restore() {
+        memento = card.restore(memento);
     }
 
     @Override

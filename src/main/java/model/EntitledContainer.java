@@ -35,45 +35,55 @@ public abstract class EntitledContainer<E> extends Entitled {
         getMovables().remove(e);
     }
 
-    int getPosition(E e) {
+    int getPositionInArray(E e) {
         return getMovables().indexOf(e);
     }
 
     boolean isLast(E e) {
-        return getPosition(e) == size() - 1;
+        return getPositionInArray(e) == size() - 1;
     }
 
     boolean isFirst(E e) {
-        return getPosition(e) == 0;
+        return getPositionInArray(e) == 0;
     }
 
     E getNext(E e) {
         if(!isLast(e)) {
-            return getMovables().get(getPosition(e) + 1);
+            return getMovables().get(getPositionInArray(e) + 1);
         }
         return null;
     }
 
     E getPrevious(E e) {
         if(!isFirst(e)) {
-            return getMovables().get(getPosition(e) - 1);
+            return getMovables().get(getPositionInArray(e) - 1);
         }
         return null;
     }
 
-    void moveUp(E e) {
+    E moveUp(E e) {
+        E other = null;
+
         if(!isFirst(e)) {
-            swap(e, getPrevious(e));
+            other = getPrevious(e);
+            swap(e, other);
         }
+
+        return other;
     }
 
-    void moveDown(E e) {
+    E moveDown(E e) {
+        E other = null;
+
         if(!isLast(e)) {
-            swap(getNext(e), e);
+            other = getNext(e);
+            swap(other, e);
         }
+
+        return other;
     }
 
     private void swap(E e1, E e2) {
-        Collections.swap(getMovables(), getPosition(e1), getPosition(e2));
+        Collections.swap(getMovables(), getPositionInArray(e1), getPositionInArray(e2));
     }
 }

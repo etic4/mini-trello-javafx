@@ -11,7 +11,6 @@ import mvvm.TrelloViewModel;
 public class TrelloMenuBar extends MenuBar {
     private final TrelloViewModel trelloViewModel;
 
-
     public TrelloMenuBar(TrelloViewModel trelloViewModel){
         super();
         this.trelloViewModel = trelloViewModel;
@@ -37,13 +36,18 @@ public class TrelloMenuBar extends MenuBar {
         createCard.setAccelerator(new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN));
         createCard.disableProperty().bind(trelloViewModel.noColumnSelectedProperty());
 
+        // --- re-seedData
+        var reseed = new MenuItem("Reseed et reset");
+        reseed.setOnAction((e -> trelloViewModel.commandSeedAndRefresh()));
+
+
         // --- quit ---
         var quit = new MenuItem("Quitter");
         quit.setOnAction(e -> trelloViewModel.commandQuit());
         quit.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.CONTROL_DOWN));
 
         // --- add items to menu ---
-        fileMenu.getItems().addAll(createColumn, createCard, quit);
+        fileMenu.getItems().addAll(createColumn, createCard, reseed, quit);
         getMenus().add(fileMenu);
     }
 
@@ -54,16 +58,16 @@ public class TrelloMenuBar extends MenuBar {
         // --- undo ---
         var undo = new MenuItem("Annuler");
         undo.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN));
-        undo.textProperty().bind(trelloViewModel.nextUndoableProperty());
+        undo.textProperty().bind(trelloViewModel.firstUndoableStringProperty());
         undo.disableProperty().bind(trelloViewModel.hasNoUndoableProperty());
-        undo.setOnAction(e -> trelloViewModel.undo());
+        undo.setOnAction(e -> trelloViewModel.commandUndo());
 
         // --- redo ---
         var redo = new MenuItem("Refaire");
         redo.setAccelerator(new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN));
-        redo.textProperty().bind(trelloViewModel.nextRedoableProperty());
+        redo.textProperty().bind(trelloViewModel.firstRedoableStringProperty());
         redo.disableProperty().bind(trelloViewModel.hasNoRedoableProperty());
-        redo.setOnAction(e -> trelloViewModel.redo());
+        redo.setOnAction(e -> trelloViewModel.commandRedo());
 
         // --- add items to menu ---
         editionMenu.getItems().addAll(undo, redo);

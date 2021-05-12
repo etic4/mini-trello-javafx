@@ -16,7 +16,7 @@ public class CardViewModel {
 
     public CardViewModel(Card card) {
         this.card = card;
-        boardFacade = new BoardFacade(card);
+        boardFacade = new BoardFacade(card.getBoard());
 
         // bind title view property to card title
         cardTitleView.set(card.getTitle());
@@ -52,15 +52,15 @@ public class CardViewModel {
     //--- Commands ---
 
     public void deleteCard() {
-        CommandManager.getInstance().execute(new DeleteCardCommand(card, boardFacade));
+        CommandManager.execute(new DeleteCardCommand(card, boardFacade));
     }
 
     public void moveCard(Direction direction) {
         if (direction != null) {
-            CommandManager.getInstance().execute(new MoveCardCommand(card, direction, boardFacade));
+            CommandManager.execute(new MoveCardCommand(card, direction, boardFacade));
         }
     }
     public void setTitle(String title) {
-        CommandManager.getInstance().execute(new EditTitleCommand<>(card, title, boardFacade));
+        CommandManager.execute(new EditTitleCommand<>(card, title, boardFacade));
     }
 }

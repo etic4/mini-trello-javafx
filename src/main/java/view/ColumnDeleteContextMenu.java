@@ -4,16 +4,15 @@ import mvvm.ColumnViewModel;
 import view.common.BaseDeleteContextMenu;
 
 public class ColumnDeleteContextMenu extends BaseDeleteContextMenu {
-    private final ColumnViewModel cardViewModel;
+    private final ColumnViewModel columnViewModel;
 
-
-    public ColumnDeleteContextMenu(ColumnViewModel cardViewModel, String title) {
+    public ColumnDeleteContextMenu(ColumnViewModel columnViewModel, String title) {
         super(title);
-        this.cardViewModel = cardViewModel;
+        this.columnViewModel = columnViewModel;
     }
 
     @Override
     protected void executeDeleteCommand() {
-        cardViewModel.deleteColumn();
+        columnViewModel.deleteColumn();
     }
 }

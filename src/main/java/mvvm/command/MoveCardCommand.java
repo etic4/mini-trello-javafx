@@ -7,8 +7,8 @@ public class MoveCardCommand extends Command {
     private final Card card;
     private final Direction direction;
     private final BoardFacade boardFacade;
-    private String commandString = "";
-
+    private Memento<Card> memento;
+    private Column column;
 
     public MoveCardCommand(Card card, Direction direction, BoardFacade boardFacade) {
         this.card = card;
@@ -18,12 +18,20 @@ public class MoveCardCommand extends Command {
 
     @Override
     public void execute() {
-        setCommandString();
-        memento = card.save(MemType.POSITION);
-        boardFacade.move(card, direction);
+        getCommandString();
+        memento = card.getMemento(MemType.POSITION);
+        column = boardFacade.move(card, direction);
     }
 
-    private void setCommandString() {
+    @Override
+    void restore() {
+        memento = card.restore(memento);
+    }
+
+
+    private String getCommandString() {
+        var commandString = "";
+
         if (direction == Direction.LEFT || direction == Direction.RIGHT) {
             var sourceColumn = boardFacade.getColumn(card);
             var destColumn = boardFacade.getMoveDestinationColumn(card, direction);
@@ -31,10 +39,12 @@ public class MoveCardCommand extends Command {
         } else {
             commandString = "Déplacement de la " + card + "vers le " + direction;
         }
+
+        return commandString;
     }
 
     @Override
     public String toString() {
-        return commandString;
+        return getCommandString();
     }
 }

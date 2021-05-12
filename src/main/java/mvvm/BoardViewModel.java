@@ -7,24 +7,26 @@ import model.Column;
 import model.BoardFacade;
 
 public class BoardViewModel {
+
     private final StringProperty boardTitleView = new SimpleStringProperty();
     private final Board board;
     private final BoardFacade boardFacade;
 
 
+    //   CONSTRUCTOR
+
     public BoardViewModel(BoardFacade boardFacade) {
         this.boardFacade = boardFacade;
         board = boardFacade.getBoard();
 
-        // bind title view property to board title
+
+        // set title view binded property tot board title
         boardTitleView.set(board.getTitle());
 
-        // set board's title property on model value if changed
+        // set title view binding on model value if changed
         board.titleProperty().addListener((o, oldVal, newVal) -> boardTitleView.set(board.getTitle()));
     }
 
-
-    // --- properties ---
 
     public StringProperty boardTitleProperty() {
         return boardTitleView;
@@ -34,14 +36,13 @@ public class BoardViewModel {
         return new SimpleListProperty<>(boardFacade.getColumns(board));
     }
 
-
     // --- commands ---
 
     public void setTitle(String title) {
-        CommandManager.getInstance().execute(new EditTitleCommand<>(board, title, boardFacade));
+        CommandManager.execute(new EditTitleCommand<>(board, title, boardFacade));
     }
 
     public void addColumn() {
-        CommandManager.getInstance().execute(new CreateColumnCommand(boardFacade));
+        CommandManager.execute(new CreateColumnCommand(boardFacade));
     }
 }

@@ -7,6 +7,7 @@ public class MoveColumnCommand extends Command {
     private final Column column;
     private final Direction direction;
     private final BoardFacade boardFacade;
+    private Memento<Column> memento;
 
 
     public MoveColumnCommand(Column column, Direction direction, BoardFacade boardFacade) {
@@ -17,10 +18,14 @@ public class MoveColumnCommand extends Command {
 
     @Override
     public void execute() {
-        memento = column.save(MemType.POSITION);
+        memento = column.getMemento(MemType.POSITION);
         boardFacade.move(column, direction);
     }
 
+    @Override
+    void restore() {
+        memento = column.restore(memento);
+    }
 
     @Override
     public String toString() {

@@ -4,6 +4,8 @@ import model.*;
 
 public class CreateColumnCommand extends Command {
     private final BoardFacade boardFacade;
+    private Column column;
+    private Memento<Column> memento;
 
 
     public CreateColumnCommand(BoardFacade boardFacade) {
@@ -12,8 +14,13 @@ public class CreateColumnCommand extends Command {
 
     @Override
     public void execute() {
-        var column = boardFacade.addColumn();
-        memento = column.save(MemType.ADD);
+        column = boardFacade.newColumn();
+        memento = column.getMemento(MemType.ADD);
+    }
+
+    @Override
+    void restore() {
+        memento = column.restore(memento);
     }
 
     @Override

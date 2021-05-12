@@ -32,11 +32,9 @@ public class ColumnView extends VBox {
         buildView();
     }
 
-
     ColumnView(Column column) {
         this(new ColumnViewModel(column));
     }
-
 
     private void buildView() {
         buildGraphicComponents();
@@ -46,23 +44,23 @@ public class ColumnView extends VBox {
     }
 
     private void buildGraphicComponents() {
-        // Add css classes
+        setStyles();
+        makesComponentsHierarchy();
+    }
+
+    private void setStyles() {
         getStyleClass().add("col-vbox");
         elTitle.addTextFieldClasses("el-column");
         hbHeader.getStyleClass().add("col-header");
         lvCards.getStyleClass().add("lv-cards");
+    }
 
-        // makes components hierarchy
+    private void makesComponentsHierarchy() {
         hbHeader.getChildren().addAll(btLeft, elTitle, btRight);
         getChildren().addAll(hbHeader, lvCards);
 
-        // set hgrow priority
         HBox.setHgrow(elTitle, Priority.ALWAYS);
-
-        // bind prefHeight on number of items
-        lvCards.prefHeightProperty().bind(Bindings.multiply(nbrItems, LIST_CELL_HEIGHT).add(10));
     }
-
 
     private void configCardFactory() {
         lvCards.setCellFactory(columnView -> new ListCell<>(){
@@ -82,7 +80,6 @@ public class ColumnView extends VBox {
         });
     }
 
-
     private void configBindings() {
         // data bindings
         elTitle.textProperty().bindBidirectional(columnViewModel.columnTitleProperty());
@@ -91,15 +88,24 @@ public class ColumnView extends VBox {
         //buttons state bindings
         btRight.disableProperty().bind(columnViewModel.btRightDisabledProperty());
         btLeft.disableProperty().bind(columnViewModel.btLeftDisabledProperty());
+
+        // bind prefHeight on number of items
+        lvCards.prefHeightProperty().bind(Bindings.multiply(nbrItems, LIST_CELL_HEIGHT).add(10));
     }
 
-
     private void configEventsHandling() {
-        // Title text changed
+        addtitleListener();
+        configActions();
+        configContextMenu();
+    }
+
+    private void addtitleListener() {
         elTitle.addEventHandler(EditableLabel.TEXT_CHANGED, e -> {
             columnViewModel.setTitle(elTitle.textProperty().get());
         });
+    }
 
+    private void configActions() {
         // actions on buttons
         btRight.setOnAction(e -> columnViewModel.moveColumn(btRight.getDirection()));
         btLeft.setOnAction((e -> columnViewModel.moveColumn(btLeft.getDirection())));
@@ -111,8 +117,9 @@ public class ColumnView extends VBox {
                 e.consume();
             }
         });
+    }
 
-        // context menu
+    private void configContextMenu() {
         var contextMenu = new ColumnDeleteContextMenu(columnViewModel, elTitle.textProperty().get());
         hbHeader.setOnContextMenuRequested(e -> {
             contextMenu.show(hbHeader, e.getScreenX(), e.getScreenY());

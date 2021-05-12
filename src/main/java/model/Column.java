@@ -1,37 +1,75 @@
 package model;
 
+import direction.Direction;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.collections.ObservableList;
 
 
-public class Column extends EntitledContainer<Card> implements History {
-    private final Board board;
+public class Column extends EntitledContainer<Card> implements History<Column> {
+    private int id;
 
+    private Board board;
 
     public Column(Board board, String title) {
         super(title);
-        this.board = board;
-        board.add(this);
+        board.addColumn(this);
 
         if (this.getTitle().equals("")) {
             setTitle("Column " + board.size());
         }
     }
 
-    public Column(Board board) {
-        this(board, "");
+    // constructeur pour backend
+    Column(int id, String title) {
+        super(title);
+        this.id = id;
     }
 
-    Board getBoard() {
+    int getId() {
+        return id;
+    }
+
+    void setId(int id) {
+        this.id = id;
+    }
+
+    int getBoardId() {
+        return this.board.getId();
+    }
+
+    public Board getBoard() {
         return board;
     };
 
-    void moveLeft() {
-        getBoard().moveUp(this);
+    void setBoard(Board board) {
+        this.board = board;
     }
 
-    void moveRight() {
-        getBoard().moveDown(this);
+    int getPosition() {
+        return getBoard().getPositionInArray(this);
+    }
+
+    ObservableList<Card> getCards() {
+        return getMovables();
+    }
+
+    void addCard(Card card) {
+        card.setColumn(this);
+        add(card);
+    }
+
+    void addCard(int position, Card card) {
+        card.setColumn(this);
+        add(position, card);
+    }
+
+    Column moveLeft() {
+        return getBoard().moveUp(this);
+    }
+
+    Column moveRight() {
+        return getBoard().moveDown(this);
     }
 
     void delete() {
@@ -52,7 +90,35 @@ public class Column extends EntitledContainer<Card> implements History {
     }
 
     @Override
-    public Memento save(MemType memType) {
+    public Memento<Column> getMemento(MemType memType) {
         return new ColumnMemento(this, memType);
+    }
+
+    @Override
+    public Memento<Column> restore(Memento<Column> memento) {
+        var columnMemento = (ColumnMemento) memento;
+        var boardFacade = new BoardFacade(this.getBoard());
+
+        var newMemento = getNewMemento(columnMemento.getMemType());
+
+        switch (columnMemento.getMemType()) {
+            case TITLE:
+                boardFacade.setTitle(this, columnMemento.getTitle());
+                break;
+            case POSITION:
+                if (this.getPosition() > columnMemento.getPosition()) {
+                    boardFacade.move(this, Direction.LEFT);
+                } else {
+                    boardFacade.move(this, Direction.RIGHT);
+                }
+                break;
+            case ADD:
+                boardFacade.delete(this);
+                break;
+            case DELETE:
+                boardFacade.restoreColumn(this, columnMemento.getPosition());
+        }
+
+        return newMemento;
     }
 }
