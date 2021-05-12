@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-class SqLiteColumnDao implements Dao<Column> {
+class SqLiteColumnDao extends SqliteConnection implements Dao<Column> {
     private static final String SQL_GET_BY_ID = "SELECT * FROM `Column` WHERE `column_id` = ?";
     private static final String SQL_GET_ALL = "SELECT * FROM `Column` WHERE `board` = ? " +
                                             "ORDER BY `position`";
@@ -25,7 +25,7 @@ class SqLiteColumnDao implements Dao<Column> {
         Column column = null;
 
         try {
-            Connection conn = SqliteConnection.getConnection();
+            Connection conn = getConnection();
             PreparedStatement preparedStatement = conn.prepareStatement(SQL_GET_BY_ID);
             preparedStatement.setInt(1, id);
 
@@ -50,7 +50,7 @@ class SqLiteColumnDao implements Dao<Column> {
         ArrayList<Column> columns = new ArrayList<>();
 
         try {
-            Connection conn = SqliteConnection.getConnection();
+            Connection conn = getConnection();
             PreparedStatement preparedStatement = conn.prepareStatement(SQL_GET_ALL);
             preparedStatement.setInt(1, id);
 
@@ -70,7 +70,7 @@ class SqLiteColumnDao implements Dao<Column> {
     @Override
     public Column save(Column column) {
         try {
-            Connection conn = SqliteConnection.getConnection();
+            Connection conn = getConnection();
             PreparedStatement preparedStatement = conn.prepareStatement(SQL_INSERT,
                     Statement.RETURN_GENERATED_KEYS);
 
@@ -97,7 +97,7 @@ class SqLiteColumnDao implements Dao<Column> {
     @Override
     public void update(Column column) {
         try {
-            Connection conn = SqliteConnection.getConnection();
+            Connection conn = getConnection();
             PreparedStatement preparedStatement = conn.prepareStatement(SQL_UPDATE);
             setValues(column, preparedStatement);
             // clause WHERE
@@ -118,7 +118,7 @@ class SqLiteColumnDao implements Dao<Column> {
     public void updatePositions(List<Column> columns) {
         if (columns.size() > 0) {
             try {
-                Connection conn = SqliteConnection.getConnection();
+                Connection conn = getConnection();
                 PreparedStatement preparedStatement = conn.prepareStatement(SQL_UPDATE_POSITION);
 
                 for (var column : columns) {
@@ -142,7 +142,7 @@ class SqLiteColumnDao implements Dao<Column> {
     @Override
     public void delete(Column column) {
         try {
-            Connection conn = SqliteConnection.getConnection();
+            Connection conn = getConnection();
             PreparedStatement preparedStatement = conn.prepareStatement(SQL_DELETE);
             preparedStatement.setInt(1, column.getId());
 

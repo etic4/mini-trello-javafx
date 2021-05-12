@@ -4,7 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-class SqLiteCardDao implements Dao<Card> {
+class SqLiteCardDao extends SqliteConnection implements Dao<Card> {
     private static final String SQL_GET_BY_ID = "SELECT * FROM `Card` WHERE `card_id` = ?";
     private static final String SQL_GET_ALL = "SELECT * FROM `Card` WHERE `column` = ? " +
                                             "ORDER BY `position`";
@@ -25,7 +25,7 @@ class SqLiteCardDao implements Dao<Card> {
         Card Card = null;
 
         try {
-            Connection conn = SqliteConnection.getConnection();
+            Connection conn = getConnection();
             PreparedStatement preparedStatement = conn.prepareStatement(SQL_GET_BY_ID);
             preparedStatement.setInt(1, id);
 
@@ -48,7 +48,7 @@ class SqLiteCardDao implements Dao<Card> {
         ArrayList<Card> Cards = new ArrayList<>();
 
         try {
-            Connection conn = SqliteConnection.getConnection();
+            Connection conn = getConnection();
             PreparedStatement preparedStatement = conn.prepareStatement(SQL_GET_ALL);
             preparedStatement.setInt(1, id);
 
@@ -68,7 +68,7 @@ class SqLiteCardDao implements Dao<Card> {
     @Override
     public Card save(Card card) {
         try {
-            Connection conn = SqliteConnection.getConnection();
+            Connection conn = getConnection();
             PreparedStatement preparedStatement = conn.prepareStatement(SQL_INSERT,
                     Statement.RETURN_GENERATED_KEYS);
 
@@ -94,7 +94,7 @@ class SqLiteCardDao implements Dao<Card> {
     @Override
     public void update(Card card) {
         try {
-            Connection conn = SqliteConnection.getConnection();
+            Connection conn = getConnection();
             PreparedStatement preparedStatement = conn.prepareStatement(SQL_UPDATE);
             setValues(card, preparedStatement);
             // clause WHERE
@@ -115,7 +115,7 @@ class SqLiteCardDao implements Dao<Card> {
     public void updatePositions(List<Card> cards) {
         if (cards.size() > 0) {
             try {
-                Connection conn = SqliteConnection.getConnection();
+                Connection conn = getConnection();
                 PreparedStatement preparedStatement = conn.prepareStatement(SQL_UPDATE_POSITION);
 
                 for (var card : cards) {
@@ -139,7 +139,7 @@ class SqLiteCardDao implements Dao<Card> {
     @Override
     public void delete(Card card) {
         try {
-            Connection conn = SqliteConnection.getConnection();
+            Connection conn = getConnection();
             PreparedStatement preparedStatement = conn.prepareStatement(SQL_DELETE);
             preparedStatement.setInt(1, card.getId());
 

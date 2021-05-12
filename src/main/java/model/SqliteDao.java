@@ -2,7 +2,7 @@ package model;
 
 import java.sql.*;
 
-class SqliteDao implements Backend {
+class SqliteDao extends SqliteConnection implements Backend {
 
     public Dao<Board> getBoardDao() {
         return new SqLiteBoardDao();
@@ -18,7 +18,7 @@ class SqliteDao implements Backend {
 
     public void seedData() {
         try {
-            Connection conn = SqliteConnection.getConnection();
+            Connection conn = getConnection();
             dropTables(conn);
             createTables(conn);
 
@@ -26,16 +26,16 @@ class SqliteDao implements Backend {
 
             String sql = "INSERT INTO Board(title) VALUES(?)";
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
-            preparedStatement.setString(1, "Board 1");
+            preparedStatement.setString(1, "Seul et unique board");
             preparedStatement.execute();
 
 
             // --- Columns ---
 
             String[][] columns = {
-                    {"Column1", "0", "1"},
-                    {"Column2", "1", "1"},
-                    {"Column3", "2", "1"}
+                    {"Première col", "0", "1"},
+                    {"Deuxième col", "1", "1"},
+                    {"Autre col", "2", "1"}
             };
 
             sql = "INSERT INTO `Column`(title, `position`, `board`) VALUES(?, ?, ?)";
@@ -52,12 +52,12 @@ class SqliteDao implements Backend {
             // --- Columns ---
 
             String[][] cards = {
-                    {"Card1 Col1", "0", "1"},
-                    {"Card2 Col1", "1", "1"},
-                    {"Card1 Col2", "0", "2"},
-                    {"Card1 Col3", "0", "3"},
-                    {"Card2 Col3", "1", "3"},
-                    {"Card3 Col3", "2", "3"}
+                    {"Une carte", "0", "1"},
+                    {"À faire", "1", "1"},
+                    {"Une seule carte", "0", "2"},
+                    {"Première carte", "0", "3"},
+                    {"Quelque chose", "1", "3"},
+                    {"Fini", "2", "3"}
             };
 
             sql = "INSERT INTO `Card`(title, `position`, `column`) VALUES(?, ?, ?)";

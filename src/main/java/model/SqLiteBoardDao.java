@@ -3,7 +3,7 @@ package model;
 import java.sql.*;
 import java.util.List;
 
-class SqLiteBoardDao implements Dao<Board> {
+class SqLiteBoardDao extends SqliteConnection implements Dao<Board> {
     private static final String SQL_GET_BY_ID = "SELECT * FROM `Board` WHERE `board_id` = ?";
     private static final String SQL_UPDATE = "UPDATE Board SET `title` = ? WHERE `board_id` = ?";
 
@@ -13,7 +13,7 @@ class SqLiteBoardDao implements Dao<Board> {
         Board board = null;
 
         try {
-            Connection conn = SqliteConnection.getConnection();
+            Connection conn = getConnection();
             PreparedStatement preparedStatement = conn.prepareStatement(SQL_GET_BY_ID);
             preparedStatement.setInt(1, id);
 
@@ -44,7 +44,7 @@ class SqLiteBoardDao implements Dao<Board> {
     @Override
     public void update(Board board) {
         try {
-            Connection conn = SqliteConnection.getConnection();
+            Connection conn = getConnection();
             PreparedStatement preparedStatement = conn.prepareStatement(SQL_UPDATE);
 
             preparedStatement.setString(1, board.getTitle());
