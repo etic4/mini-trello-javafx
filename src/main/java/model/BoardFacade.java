@@ -65,9 +65,10 @@ public class BoardFacade {
     }
 
     public void delete(Column column) {
+        var columnDao = dao.getColumnDao();
         column.delete();
-        dao.getColumnDao().delete(column);
-        dao.getColumnDao().updatePositions(board.getColumns());
+        columnDao.delete(column);
+        columnDao.updatePositions(board.getColumns());
     }
 
     public void move(Column column, Direction direction) {
@@ -81,8 +82,9 @@ public class BoardFacade {
                 otherColumn = column.moveRight();
         }
 
-        dao.getColumnDao().update(column);
-        dao.getColumnDao().update(otherColumn);
+        var columnDao = dao.getColumnDao();
+        columnDao.update(column);
+        columnDao.update(otherColumn);
     }
 
     // ---  Card ---
@@ -104,11 +106,14 @@ public class BoardFacade {
     }
 
     public void delete(Card card) {
-        card.delete();
-        dao.getCardDao().delete(card);
-
+        var cardDao = dao.getCardDao();
         var column = card.getColumn();
-        dao.getCardDao().updatePositions(column.getCards());
+
+        card.delete();
+        cardDao.delete(card);
+
+
+        cardDao.updatePositions(column.getCards());
     }
 
     public Column move(Card card, Direction direction) {
@@ -138,8 +143,9 @@ public class BoardFacade {
         }
 
         if (destColumn != null) {
-            dao.getCardDao().updatePositions(column.getCards());
-            dao.getCardDao().updatePositions(destColumn.getCards());
+            var cardDao = dao.getCardDao();
+            cardDao.updatePositions(column.getCards());
+            cardDao.updatePositions(destColumn.getCards());
             column = destColumn;
         }
 

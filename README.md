@@ -37,8 +37,21 @@
     * La classe _EditableLabel_ a été refactorisée et fire maintenant un event lorsque l'edit du texte est terminé
     
     
-## Notes de livraison itération 3
+## Notes de livraison finale
+### DAO
+* Implémentation d'une Factory pour DAO, avec deux backend, Sqlite et Json. Le backend Json n'est pas implémenté, à part le seed data
+* Le backend utilisé est défini comme attribut statique dans la classe main/Config
+* Une entrée a été ajoutée au menu "Fichier / Reseed & reset" qui permet de recréer la db, seed et reset la vue
 
-## Notes de livraison itération 4
+### Rectifications à l'itération 2
+* Rectification de la classe _CommandManager_ pour simplication et clarification
+* Command manager est à nouveau accédé par la vue à travers _TrelloViewModel_
+* Des Dequeues plutôt que des stacks ont été utilisés pour stocker les _undoables_ et _redoables_ afin de pouvoir en limiter la capacité.
+  
+* Les commandes ne comportent maintenant qu'une méthode _execute_ (qui a comme effet de bord de reset les _redoables_) et une méthode
+_restore_. À l'exécution (dans certains cas avant l'exécution) et lors d'un _restore_ un mémento représentant son état est retourné par l'objet concerné.
+  
+* Les méthodes de config des vues ont été réduites et factorisées en méthodes plus petites
+
 
 
