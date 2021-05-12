@@ -41,6 +41,9 @@
     
     
 ## Notes de livraison finale
+Le [dossier d'analyse final en markdown](analyse/Dossier%20d'analyse%20final.md) se trouve dans le dossier "analyse".
+
+La [version pdf](analyse/Dossier%20d'analyse%20final.pdf) se trouve dans le même dossier
 ### DAO
 * Implémentation d'une Factory pour DAO, avec deux backend, Sqlite et Json. Le backend Json n'est pas implémenté, à part le seed data
 * Le backend utilisé est par un enum attribut statique dans la classe main/Config
@@ -55,6 +58,3 @@
 _restore_. À l'exécution (dans certains cas avant l'exécution) et lors d'un _restore_ l'objet concerné retourne un nouveau mémento représentant son état avant exécution ou restore.
   
 * Les méthodes de config des vues ont été réduites et à nouveau factorisées en méthodes plus petites.
-
-NB:
-Désolé pour la mise en page du pdf, elle est générée à partir de markdwon
