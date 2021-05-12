@@ -19,6 +19,9 @@
     
 
 ## Notes de livraison itération 2
+
+                Etienne Carlier  
+
 * Pas de bug connu
 * Toutes les fonctionnalités sont implémentées
 * Choix de conception concernant les instructions pour l'itération 2:
@@ -41,7 +44,7 @@
 ### DAO
 * Implémentation d'une Factory pour DAO, avec deux backend, Sqlite et Json. Le backend Json n'est pas implémenté, à part le seed data
 * Le backend utilisé est défini comme attribut statique dans la classe main/Config
-* Une entrée a été ajoutée au menu "Fichier / Reseed & reset" qui permet de recréer la db, seed et reset la vue
+* Une entrée "Reseed & reset" a été ajoutée au menu "Fichier" qui permet de recréer la db, reseed la db et reset la vue
 
 ### Rectifications à l'itération 2
 * Rectification de la classe _CommandManager_ pour simplication et clarification
@@ -49,7 +52,7 @@
 * Des Dequeues plutôt que des stacks ont été utilisés pour stocker les _undoables_ et _redoables_ afin de pouvoir en limiter la capacité.
   
 * Les commandes ne comportent maintenant qu'une méthode _execute_ (qui a comme effet de bord de reset les _redoables_) et une méthode
-_restore_. À l'exécution (dans certains cas avant l'exécution) et lors d'un _restore_ un mémento représentant son état est retourné par l'objet concerné.
+_restore_. À l'exécution (dans certains cas avant l'exécution) et lors d'un _restore_ un l'objet concerné retourne un nouveau mémento représentant son état avant exécution (ou restore).
   
 * Les méthodes de config des vues ont été réduites et factorisées en méthodes plus petites
 
