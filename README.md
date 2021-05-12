@@ -55,3 +55,6 @@
 _restore_. À l'exécution (dans certains cas avant l'exécution) et lors d'un _restore_ l'objet concerné retourne un nouveau mémento représentant son état avant exécution ou restore.
   
 * Les méthodes de config des vues ont été réduites et à nouveau factorisées en méthodes plus petites.
+
+NB:
+Désolé pour la mise en page du pdf, elle est générée à partir de markdwon
