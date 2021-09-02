@@ -1,19 +1,13 @@
-# Projet ANC3 2021 - Trello
+# Projet scolaire (2ème année) - Trello en Java/JavaFx
+Implémentation d'un mini Trello en Java/JavaFX en 3 itération. Commencé à 3 personnes, réécrit et terminé seul à partir de l'itération 2..
+
+L'objectif du cours était de s'initier à des patterns de programmation (MVVM, Memento, Command, DAO)
+
+Ce qui suit sont les notes de livraisons pour chaque itération destinées au prof.
 
 ## Notes de livraison itération 1
 * Pas de bug connu;
 * Toutes les fonctionnalités sont implémentées;
-* Choix de conception:
-    + Dans _le model_: 
-        - Utilisation d'interfaces, de classe abstraite et de génériques pour factoriser les méthodes.
-        - Utilisation d'une façade (_BoardFacade_).
-        - Implémentation des _ObservableList\<Column>_ dans _Board_ et _ObservableList\<Card>_ dans _Column_.
-        - Implémentation des _BooleanProperties_ utiles à l'activation des différents boutons de déplacement.
-        - Enum pour les directions de la méthode _Move()_ dans _BoardFacade_. 
-  + Dans les _views_:
-    - Tous les éléments implémentés via JavaFx (pas de .fxml).
-    - Factorisation de la méthode de configuration des boutons.
-    
 
 ## Notes de livraison itération 2
 * Pas de bug connu
@@ -32,8 +26,8 @@
     * Les boutons sont maintenant une classe qui hérite de Button
     * Le menu contextuel (delete) est maintenant une classe fille de _ContexMenu_
     * La classe _EditableLabel_ a été refactorisée et fire maintenant un event lorsque l'edit du texte est terminé
-    
-    
+
+
 ## Notes de livraison finale
 Le [dossier d'analyse final en markdown](analyse/Dossier%20d'analyse%20final.md) se trouve dans le dossier "analyse".
 
@@ -47,8 +41,8 @@ La [version pdf](analyse/Dossier%20d'analyse%20final.pdf) se trouve dans le mêm
 * Rectification de la classe _CommandManager_ pour simplication et clarification
 * _CommandManager_ est à nouveau accédé par la vue à travers _TrelloViewModel_
 * Dans _CommandManager_, des Dequeuesont été utilisés plutôt que des stacks pour stocker les _undoables_ et _redoables_ ,afin de pouvoir en limiter la capacité.
-  
+
 * Les commandes ne comportent maintenant qu'une méthode _execute_ (qui a comme effet de bord de reset les _redoables_) et une méthode
-_restore_. À l'exécution (dans certains cas avant l'exécution) et lors d'un _restore_ l'objet concerné retourne un nouveau mémento représentant son état avant exécution ou restore.
-  
+  _restore_. À l'exécution (dans certains cas avant l'exécution) et lors d'un _restore_ l'objet concerné retourne un nouveau mémento représentant son état avant exécution ou restore.
+
 * Les méthodes de config des vues ont été réduites et à nouveau factorisées en méthodes plus petites.
