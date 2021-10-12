@@ -1,48 +1,4 @@
 # Projet scolaire (2ème année) - Trello en Java/JavaFx
-Implémentation d'un mini Trello en Java/JavaFX en 3 itération. Commencé à 3 personnes, réécrit et terminé seul à partir de l'itération 2..
+Implémentation d'un mini Trello en Java/JavaFX.
 
 L'objectif du cours était de s'initier à des patterns de programmation (MVVM, Memento, Command, DAO)
-
-Ce qui suit sont les notes de livraisons pour chaque itération destinées au prof.
-
-## Notes de livraison itération 1
-* Pas de bug connu;
-* Toutes les fonctionnalités sont implémentées;
-
-## Notes de livraison itération 2
-* Pas de bug connu
-* Toutes les fonctionnalités sont implémentées
-* Choix de conception concernant les instructions pour l'itération 2:
-    * Un _CommandManager_ est un singleton
-    * Une classe _Memento_ par objet, paramétrisable à l'instanciation en fonction du type de commande réalisée
-    * Pas de clonage en profondeur mais des commandes inversée pour restaurer l'état antérieur à partir de références aux objets
-* Mais aussi un grand nombre de changements on été apportéspar rapport à l'itération 1:
-    * refactorisation du modèle (remplacement des interfaces et des méthodes par défault par des classe) pour mieux gérer la visibilité de ses éléments et implémenter correctement le _pattern facade_
-    * refactorisation assez profonde des view et view models en vue de les clarifier et de les simplifier:
-    * utlilisation d'une feuille de style css pour l'essentiel du styling des élements
-    * Le choix a été fait de faire systématiquement appel à des méthode du view model par la view en réponse à des action de l'utilisateur (ie lors de l'édition d'un titre, du move d'un carte, etc..)
-    * Un ensemble TrelloModel / TrelloViewModel / trelloViewModel a été créé, notamment pour contenir la barre de menu principale mais aussi pour rationnaliser la création et le seed data du board
-    * TrelloViewModel est un singleton pour faciliter les bindings des éléments du menu principal
-    * Les boutons sont maintenant une classe qui hérite de Button
-    * Le menu contextuel (delete) est maintenant une classe fille de _ContexMenu_
-    * La classe _EditableLabel_ a été refactorisée et fire maintenant un event lorsque l'edit du texte est terminé
-
-
-## Notes de livraison finale
-Le [dossier d'analyse final en markdown](analyse/Dossier%20d'analyse%20final.md) se trouve dans le dossier "analyse".
-
-La [version pdf](analyse/Dossier%20d'analyse%20final.pdf) se trouve dans le même dossier
-### DAO
-* Implémentation d'une Factory pour DAO, avec deux backend, Sqlite et Json. Le backend Json n'est pas implémenté, à part le seed data
-* Le backend utilisé est par un enum attribut statique dans la classe main/Config
-* Une entrée "Reseed & reset" a été ajoutée au menu "Fichier" qui permet de recréer la db, la reseed mettre à jour la vue.
-
-### Rectifications à l'itération 2
-* Rectification de la classe _CommandManager_ pour simplication et clarification
-* _CommandManager_ est à nouveau accédé par la vue à travers _TrelloViewModel_
-* Dans _CommandManager_, des Dequeuesont été utilisés plutôt que des stacks pour stocker les _undoables_ et _redoables_ ,afin de pouvoir en limiter la capacité.
-
-* Les commandes ne comportent maintenant qu'une méthode _execute_ (qui a comme effet de bord de reset les _redoables_) et une méthode
-  _restore_. À l'exécution (dans certains cas avant l'exécution) et lors d'un _restore_ l'objet concerné retourne un nouveau mémento représentant son état avant exécution ou restore.
-
-* Les méthodes de config des vues ont été réduites et à nouveau factorisées en méthodes plus petites.
